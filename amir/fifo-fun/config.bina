@@ -1,0 +1,26 @@
+# jobs to run
+
+reads_dir : "/mnt/scratch0/public/data/snyder"
+
+jobs: 
+[
+	{	
+		first_end : $reads_dir + "/A804NLABXX.s_1_1.fq.gz",
+		second_end : $reads_dir + "/A804NLABXX.s_1_2.fq.gz",
+		read_group : "A804NLABXX.s_1",
+		sample : "Snyder",
+		platform : "Illumina",
+		library: "SnyderLib"
+	},
+]
+
+# number of threads
+num_threads : "8"
+
+# references to sort and keep
+references: ['chr1','chr2','chr3','chr4' ,'chr5' ,'chr6' ,'chr7' ,'chr8' ,'chr9' ,'chr10' ,'chr11' ,'chr12' ,'chr13' ,'chr14' ,'chr15' ,'chr16' ,'chr17' ,'chr18' ,'chr19' ,'chr20' ,'chr21' ,'chr22', 'chrX', 'chrY' ]
+
+# output directory
+output_dir: "."
+
+trim_q:"20"

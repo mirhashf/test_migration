@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="dist" name="Create runnable jar for AlignDiff">
+	<property name="src" location="src"/>
+	<property name="build" location="build"/>
+	<property name="dist"  location="dist"/>
+	<target name="init">
+		<tstamp/>
+		<!-- Create the build directory structure used by compile -->
+		<mkdir dir="${build}"/>
+	</target>
+
+	<!-- set global properties for this build -->
+	<target name="compile" depends="init"
+            description="compile the source" >
+		<!-- Compile the java code from ${src} into ${build} -->
+		<javac debug="true" srcdir="${src}" destdir="${build}"  includeantruntime="false" >
+			<classpath>
+				<pathelement path="third_party/picard-1.53.jar"/>
+				<pathelement path="third_party/sam-1.53.jar"/>
+				<pathelement path="third_party/args4j-2.0.19-SNAPSHOT.jar"/>
+			</classpath>
+		</javac>
+	</target>
+
+
+	<!-- create runnable jar -->
+	<target name="dist" depends="compile">
+		<mkdir dir="${dist}"/>
+		<jar destfile="${dist}/AlignDiff.jar" filesetmanifest="mergewithoutmain">
+			<manifest>
+				<attribute name="Main-Class" value="bina.seqalto.utilities.aligndiff.AlignDiff"/>
+				<attribute name="Class-Path" value=".:third_party/"/>
+			</manifest>
+			<fileset dir="${build}"/>
+			<zipfileset excludes="META-INF/*.SF" src="third_party/picard-1.53.jar"/>
+			<zipfileset excludes="META-INF/*.SF" src="third_party/sam-1.53.jar"/>
+			<zipfileset excludes="META-INF/*.SF" src="third_party/args4j-2.0.19-SNAPSHOT.jar"/>
+		</jar>
+	</target>
+
+	<target name="clean"
+            description="clean up" >
+		<!-- Delete the ${build} and ${dist} directory trees -->
+		<delete dir="${build}"/>
+		<delete dir="${dist}"/>
+		<delete dir="doc"/>
+	</target>
+
+	    <target name="javadoc">
+	        <javadoc access="public" author="true" classpath="third_party/args4j-2.0.19-SNAPSHOT.jar:third_party/sam-1.53.jar:third_party/picard-1.53.jar" destdir="doc" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="bina.seqalto.utilities.aligndiff" source="1.6" sourcepath="src" splitindex="true" use="true" version="true"/>
+	    </target>
+
+	
+</project>
