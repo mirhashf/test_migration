@@ -4,7 +4,10 @@
 # Written by AJ Minich (aj.minich@binatechnologies.com), February 2012
 #
 # Runs alignment and the full GATK pipeline on a given alignment file.
+# Logs output to <chrom>_<aligner>_<pipeline>.log
 #
+
+VERSION=1.01
 
 # Constants
 PICARD=~/programs/picard/dist
@@ -19,7 +22,7 @@ aligner_threads=16
 pipeline_threads=1
 
 if [[ $# -lt 4 ]]; then
-    echo "Full Pipeline Runner v1.0"
+    echo "Full Pipeline Runner v${VERSION}"
     echo "Usage: fullPipeline <reference> <reads_prefix> <aligner> <pipeline>"
     echo ""
     echo "Reference:            location of the reference FASTA file, pre-indexed"
@@ -28,8 +31,9 @@ if [[ $# -lt 4 ]]; then
     echo "Pipeline choices:     gatk"
     echo ""
     echo "Notes:"
-    echo "- the alignment is run with ${aligner_threads} thread(s)."
-    echo "- the pipeline is run with ${pipeline_threads} thread(s)."
+    echo "- Alignment is run with ${aligner_threads} thread(s)."
+    echo "- Pipeline is run with ${pipeline_threads} thread(s)."
+    echo "- Fix mate information is not executed separately, as it is performed by Indel Realigner."
     exit
 else
     reference=${1}
@@ -41,7 +45,17 @@ else
     ref_file=$(basename $reference)
     chrom=${ref_file%.*}
     
-    echo "Running ${aligner} alignment and ${pipeline} analysis on ${chrom} reads from '${reads}' with ${reference}."
+    # Initialize the log file
+    log_file="${chrom}_${aligner}_${pipeline}.log"
+    
+    echo "Full Pipeline Runner v${VERSION}" | tee ${log_file}
+    echo "Aligner: ${aligner} with ${aligner_threads} threads" | tee -a ${log_file}
+    echo "Pipeline: ${pipeline} with ${pipeline_threads} threads" | tee -a ${log_file}
+    echo "Reference: ${reference}" | tee -a ${log_file}
+    echo "Chromosome: ${chrom}" | tee -a ${log_file}
+    echo "Reads: ${reads}" | tee -a ${log_file}
+    echo "" | tee -a ${log_file}
+    
 fi
 
 # Timer for determining elapsed time of each operation.
@@ -74,6 +88,10 @@ case "${aligner}" in
         aligner="SeqAlto"
     
         echo -e "\n--------------------------- ALIGNMENT WITH SEQALTO ---------------------------"
+
+        #index_load_start=$(timer)
+        #${seqalto} load_index ${reference}\_22.midx
+        #echo "SeqAlto Index Loading: $(timer ${index_load_start})" | tee -a ${log_file}
 
         ${seqalto} align \
             --idx ${reference}\_22.midx \
@@ -110,9 +128,6 @@ case "${aligner}" in
             ${reads}\_2.fq \
             > ${reads}\_${aligner}.sam
         
-        bwa_time=`echo $(timer ${bwa_start})`
-        echo "BWA alignment complete in ${bwa_time}."
-        
         ;;
         
     * )
@@ -122,8 +137,7 @@ case "${aligner}" in
 
 esac
 
-align_time=`echo $(timer ${align_start})`
-echo "Alignment with ${aligner} complete in ${align_time}."
+echo "${aligner} Alignment: $(timer ${align_start})" | tee -a ${log_file}
 
 aligned_reads=${reads}\_${aligner}
 
@@ -131,11 +145,9 @@ echo -e "\n--------------------------- SAM-to-BAM CONVERSION AND SORTING -------
 
 conversion_start=$(timer)
 
-echo "Converting SAM results file to BAM."
 samtools view -bS ${aligned_reads}.sam > ${aligned_reads}.bam
 
-conversion_time=`echo $(timer ${conversion_start})`
-echo "SAM-to-BAM conversion complete in ${conversion_time}."
+echo "SAM-to-BAM Conversion: $(timer ${conversion_start})" | tee -a ${log_file}
 
 #java -Xms15g -Xmx15g -jar $PICARD/MergeSamFiles.jar INPUT=$rg/1_RG.bam INPUT=$rg/2_RG.bam INPUT=$rg/3_RG.bam INPUT=$rg/4_RG.bam INPUT=$rg/5_RG.bam OUTPUT=$rg/bwa_merged.bam SORT_ORDER=coordinate VALIDATION_STRINGENCY=LENIENT  ASSUME_SORTED=true USE_THREADING=true
 
@@ -152,8 +164,7 @@ java -Xms5g -Xmx5g -jar ${PICARD}/AddOrReplaceReadGroups.jar \
     VALIDATION_STRINGENCY=LENIENT  \
     TMP_DIR=${tmp}
 
-groups_time=`echo $(timer ${groups_start})`
-echo "Add/Replace Groups complete in ${groups_time}."
+echo "Add/Replace Groups: $(timer ${groups_start})" | tee -a ${log_file}
 
 aligned_reads=${aligned_reads}\_AG
 
@@ -165,21 +176,13 @@ java -Xms5g -Xmx5g -jar ${PICARD}/SortSam.jar \
     OUTPUT=${aligned_reads}\_sorted.bam \
     SORT_ORDER=coordinate
 
-sorting_time=`echo $(timer ${sorting_start})`
-echo "BAM sorting complete in ${sorting_time}."
+echo "BAM Sorting: $(timer ${sorting_start})" | tee -a ${log_file}
 
 aligned_reads=${aligned_reads}\_sorted
 
 # Rebuild index
 #java -Xms5g -Xmx5g -jar ${PICARD}/BuildBamIndex.jar INPUT=$d/$f.bam VALIDATION_STRINGENCY=LENIENT
 #java -Xms15g -Xmx15g -jar $PICARD/ReorderSam.jar I=$d/$f.bam O=$d/$f\_sorted.bam  REFERENCE=$REF TMP_DIR=$TMP VALIDATION_STRINGENCY=LENIENT
-
-echo -e ""
-echo -e "Timing Results to this point:"
-echo -e "${aligner} Alignment:      ${align_time}"
-echo -e "SAM-to-BAM Conversion:     ${conversion_time}"
-echo -e "Add/Remove Groups:         ${groups_time}"
-echo -e "BAM Sorting:               ${sorting_time}"
 
 echo -e "\n--------------------------- DUPLICATE MARKING ---------------------------"
 
@@ -197,8 +200,7 @@ java -Xms5g -Xmx5g -jar ${PICARD}/MarkDuplicates.jar \
 # Rebuild index
 java -Xms5g -Xmx5g -jar ${PICARD}/BuildBamIndex.jar INPUT=${aligned_reads}\_marked.bam VALIDATION_STRINGENCY=LENIENT
 
-mark_duplicates_time=`echo $(timer ${mark_duplicates_start})`
-echo "Marking duplicates complete in ${mark_duplicates_time}."
+echo "Mark Duplicates: $(timer ${mark_duplicates_start})" | tee -a ${log_file}
 
 echo -e "\n--------------------------- REALIGNMENT ---------------------------"
 
@@ -211,11 +213,9 @@ java -Xms5g -Xmx5g -jar ${GATK}/GenomeAnalysisTK.jar \
     -R ${reference} \
     -o ${aligned_reads}\_realign.intervals \
     -et NO_ET \
-    -nt ${pipeline_threads} \
-    -L ${chrom}
+    -nt ${pipeline_threads}
 
-realigner_target_creator_time=`echo $(timer ${realigner_target_creator_start})`
-echo "Realigner Target Creator complete in ${realigner_target_creator_time}."
+echo "Realigner Target Creator: $(timer ${realigner_target_creator_start})" | tee -a ${log_file}
 
 indel_realigner_start=$(timer)
 
@@ -226,26 +226,12 @@ java -Xms5g -Xmx5g -Djava.io.tmpdir=${tmp} -jar $GATK/GenomeAnalysisTK.jar \
     -R ${reference} \
     -o ${aligned_reads}\_realign.bam \
     -targetIntervals ${aligned_reads}\_realign.intervals \
-    -et NO_ET \
-    -L ${chrom}
+    -et NO_ET
 
 # Rebuild index
 java -Xms5g -Xmx5g -jar $PICARD/BuildBamIndex.jar INPUT=${aligned_reads}\_realign.bam VALIDATION_STRINGENCY=LENIENT
 
-indel_realigner_time=`echo $(timer ${indel_realigner_start})`
-echo "Indel Realigner complete in ${indel_realigner_time}."
-
-echo "Note: fix mate information executed by Indel Realigner."
-
-echo -e ""
-echo -e "Timing Results to this point:"
-echo -e "${aligner} Alignment:      ${align_time}"
-echo -e "SAM-to-BAM Conversion:     ${conversion_time}"
-echo -e "Add/Remove Groups:         ${groups_time}"
-echo -e "BAM Sorting:               ${sorting_time}"
-echo -e "Mark Duplicates:           ${mark_duplicates_time}"
-echo -e "Realigner Target Creator:  ${realigner_target_creator_time}"
-echo -e "Indel Realigner:           ${indel_realigner_time}"
+echo "Indel Realigner: $(timer ${indel_realigner_start})" | tee -a ${log_file}
 
 echo -e "\n--------------------------- BASE QUALITY RECALIBRATION ---------------------------"
 
@@ -263,14 +249,12 @@ java -Xms5g -Xmx5g -jar $GATK/GenomeAnalysisTK.jar \
     -I ${aligned_reads}\_realign.bam \
     -recalFile ${aligned_reads}\_realign.bam.csv \
     -et NO_ET \
-    -nt ${pipeline_threads} \
-    -L ${chrom}
+    -nt ${pipeline_threads}
 
 # Rebuild index
 java -Xms5g -Xmx5g -jar $PICARD/BuildBamIndex.jar INPUT=${aligned_reads}\_realign.bam VALIDATION_STRINGENCY=LENIENT
 
-count_covariates_time=`echo $(timer ${count_covariates_start})`
-echo "Count Covariates complete in ${count_covariates_time}."
+echo "Counting Covariates: $(timer ${count_covariates_start})" | tee -a ${log_file}
 
 recalibrate_table_start=$(timer)
 
@@ -287,15 +271,13 @@ else
         -baq RECALCULATE \
         --doNotWriteOriginalQuals \
         -recalFile ${aligned_reads}\_realign.bam.csv \
-        -et NO_ET \
-        -L ${chrom}
+        -et NO_ET
 fi
 
 # Rebuild index
 java -Xms5g -Xmx5g -jar $PICARD/BuildBamIndex.jar INPUT=${aligned_reads}\_recalibrated.bam VALIDATION_STRINGENCY=LENIENT
 
-recalibrate_table_time=`echo $(timer ${recalibrate_table_start})`
-echo "Table Recalibration complete in ${recalibrate_table_time}."
+echo "Table Recalibration: $(timer ${recalibrate_table_start})" | tee -a ${log_file}
 
 echo -e "\n--------------------------- UNIFIED GENOTYPER SNP CALLING ---------------------------"
 
@@ -316,11 +298,9 @@ java -Xms5g -Xmx5g -Djava.io.tmpdir=${tmp} -jar $GATK/GenomeAnalysisTK.jar \
     -baq CALCULATE_AS_NECESSARY \
     -stand_call_conf 30.0 \
     -stand_emit_conf 10.0 \
-    -nt ${pipeline_threads} \
-    -L ${chrom}
+    -nt ${pipeline_threads}
 
-snp_calling_time=`echo $(timer ${snp_calling_start})`
-echo "SNP calling complete in ${snp_calling_time}."
+echo "SNP Calling: $(timer ${snp_calling_start})" | tee -a ${log_file}
 
 indel_calling_start=$(timer)
 
@@ -339,25 +319,12 @@ java -Xms5g -Xmx5g -Djava.io.tmpdir=${tmp} -jar $GATK/GenomeAnalysisTK.jar \
     -stand_call_conf 30.0 \
     -stand_emit_conf 10.0 \
     -glm INDEL \
-    -nt ${pipeline_threads} \
-    -L ${chrom}
+    -nt ${pipeline_threads}
 
-indel_calling_time=`echo $(timer ${indel_calling_start})`
-echo "Indel calling complete in ${indel_calling_time}."
+echo "Indel Calling: $(timer ${indel_calling_start})" | tee -a ${log_file}
 
 echo -e "\n--------------------------- PIPELINE PROCESSING COMPLETE ---------------------------"
 
-total_time=`echo $(timer ${start_time})`
+echo "Total Running Time: $(timer ${start_time})"
+echo "Log written to '${log_file}'."
 
-echo -e "${aligner} Alignment:      ${align_time}"
-echo -e "SAM-to-BAM Conversion:     ${conversion_time}"
-echo -e "Add/Remove Groups:         ${groups_time}"
-echo -e "BAM Sorting:               ${sorting_time}"
-echo -e "Mark Duplicates:           ${mark_duplicates_time}"
-echo -e "Realigner Target Creator:  ${realigner_target_creator_time}"
-echo -e "Indel Realigner:           ${indel_realigner_time}"
-echo -e "Counting Covariates:       ${count_covariates_time}"
-echo -e "Table Recalibration:       ${recalibrate_table_time}"
-echo -e "SNP Calling:               ${snp_calling_time}"
-echo -e "Indel Calling:             ${indel_calling_time}"
-echo -e "Total Running Time:        ${total_time}"
