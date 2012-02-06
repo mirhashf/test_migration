@@ -12,7 +12,7 @@ VERSION=1.01
 # Constants
 PICARD=~/programs/picard/dist
 GATK=~/programs/gatk/dist
-GATK_FAST=~/programs/gatk-fast
+GATK_FAST=/home/ajminich/programs/third_party/software/gatk/dist/GenomeAnalysisTK
 seqalto=/home/ajminich/programs/seq
 bwa=/home/ajminich/programs/bwa/bwa-0.6.1/bwa
 alignstats=/home/ajminich/programs/alignstats
@@ -91,7 +91,7 @@ echo -e "\n--------------------------- FAST GATK ---------------------------"
 
 fast_gatk_start=$(timer)
 
-java -Xms5g -Xmx5g -jar ${GATK_FAST}.jar \
+java -Xms1g -Xmx2g -jar ${GATK_FAST}.jar \
     -T FastRealign \
     -I ${aligned_reads}\_marked.bam \
     -R ${reference} \

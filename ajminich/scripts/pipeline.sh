@@ -3,32 +3,32 @@
 # Full Pipeline Runner
 # Written by AJ Minich (aj.minich@binatechnologies.com), February 2012
 #
-# Runs alignment and the full GATK pipeline on a given alignment file.
+# Runs alignment and a full GATK pipeline on a given alignment file.
 # Logs output to <chrom>_<aligner>_<pipeline>.log
 #
 
-VERSION=1.01
+VERSION=1.02
 
 # Constants
-PICARD=~/programs/picard/dist
-GATK=~/programs/gatk/dist
+PICARD=/home/ajminich/programs/picard/dist
+GATK=/home/ajminich/programs/gatk/dist
+GATK_FAST=/home/ajminich/programs/third_party/software/gatk/dist/
 seqalto=/home/ajminich/programs/seq
 bwa=/home/ajminich/programs/bwa/bwa-0.6.1/bwa
-alignstats=/home/ajminich/programs/alignstats
 SNP=/mnt/scratch0/public/data/variants/dbSNP/dbsnp_132.hg19.vcf
 
 tmp=/mnt/scratch0/ajminich
-aligner_threads=16
+aligner_threads=1
 pipeline_threads=1
 
 if [[ $# -lt 4 ]]; then
     echo "Full Pipeline Runner v${VERSION}"
-    echo "Usage: fullPipeline <reference> <reads_prefix> <aligner> <pipeline>"
+    echo "Usage: pipeline.sh <reference> <reads_prefix> <aligner> <pipeline>"
     echo ""
     echo "Reference:            location of the reference FASTA file, pre-indexed"
     echo "Reads prefix:         reads will be taken from <reads_prefix>_1.fq and <reads_prefix>_2.fq"
     echo "Aligner choices:      seqalto, bwa"
-    echo "Pipeline choices:     gatk"
+    echo "Pipeline choices:     gatk, gatk-fast"
     echo ""
     echo "Notes:"
     echo "- Alignment is run with ${aligner_threads} thread(s)."
@@ -49,8 +49,8 @@ else
     log_file="${chrom}_${aligner}_${pipeline}.log"
     
     echo "Full Pipeline Runner v${VERSION}" | tee ${log_file}
-    echo "Aligner: ${aligner} with ${aligner_threads} threads" | tee -a ${log_file}
-    echo "Pipeline: ${pipeline} with ${pipeline_threads} threads" | tee -a ${log_file}
+    echo "Aligner: ${aligner} with ${aligner_threads} thread(s)" | tee -a ${log_file}
+    echo "Pipeline: ${pipeline} with ${pipeline_threads} thread(s)" | tee -a ${log_file}
     echo "Reference: ${reference}" | tee -a ${log_file}
     echo "Chromosome: ${chrom}" | tee -a ${log_file}
     echo "Reads: ${reads}" | tee -a ${log_file}
@@ -202,63 +202,97 @@ java -Xms5g -Xmx5g -jar ${PICARD}/BuildBamIndex.jar INPUT=${aligned_reads}\_mark
 
 echo "Mark Duplicates: $(timer ${mark_duplicates_start})" | tee -a ${log_file}
 
-echo -e "\n--------------------------- REALIGNMENT ---------------------------"
+case "${pipeline}" in 
 
-realigner_target_creator_start=$(timer)
+    "gatk-fast" | "fast-gatk" | "realigner-fast" | "fast" | "fastrealign" )
+    
+        pipeline="Fast GATK"
+        
+        echo -e "\n--------------------------- FAST GATK ---------------------------"
+        
+        fast_gatk_start=$(timer)
+        
+        java -Xms5g -Xmx5g -jar ${GATK_FAST}/GenomeAnalysisTK.jar \
+            -T FastRealign \
+            -I ${aligned_reads}\_marked.bam \
+            -R ${reference} \
+            -standard \
+            -knownSites ${SNP} \
+            -o ${aligned_reads}\_realign.bam \
+            -recalFile ${aligned_reads}\_realign.bam.csv
+            #--suppress_recalibrate
+            #--suppress_write_bam
+        
+        echo "Fast GATK: $(timer ${fast_gatk_start})" | tee -a ${log_file}
+        
+        ;;
 
-echo "Determining intervals to re-align."
-java -Xms5g -Xmx5g -jar ${GATK}/GenomeAnalysisTK.jar \
-    -T RealignerTargetCreator \
-    -I ${aligned_reads}\_marked.bam \
-    -R ${reference} \
-    -o ${aligned_reads}\_realign.intervals \
-    -et NO_ET \
-    -nt ${pipeline_threads}
+    * )     # everything else
 
-echo "Realigner Target Creator: $(timer ${realigner_target_creator_start})" | tee -a ${log_file}
+        pipeline="Normal GATK"
+        
+        echo -e "\n--------------------------- REALIGNMENT ---------------------------"
+        
+        realigner_target_creator_start=$(timer)
+        
+        echo "Determining intervals to re-align."
+        java -Xms5g -Xmx5g -jar ${GATK}/GenomeAnalysisTK.jar \
+            -T RealignerTargetCreator \
+            -I ${aligned_reads}\_marked.bam \
+            -R ${reference} \
+            -o ${aligned_reads}\_realign.intervals \
+            -et NO_ET \
+            -nt ${pipeline_threads}
+        
+        echo "Realigner Target Creator: $(timer ${realigner_target_creator_start})" | tee -a ${log_file}
+        
+        indel_realigner_start=$(timer)
+        
+        echo "Realigning targeted intervals."
+        java -Xms5g -Xmx5g -Djava.io.tmpdir=${tmp} -jar $GATK/GenomeAnalysisTK.jar \
+            -T IndelRealigner \
+            -I ${aligned_reads}\_marked.bam \
+            -R ${reference} \
+            -o ${aligned_reads}\_realign.bam \
+            -targetIntervals ${aligned_reads}\_realign.intervals \
+            -et NO_ET
+        
+        # Rebuild index
+        java -Xms5g -Xmx5g -jar $PICARD/BuildBamIndex.jar INPUT=${aligned_reads}\_realign.bam VALIDATION_STRINGENCY=LENIENT
+        
+        echo "Indel Realigner: $(timer ${indel_realigner_start})" | tee -a ${log_file}
+        
+        echo -e "\n--------------------------- BASE QUALITY RECALIBRATION ---------------------------"
+        
+        count_covariates_start=$(timer)
+        
+        echo "Counting covariates."
+        java -Xms5g -Xmx5g -jar $GATK/GenomeAnalysisTK.jar \
+            -T CountCovariates \
+            -cov ReadGroupCovariate \
+            -cov QualityScoreCovariate \
+            -cov CycleCovariate \
+            -cov DinucCovariate \
+            -R ${reference} \
+            -knownSites ${SNP} \
+            -I ${aligned_reads}\_realign.bam \
+            -recalFile ${aligned_reads}\_realign.bam.csv \
+            -et NO_ET \
+            -nt ${pipeline_threads}
+        
+        # Rebuild index
+        java -Xms5g -Xmx5g -jar $PICARD/BuildBamIndex.jar INPUT=${aligned_reads}\_realign.bam VALIDATION_STRINGENCY=LENIENT
+        
+        echo "Counting Covariates: $(timer ${count_covariates_start})" | tee -a ${log_file}
+        
+        ;;
 
-indel_realigner_start=$(timer)
+esac    # pipeline choice
 
-echo "Realigning targeted intervals."
-java -Xms5g -Xmx5g -Djava.io.tmpdir=${tmp} -jar $GATK/GenomeAnalysisTK.jar \
-    -T IndelRealigner \
-    -I ${aligned_reads}\_marked.bam \
-    -R ${reference} \
-    -o ${aligned_reads}\_realign.bam \
-    -targetIntervals ${aligned_reads}\_realign.intervals \
-    -et NO_ET
-
-# Rebuild index
-java -Xms5g -Xmx5g -jar $PICARD/BuildBamIndex.jar INPUT=${aligned_reads}\_realign.bam VALIDATION_STRINGENCY=LENIENT
-
-echo "Indel Realigner: $(timer ${indel_realigner_start})" | tee -a ${log_file}
-
-echo -e "\n--------------------------- BASE QUALITY RECALIBRATION ---------------------------"
-
-count_covariates_start=$(timer)
-
-echo "Counting covariates."
-java -Xms5g -Xmx5g -jar $GATK/GenomeAnalysisTK.jar \
-    -T CountCovariates \
-    -cov ReadGroupCovariate \
-    -cov QualityScoreCovariate \
-    -cov CycleCovariate \
-    -cov DinucCovariate \
-    -R ${reference} \
-    -knownSites ${SNP} \
-    -I ${aligned_reads}\_realign.bam \
-    -recalFile ${aligned_reads}\_realign.bam.csv \
-    -et NO_ET \
-    -nt ${pipeline_threads}
-
-# Rebuild index
-java -Xms5g -Xmx5g -jar $PICARD/BuildBamIndex.jar INPUT=${aligned_reads}\_realign.bam VALIDATION_STRINGENCY=LENIENT
-
-echo "Counting Covariates: $(timer ${count_covariates_start})" | tee -a ${log_file}
+echo -e "\n--------------------------- TABLE RECALIBRATION ---------------------------"
 
 recalibrate_table_start=$(timer)
 
-echo "Recalibrating base quality table."
 if [ "`grep -v '#' ${aligned_reads}\_realign.bam.csv | grep -v "EOF" | wc -l`" = "1" ]
 then
     cp ${aligned_reads}\_realign.bam ${aligned_reads}\_recalibrated.bam
@@ -279,11 +313,10 @@ java -Xms5g -Xmx5g -jar $PICARD/BuildBamIndex.jar INPUT=${aligned_reads}\_recali
 
 echo "Table Recalibration: $(timer ${recalibrate_table_start})" | tee -a ${log_file}
 
-echo -e "\n--------------------------- UNIFIED GENOTYPER SNP CALLING ---------------------------"
+echo -e "\n--------------------------- UNIFIED GENOTYPER VARIANT CALLING ---------------------------"
 
-snp_calling_start=$(timer)
+variant_calling_start=$(timer)
 
-echo "Running GATK SNP caller."
 java -Xms5g -Xmx5g -Djava.io.tmpdir=${tmp} -jar $GATK/GenomeAnalysisTK.jar \
     -T UnifiedGenotyper \
     -I ${aligned_reads}\_recalibrated.bam \
@@ -298,30 +331,10 @@ java -Xms5g -Xmx5g -Djava.io.tmpdir=${tmp} -jar $GATK/GenomeAnalysisTK.jar \
     -baq CALCULATE_AS_NECESSARY \
     -stand_call_conf 30.0 \
     -stand_emit_conf 10.0 \
+    -glm BOTH \
     -nt ${pipeline_threads}
 
-echo "SNP Calling: $(timer ${snp_calling_start})" | tee -a ${log_file}
-
-indel_calling_start=$(timer)
-
-echo "Running GATK indel caller."
-java -Xms5g -Xmx5g -Djava.io.tmpdir=${tmp} -jar $GATK/GenomeAnalysisTK.jar \
-    -T UnifiedGenotyper \
-    -I ${aligned_reads}\_recalibrated.bam \
-    -R ${reference} \
-    -D ${SNP} \
-    -o ${aligned_reads}\_indel.vcf \
-    -et NO_ET \
-    -A AlleleBalance \
-    -A DepthOfCoverage \
-    -A MappingQualityZero \
-    -baq CALCULATE_AS_NECESSARY \
-    -stand_call_conf 30.0 \
-    -stand_emit_conf 10.0 \
-    -glm INDEL \
-    -nt ${pipeline_threads}
-
-echo "Indel Calling: $(timer ${indel_calling_start})" | tee -a ${log_file}
+echo "Variant Calling: $(timer ${variant_calling_start})" | tee -a ${log_file}
 
 echo -e "\n--------------------------- PIPELINE PROCESSING COMPLETE ---------------------------"
 
