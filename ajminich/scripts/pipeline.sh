@@ -12,7 +12,7 @@ VERSION=1.02
 # Constants
 PICARD=/home/ajminich/programs/picard/dist
 GATK=/home/ajminich/programs/gatk/dist
-GATK_FAST=/home/ajminich/programs/third_party/software/gatk/dist/
+GATK_FAST=/home/ajminich/programs/gatk-fast/software/gatk/dist/
 seqalto=/home/ajminich/programs/seq
 bwa=/home/ajminich/programs/bwa/bwa-0.6.1/bwa
 SNP=/mnt/scratch0/public/data/variants/dbSNP/dbsnp_132.hg19.vcf
