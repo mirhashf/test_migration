@@ -10,7 +10,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -28,19 +27,21 @@ public class HomeController {
   @Resource(name = "sessionFactory")
   @Inject
   public SessionFactory sessionFactory;
-
+  @Inject
+  public Leader leader;
 
   @GET
-  @Path("new_job/{name}")
+  @Path("new_job/{binary}")
   @Produces(MediaType.APPLICATION_JSON)
-  public TestObject setIt(@PathParam("name") String name) {
-    Session session = getSessionFactory().openSession();
-    session.beginTransaction();
-    TestObject object = new TestObject();
-    object.setName(name);
-    session.save(object);
-    session.getTransaction().commit();
-    return object;
+  public Object newJob(@PathParam("binary") String binary) throws Exception {
+    if(ZooKeeperService.getIsLeader()){
+      JobRequest job = new JobRequest();
+      job.setBinary(binary);
+      leader.process(job);
+      return job;
+    }else{
+      return "I'm not a leader! Please contact leader...";
+    }
   }
 
   @GET

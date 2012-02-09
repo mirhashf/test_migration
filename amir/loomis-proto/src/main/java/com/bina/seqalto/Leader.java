@@ -2,16 +2,21 @@
 
 package com.bina.seqalto;
 
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Service;
 
 /**
  * @author Amirhossein Kiani (amir@binatechnologies.com)
  *
  * Leader's work is done in this class! Clients send {@link JobRequest}s to Leader if they receive one.
  */
+@Service
 public class Leader {
-  public void process(JobRequest request) throws Exception{
+  @Inject
+  ZooKeeperService zooKeeper;
+  public synchronized void process(JobRequest request) throws Exception{
     // create job node
-    ZooKeeperService.createJob(request);
-
+    zooKeeper.createJob(request);
   }
 }

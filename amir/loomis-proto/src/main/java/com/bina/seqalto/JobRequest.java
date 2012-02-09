@@ -3,18 +3,37 @@
 package com.bina.seqalto;
 
 /**
- * @author Amirhossein Kiani (amir@binatechnologies.com)
- * Created on Jan 29, 2012
+ * @author Amirhossein Kiani (amir@binatechnologies.com) Created on Jan 29, 2012
  * 
- * Represents a JSON {@link JobRequest} that comes from client for the leader.
+ *         Represents a JSON {@link JobRequest} that comes from client for the leader. Currently for
+ *         simplicity, every job should run on all the nodes.
  */
 public class JobRequest {
   private String binary;
   private String input;
   private String output;
-  private int id;
- 
-  
+  private String id;
+  private boolean started;
+
+
+  /**
+   * Constructor
+   */
+  public JobRequest() {
+    setStarted(false);
+    input = new String();
+    output = new String();
+    id = new String();
+  }
+
+  public boolean getStarted() {
+    return started;
+  }
+
+  public void setStarted(boolean started) {
+    this.started = started;
+  }
+
   public String getBinary() {
     return binary;
   }
@@ -39,11 +58,11 @@ public class JobRequest {
     this.output = output;
   }
 
-  public int getId() {
+  public String getId() {
     return id;
   }
 
-  public void setId(int id) {
+  public void setId(String id) {
     this.id = id;
   }
 }
