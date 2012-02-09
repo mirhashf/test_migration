@@ -14,12 +14,12 @@ PICARD=/home/ajminich/programs/picard/dist
 GATK=/home/ajminich/programs/gatk/dist
 GATK_FAST=/home/ajminich/programs/gatk-fast/software/gatk/dist/
 seqalto=/home/ajminich/programs/seq
-bwa=/home/ajminich/programs/bwa/bwa-0.6.1/bwa
+bwa=/home/ajminich/programs/bwa
 SNP=/mnt/scratch0/public/data/variants/dbSNP/dbsnp_132.hg19.vcf
 
 tmp=/mnt/scratch0/ajminich
-aligner_threads=1
-pipeline_threads=1
+aligner_threads=16
+pipeline_threads=16
 
 if [[ $# -lt 4 ]]; then
     echo "Full Pipeline Runner v${VERSION}"

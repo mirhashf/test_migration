@@ -1,19 +1,5 @@
-# compSNPvcf.R
-# VCF File Comparison
-# Written by Jian Li
-#
-# Run as:
-#
-#   R --slave --args inputFile1 inputFile2 editfile<compSNPvcf.R
-#
-# - input and editfile should be in VCF format.
-# - editfile could be "/mnt/scratch0/public/data/variants/dbSNP/CEU/CEU-1409-21.vcf"
-# - outputs three files:
-#     > inputFile1 specific prediction
-#     > inputFile2 specific SNPs
-#     > intersection of the total sets of predictions
-#
-# Output file: those lines with an "rs" Id in the "ID" column mean they are from dbSNP.
+
+#R --slave --args inputFile1 inputFile2 editfile "real/simu"<compSNPvcf.R
 
 #editfn="/home/public/data/variants/dbSNP/21-1409-CEU.vcf"
 
@@ -23,9 +9,18 @@ f2n=Args[5]
 
 editfn=Args[6]
 orig=read.table(editfn,sep="\t",stringsAsFactors=FALSE)
-names(orig)=c("CHROM","POS","ID","REF","dbALT","dbQUAL","dbFILTER","dbINFO")
+snpFlag=vector("logical",dim(orig)[1])
 
-snpFlag=sapply(1:nrow(orig),function(x) grepl("VC=SN",orig[x,8]))# | grepl("VC=MIX",orig[x,8]))
+if (Args[7] == "real")
+ { names(orig)=c("CHROM","POS","ID","REF","dbALT","dbQUAL","dbFILTER","dbINFO")
+  snpFlag=sapply(1:nrow(orig),function(x) grepl("VC=SN",orig[x,8]))# | grepl("VC=MIX",orig[x,8]))
+ }else if (Args[7] == "simu"){ 
+names(orig)=c("CHROM","POS","type","length","paTic","maTic","hom-het","mutationSeq")
+  snpFlag=(orig$type == "SNP")
+ }else{
+   stop("please specify 'simu' or 'real'")
+ }
+
 snpInd=which(snpFlag == TRUE)
 idInd=which(snpFlag == FALSE)
 
@@ -83,7 +78,7 @@ FDR1 = FP1 / (FP1 + TP1)
 PPV2 = TP2 / (TP2 + FP2)
 FDR2 = FP2 / (FP2 + TP2)
 
-cat("\n")
+cat("\nTP,TP%,FP,FN\n")
 
 cat(TP1,paste(TP1/dim(orig)[1]*100,"%"),FP1,FN1,sep=",")
 cat("\n")
