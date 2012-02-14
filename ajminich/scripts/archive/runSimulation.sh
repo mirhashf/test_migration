@@ -10,7 +10,7 @@
 simuread=/home/ajminich/programs/loomis/software/loomis/simureads/simuRead
 dbSNP=/mnt/scratch0/public/data/variants/dbSNP/CEU/CEU-1409-21.vcf
 seqalto=/home/ajminich/programs/seq
-bwa=/home/ajminich/programs/bwa/bwa-0.6.1/bwa
+bwa=/home/ajminich/programs/bwa
 trimmer=/home/ajminich/programs/align/trimBWAstyle.pl
 alignstats=/home/ajminich/programs/alignstats
 tmp=/mnt/scratch0/ajminich

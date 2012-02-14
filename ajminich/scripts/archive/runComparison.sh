@@ -12,7 +12,7 @@ prefix=${2}
 
 # Programs and Files
 seqalto=/home/ajminich/programs/seq
-bwa=/home/ajminich/programs/bwa/bwa-0.6.1/bwa
+bwa=/home/ajminich/programs/bwa
 alignstats=/home/ajminich/programs/alignstats
 tmp=/mnt/scratch0/ajminich
 
@@ -21,8 +21,8 @@ seqalto_align=seqAlign
 bwa_align=bwaAlign
 
 # Simulation Parameters
-#reference=/home/ajminich/data/hg19/ucsc.hg19.fasta     # run against full genome
-reference=/home/ajminich/data/hg19/chr21.fa
+reference=/home/ajminich/data/hg19/ucsc.hg19.fasta     # run against full genome
+#reference=/home/ajminich/data/hg19/chr21.fa
 
 # Output parameters
 results_folder=${prefix}
