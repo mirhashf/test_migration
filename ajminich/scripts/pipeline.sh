@@ -338,6 +338,6 @@ echo "Variant Calling: $(timer ${variant_calling_start})" | tee -a ${log_file}
 
 echo -e "\n--------------------------- PIPELINE PROCESSING COMPLETE ---------------------------"
 
-echo "Total Running Time: $(timer ${start_time})"
+echo "Total Running Time: $(timer ${start_time})" | tee -a ${log_file}
 echo "Log written to '${log_file}'."
 
