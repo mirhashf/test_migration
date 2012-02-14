@@ -6,7 +6,7 @@
 # This script runs an alignment of the given data using the selected aligners.
 # It should be run on a scratchdisk, since it outputs files to the local folder.
 
-VERSION=1.00
+VERSION=1.01
 
 # Programs and Files
 seqalto=/home/ajminich/programs/seq
@@ -72,72 +72,61 @@ function timer()
 
 start_time=$(timer)
 
-case "${aligner}" in
-
-    "seqalto" | "seq" | "SeqAlto" | "Seqalto" | "both" | "all" | "BOTH" | "ALL" )
+if [[ "${aligner}" == seq* ]] || [[ "${aligner}" == Seq* ]] || \
+    [[ "${aligner}" == both ]] || [[ "${aligner}" == BOTH ]] || [[ "${aligner}" == all ]]
+then
         
-        seqalto_start=$(timer)
+    seqalto_start=$(timer)
+
+    echo -e "\n--------------------------- ALIGNMENT WITH SEQALTO ---------------------------"
+
+    #index_load_start=$(timer)
+    #${seqalto} load_index ${reference}\_22.midx
+    #echo "SeqAlto Index Loading: $(timer ${index_load_start})" | tee -a ${log_file}
+
+    ${seqalto} align \
+        --idx ${reference}_${kmer_size}.midx \
+        -p ${num_threads} \
+        -1 ${reads_prefix}_1.fq \
+        -2 ${reads_prefix}_2.fq \
+        > ${reads_prefix}\_SeqAlto.sam
+        
+    echo "SeqAlto Alignment: $(timer ${seqalto_start})" | tee -a ${log_file}
+
+fi
+
+if [[ "${aligner}" == bwa* ]] || [[ "${aligner}" == BWA* ]] || \
+    [[ "${aligner}" == both ]] || [[ "${aligner}" == BOTH ]] || [[ "${aligner}" == all ]]
+then
+
+    bwa_start=$(timer)
+
+    echo -e "\n--------------------------- ALIGNMENT WITH BWA ---------------------------"
+
+    ${bwa} aln \
+        ${reference} \
+        ${reads_prefix}_1.fq \
+        -t ${num_threads} \
+        > ${reads_prefix}_1.sai
+    ${bwa} aln \
+        ${reference} \
+        ${reads_prefix}_2.fq \
+        -t ${num_threads} \
+        > ${reads_prefix}_2.sai
     
-        echo -e "\n--------------------------- ALIGNMENT WITH SEQALTO ---------------------------"
-
-        #index_load_start=$(timer)
-        #${seqalto} load_index ${reference}\_22.midx
-        #echo "SeqAlto Index Loading: $(timer ${index_load_start})" | tee -a ${log_file}
-
-        ${seqalto} align \
-            --idx ${reference}_${kmer_size}.midx \
-            -p ${num_threads} \
-            -1 ${reads_prefix}_1.fq \
-            -2 ${reads_prefix}_2.fq \
-            > ${reads}\_SeqAlto.sam
-            
-        echo "SeqAlto Alignment: $(timer ${seqalto_start})" | tee -a ${log_file}
-            
-        ;;
-        
-    "bwa" | "BWA" | "both" | "all" | "BOTH" | "ALL"  )
+    echo "Performing BWA paired-end merging."
+    ${bwa} sampe \
+        -P ${reference} \
+        ${reads_prefix}_1.sai \
+        ${reads_prefix}_2.sai \
+        ${reads_prefix}_1.fq \
+        ${reads_prefix}_2.fq \
+        > ${reads_prefix}_BWA.sam
     
-        bwa_start=$(timer)
+    echo "BWA Alignment: $(timer ${bwa_start})" | tee -a ${log_file}
     
-        echo -e "\n--------------------------- ALIGNMENT WITH BWA ---------------------------"
-
-        ${bwa} aln \
-            ${reference} \
-            ${reads_prefix}_1.fq \
-            -t ${num_threads} \
-            > ${reads_prefix}_1.sai
-        ${bwa} aln \
-            ${reference} \
-            ${reads_prefix}_2.fq \
-            -t ${num_threads} \
-            > ${reads_prefix}_2.sai
-        
-        echo "Performing BWA paired-end merging."
-        ${bwa} sampe \
-            -P ${reference} \
-            ${reads_prefix}_1.sai \
-            ${reads_prefix}_2.sai \
-            ${reads_prefix}_1.fq \
-            ${reads_prefix}_2.fq \
-            > ${reads_prefix}_BWA.sam
-        
-        echo "BWA Alignment: $(timer ${bwa_start})" | tee -a ${log_file}
-        
-        ;;
-        
-    "none" | "neither" )
-    
-        echo "No alignments performed."
-        
-        ;;
-        
-    * )
-        echo "Error: I don't know how to use '${aligner}'." | tee -a ${log_file}
-        exit
-        ;;
-
-esac
-
+fi
+  
 # AlignStats
 case "${runstats}" in
 
@@ -166,7 +155,7 @@ case "${runstats}" in
         alignstats_start=$(timer)
         
         # Run AlignDiff
-        java -jar ${alignstats} \
+        java -jar ${alignstats}.jar \
             ${reads_prefix}_SeqAlto.bam ${reads_prefix}_BWA.bam \
             ${reads_prefix}_compare/ \
             --report ${reads_prefix}_compare.html \
