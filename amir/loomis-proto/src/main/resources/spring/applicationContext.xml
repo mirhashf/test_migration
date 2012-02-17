@@ -13,14 +13,13 @@
 	<tx:annotation-driven />
 
 	<!-- Load Hibernate related configuration -->
-	<import resource="hibernate-context.xml" />
-
-
+	<import resource="classpath:spring/hibernate-context.xml" />
+	
 	<bean id="placeholderConfigMM" class="com.bina.seqalto.SpringPropertiesUtil">
 		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE" />
 		<property name="locations">
 			<list>
-				<value>classpath:spring.properties</value>
+				<value>classpath:spring/spring.properties</value>
 			</list>
 		</property>
 	</bean>

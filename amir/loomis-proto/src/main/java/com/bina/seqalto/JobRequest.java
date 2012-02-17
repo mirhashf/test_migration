@@ -2,27 +2,61 @@
 
 package com.bina.seqalto;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author Amirhossein Kiani (amir@binatechnologies.com) Created on Jan 29, 2012
  * 
- *         Represents a JSON {@link JobRequest} that comes from client for the leader. Currently for
- *         simplicity, every job should run on all the nodes.
+ *         Represents a job that needs to run. It is also used to store a job's data structure on ZooKeeper.
  */
 public class JobRequest {
-  private String binary;
-  private String input;
-  private String output;
   private String id;
   private boolean started;
+  private boolean streaming;
+  private boolean streamingStarted;
+  private boolean stopped;
+  
+  public boolean isStreamingStarted() {
+    return streamingStarted;
+  }
 
+  public void setStreamingStarted(boolean streamingStarted) {
+    this.streamingStarted = streamingStarted;
+  }
+
+  private int packetSizeInLines = 1;
+  private Map<JobParameters, String> jobProperties = new HashMap<JobParameters,String>();
+
+  public Map<JobParameters, String> getJobProperties() {
+    return jobProperties;
+  }
+
+  public void setJobProperties(Map<JobParameters, String> jobProperties) {
+    this.jobProperties = jobProperties;
+  }
+
+  public int getPacketSizeInLines() {
+    return packetSizeInLines;
+  }
+
+  public void setPacketSizeInLines(int packetSizeInLines) {
+    this.packetSizeInLines = packetSizeInLines;
+  }
+
+  public boolean isStreaming() {
+    return streaming;
+  }
+
+  public void setStreaming(boolean streaming) {
+    this.streaming = streaming;
+  }
 
   /**
    * Constructor
    */
   public JobRequest() {
     setStarted(false);
-    input = new String();
-    output = new String();
     id = new String();
   }
 
@@ -33,36 +67,27 @@ public class JobRequest {
   public void setStarted(boolean started) {
     this.started = started;
   }
-
-  public String getBinary() {
-    return binary;
-  }
-
-  public void setBinary(String binary) {
-    this.binary = binary;
-  }
-
-  public String getInput() {
-    return input;
-  }
-
-  public void setInput(String input) {
-    this.input = input;
-  }
-
-  public String getOutput() {
-    return output;
-  }
-
-  public void setOutput(String output) {
-    this.output = output;
-  }
-
   public String getId() {
     return id;
   }
 
   public void setId(String id) {
     this.id = id;
+  }
+  
+  public void setProperty(JobParameters property, String value){
+    this.jobProperties.put(property, value);
+  }
+  
+  public String getProperty(JobParameters property){
+    return this.jobProperties.get(property);
+  }
+
+  public boolean isStopped() {
+    return stopped;
+  }
+
+  public void setStopped(boolean stopped) {
+    this.stopped = stopped;
   }
 }
