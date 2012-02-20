@@ -12,8 +12,9 @@ import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 
 
 /**
+ * Reads properties from the spring.properties file.
+ * 
  * @author Amirhossein Kiani (amir@binatechnologies.com)
- *
  */
 public class SpringPropertiesUtil extends PropertyPlaceholderConfigurer {
 

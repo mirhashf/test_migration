@@ -1,9 +1,7 @@
 package com.bina.seqalto;
 
-import javax.ws.rs.core.MediaType;
 
 import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -32,9 +30,8 @@ public class MainTest extends JerseyTest {
 
 
   public MainTest() {
-
     // took me a while to figure these out...
-    // i wanted to make it work with inmemory container but seems like this is
+    // i wanted to make it work with in-memory container but seems like this is
     // the only option
     super(new WebAppDescriptor.Builder("com.bina.seqalto")
         .contextParam("contextConfigLocation", "classpath:applicationContext.xml")
@@ -50,32 +47,10 @@ public class MainTest extends JerseyTest {
     config.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, true);
     return config;
   }
-
-
+  
+ 
   @Test
   public void testZooKeeper(){
     logger.info("Testing ZooKeeper");
   }
-  
-  @Test
-  public void testHelloWorld() throws Exception {
-    resource = resource();
-    String responseMsg =
-        resource.path("/test/goodbye").type(MediaType.APPLICATION_JSON).get(String.class);
-    ObjectMapper mapper = new ObjectMapper();
-    TestObject response = mapper.readValue(responseMsg, TestObject.class);
-    logger.info(String.valueOf(response.getAge()));
-
-  }
-
-  @Test
-  public void testCreateObject() throws Exception {
-    resource = resource();
-    String responseMsg =
-        resource.path("/test/add_object/amiroo").type(MediaType.APPLICATION_JSON).get(String.class);
-    logger.info(responseMsg);
-    
-
-  }
-  
 }
