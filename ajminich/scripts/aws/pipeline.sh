@@ -17,7 +17,7 @@ seqalto=/home/ubuntu/programs/seq
 bwa=/home/ubuntu/programs/bwa
 SNP=/mnt/data/hg19/dbsnp.hg19.vcf
 
-tmp=/mnt/scratch0/ajminich
+tmp=/mnt
 aligner_threads=16
 pipeline_threads=16
 
