@@ -1,0 +1,20 @@
+{
+  "name" : "SeqAlto Pipeline on ds3",
+
+  "stdoutToConsole" : false,
+  "stdoutToLog" : false,
+  "stdoutFile" : "/mnt/execution/ds3/ds3_SeqAlto_pipeline.txt",
+  "attachStdout" : false,
+
+  "stderrToConsole" : true,
+  "stderrToLog" : false,
+  "stderrFile" : "/mnt/execution/ds3/ds3_SeqAlto_pipeline.log",
+  "attachStderr" : true,
+
+  "executable" : "/home/ubuntu/programs/sandbox/ajminich/scripts/pipeline.sh",
+  "arguments" : [ "/mnt/data/chr21/chr21.fa", "/mnt/data/ds3/ds3_trimmed", "seq", "gatk" ],
+  "options" : {
+    },
+
+  "email" : "aj.minich@binatechnologies.com"
+}

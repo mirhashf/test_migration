@@ -1,0 +1,21 @@
+{
+  "name" : "Align ds3_1 with BWA",
+
+  "stdoutToConsole" : false,
+  "stdoutToLog" : false,
+  "stdoutFile" : "/mnt/execution/ds3/ds3_trimmed_1.sai",
+  "attachStdout" : false,
+
+  "stderrToConsole" : true,
+  "stderrToLog" : false,
+  "stderrFile" : "/mnt/execution/ds3/ds3_trimmed_1.log",
+  "attachStderr" : true,
+
+  "executable" : "/home/ubuntu/programs/bwa",
+  "arguments" : [ "aln", "/mnt/data/chr21/chr21.fa", "/mnt/data/ds3/ds3_trimmed_1.fq" ],
+  "options" : {
+    "-t" : "16"
+    },
+
+  "email" : "aj.minich@binatechnologies.com"
+}
