@@ -10,12 +10,12 @@
 VERSION=1.02
 
 # Constants
-PICARD=/home/ajminich/programs/picard/dist
-GATK=/home/ajminich/programs/gatk/dist
-GATK_FAST=/home/ajminich/programs/gatk-fast/software/gatk/dist/
-seqalto=/home/ajminich/programs/seq
-bwa=/home/ajminich/programs/bwa
-SNP=/mnt/scratch0/public/data/variants/dbSNP/dbsnp_132.hg19.vcf
+PICARD=/home/ubuntu/programs/picard
+GATK=/home/ubuntu/programs/gatk
+#GATK_FAST=/home/ajminich/programs/gatk-fast/software/gatk/dist/
+seqalto=/home/ubuntu/programs/seq
+bwa=/home/ubuntu/programs/bwa
+SNP=/mnt/data/hg19/dbsnp.hg19.vcf
 
 tmp=/mnt/scratch0/ajminich
 aligner_threads=16
@@ -93,11 +93,12 @@ case "${aligner}" in
         #${seqalto} load_index ${reference}\_22.midx
         #echo "SeqAlto Index Loading: $(timer ${index_load_start})" | tee -a ${log_file}
 
-        ${seqalto} align \
-            --idx ${reference}\_22.midx \
+        ${seqalto} -mode align \
+            -idx ${reference}\_22.midx \
             -p ${aligner_threads} \
             -1 ${reads}\_1.fq \
             -2 ${reads}\_2.fq \
+	    -verbose \
             > ${reads}\_${aligner}.sam
             
         ;;
@@ -195,7 +196,7 @@ java -Xms5g -Xmx5g -jar ${PICARD}/MarkDuplicates.jar \
     M=${aligned_reads}.metrics \
     VALIDATION_STRINGENCY=SILENT \
     ASSUME_SORTED=true \
-    REMOVE_DUPLICATES=true 
+    REMOVE_DUPLICATES=true
 
 # Rebuild index
 java -Xms5g -Xmx5g -jar ${PICARD}/BuildBamIndex.jar INPUT=${aligned_reads}\_marked.bam VALIDATION_STRINGENCY=LENIENT
@@ -219,7 +220,8 @@ case "${pipeline}" in
             -standard \
             -knownSites ${SNP} \
             -o ${aligned_reads}\_realign.bam \
-            -recalFile ${aligned_reads}\_realign.bam.csv
+            -recalFile ${aligned_reads}\_realign.bam.csv \
+	    -L ${chrom}
             #--suppress_recalibrate
             #--suppress_write_bam
         
@@ -242,7 +244,8 @@ case "${pipeline}" in
             -R ${reference} \
             -o ${aligned_reads}\_realign.intervals \
             -et NO_ET \
-            -nt ${pipeline_threads}
+            -nt ${pipeline_threads} \
+	    -L ${chrom}
         
         echo "Realigner Target Creator: $(timer ${realigner_target_creator_start})" | tee -a ${log_file}
         
@@ -255,7 +258,8 @@ case "${pipeline}" in
             -R ${reference} \
             -o ${aligned_reads}\_realign.bam \
             -targetIntervals ${aligned_reads}\_realign.intervals \
-            -et NO_ET
+            -et NO_ET \
+	    -L ${chrom}
         
         # Rebuild index
         java -Xms5g -Xmx5g -jar $PICARD/BuildBamIndex.jar INPUT=${aligned_reads}\_realign.bam VALIDATION_STRINGENCY=LENIENT
@@ -278,7 +282,8 @@ case "${pipeline}" in
             -I ${aligned_reads}\_realign.bam \
             -recalFile ${aligned_reads}\_realign.bam.csv \
             -et NO_ET \
-            -nt ${pipeline_threads}
+            -nt ${pipeline_threads} \
+	    -L ${chrom}
         
         # Rebuild index
         java -Xms5g -Xmx5g -jar $PICARD/BuildBamIndex.jar INPUT=${aligned_reads}\_realign.bam VALIDATION_STRINGENCY=LENIENT
@@ -305,7 +310,8 @@ else
         -baq RECALCULATE \
         --doNotWriteOriginalQuals \
         -recalFile ${aligned_reads}\_realign.bam.csv \
-        -et NO_ET
+        -et NO_ET \
+	-L ${chrom}
 fi
 
 # Rebuild index
@@ -332,7 +338,8 @@ java -Xms5g -Xmx5g -Djava.io.tmpdir=${tmp} -jar $GATK/GenomeAnalysisTK.jar \
     -stand_call_conf 30.0 \
     -stand_emit_conf 10.0 \
     -glm BOTH \
-    -nt ${pipeline_threads}
+    -nt ${pipeline_threads} \
+    -L ${chrom}
 
 echo "Variant Calling: $(timer ${variant_calling_start})" | tee -a ${log_file}
 
