@@ -12,3 +12,6 @@ EXEC_FOLDER="/mnt/execution"
 mkdir ${EXEC_FOLDER}
 chmod a+rw ${EXEC_FOLDER}
 ln -s ${EXEC_FOLDER}  /home/ubuntu/
+
+# Give permission to read, write, and edit /mnt
+chmod a+rw /mnt
