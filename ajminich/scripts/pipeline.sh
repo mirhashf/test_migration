@@ -1,59 +1,50 @@
 #!/bin/bash -eu
 
-# Full Pipeline Runner
+# Pipeline Runner
 # Written by AJ Minich (aj.minich@binatechnologies.com), February 2012
 #
-# Runs alignment and a full GATK pipeline on a given alignment file.
-# Logs output to <chrom>_<aligner>_<pipeline>.log
+# Runs GATK pipeline on a given alignment file.
+# Logs output to <alignment_file>_<pipeline>.log
 #
 
-VERSION=1.02
+VERSION=1.03
 
 # Constants
 PICARD=/home/ajminich/programs/picard/dist
 GATK=/home/ajminich/programs/gatk/dist
 GATK_FAST=/home/ajminich/programs/gatk-fast/software/gatk/dist/
-seqalto=/home/ajminich/programs/seq
-bwa=/home/ajminich/programs/bwa
 SNP=/mnt/scratch0/public/data/variants/dbSNP/dbsnp_132.hg19.vcf
 
 tmp=/mnt/scratch0/ajminich
-aligner_threads=16
 pipeline_threads=16
 
 if [[ $# -lt 4 ]]; then
-    echo "Full Pipeline Runner v${VERSION}"
-    echo "Usage: pipeline.sh <reference> <reads_prefix> <aligner> <pipeline>"
+    echo "Pipeline Runner v${VERSION}"
+    echo "Usage: pipeline.sh <reference> <alignment_file>.sam <pipeline> <chroms>"
     echo ""
     echo "Reference:            location of the reference FASTA file, pre-indexed"
-    echo "Reads prefix:         reads will be taken from <reads_prefix>_1.fq and <reads_prefix>_2.fq"
-    echo "Aligner choices:      seqalto, bwa"
+    echo "Alignment File:       alignment file to process (in .sam format)"
     echo "Pipeline choices:     gatk, gatk-fast"
+    echo "Chromsosomes:         comma-separated list of chromosomes (chr15,chr16,...)"
     echo ""
     echo "Notes:"
-    echo "- Alignment is run with ${aligner_threads} thread(s)."
     echo "- Pipeline is run with ${pipeline_threads} thread(s)."
     echo "- Fix mate information is not executed separately, as it is performed by Indel Realigner."
     exit
 else
     reference=${1}
-    reads=${2}
-    aligner=${3}
-    pipeline=${4}
-    
-    # Determine chromosome using the reference filename
-    ref_file=$(basename $reference)
-    chrom=${ref_file%.*}
+    alignment_file=${2}
+    pipeline=${3}
+    chrom=${4}
     
     # Initialize the log file
-    log_file="${chrom}_${aligner}_${pipeline}.log"
+    log_file="${alignment_file}_${pipeline}.log"
     
-    echo "Full Pipeline Runner v${VERSION}" | tee ${log_file}
-    echo "Aligner: ${aligner} with ${aligner_threads} thread(s)" | tee -a ${log_file}
+    echo "Pipeline Runner v${VERSION}" | tee ${log_file}
     echo "Pipeline: ${pipeline} with ${pipeline_threads} thread(s)" | tee -a ${log_file}
     echo "Reference: ${reference}" | tee -a ${log_file}
-    echo "Chromosome: ${chrom}" | tee -a ${log_file}
-    echo "Reads: ${reads}" | tee -a ${log_file}
+    echo "Chromosomes: ${chrom}" | tee -a ${log_file}
+    echo "Alignment File: ${alignment_file}" | tee -a ${log_file}
     echo "" | tee -a ${log_file}
     
 fi
@@ -79,67 +70,7 @@ function timer()
 
 start_time=$(timer)
 
-# Run the alignment
-align_start=$(timer)
-case "${aligner}" in
-
-    "seqalto" | "seq" | "SeqAlto" | "Seqalto" )
-    
-        aligner="SeqAlto"
-    
-        echo -e "\n--------------------------- ALIGNMENT WITH SEQALTO ---------------------------"
-
-        #index_load_start=$(timer)
-        #${seqalto} load_index ${reference}\_22.midx
-        #echo "SeqAlto Index Loading: $(timer ${index_load_start})" | tee -a ${log_file}
-
-        ${seqalto} align \
-            --idx ${reference}\_22.midx \
-            -p ${aligner_threads} \
-            -1 ${reads}\_1.fq \
-            -2 ${reads}\_2.fq \
-            > ${reads}\_${aligner}.sam
-            
-        ;;
-        
-    "bwa" | "BWA" )
-    
-        echo -e "\n--------------------------- ALIGNMENT WITH BWA ---------------------------"
-
-        aligner="BWA"
-
-        time ${bwa} aln \
-            ${reference} \
-            ${reads}\_1.fq \
-            -t ${aligner_threads} \
-            > ${reads}\_1.sai
-        time ${bwa} aln \
-            ${reference} \
-            ${reads}\_2.fq \
-            -t ${aligner_threads} \
-            > ${reads}\_2.sai
-        
-        echo "Performing BWA paired-end merging."
-        time ${bwa} sampe \
-            -P ${reference} \
-            ${reads}\_1.sai \
-            ${reads}\_2.sai \
-            ${reads}\_1.fq \
-            ${reads}\_2.fq \
-            > ${reads}\_${aligner}.sam
-        
-        ;;
-        
-    * )
-        echo "Error: I don't know how to use '${aligner}'."
-        exit
-        ;;
-
-esac
-
-echo "${aligner} Alignment: $(timer ${align_start})" | tee -a ${log_file}
-
-aligned_reads=${reads}\_${aligner}
+aligned_reads=${alignment_file}
 
 echo -e "\n--------------------------- SAM-to-BAM CONVERSION AND SORTING ---------------------------"
 
@@ -148,8 +79,6 @@ conversion_start=$(timer)
 samtools view -bS ${aligned_reads}.sam > ${aligned_reads}.bam
 
 echo "SAM-to-BAM Conversion: $(timer ${conversion_start})" | tee -a ${log_file}
-
-#java -Xms15g -Xmx15g -jar $PICARD/MergeSamFiles.jar INPUT=$rg/1_RG.bam INPUT=$rg/2_RG.bam INPUT=$rg/3_RG.bam INPUT=$rg/4_RG.bam INPUT=$rg/5_RG.bam OUTPUT=$rg/bwa_merged.bam SORT_ORDER=coordinate VALIDATION_STRINGENCY=LENIENT  ASSUME_SORTED=true USE_THREADING=true
 
 groups_start=$(timer)
 
@@ -179,10 +108,6 @@ java -Xms5g -Xmx5g -jar ${PICARD}/SortSam.jar \
 echo "BAM Sorting: $(timer ${sorting_start})" | tee -a ${log_file}
 
 aligned_reads=${aligned_reads}\_sorted
-
-# Rebuild index
-#java -Xms5g -Xmx5g -jar ${PICARD}/BuildBamIndex.jar INPUT=$d/$f.bam VALIDATION_STRINGENCY=LENIENT
-#java -Xms15g -Xmx15g -jar $PICARD/ReorderSam.jar I=$d/$f.bam O=$d/$f\_sorted.bam  REFERENCE=$REF TMP_DIR=$TMP VALIDATION_STRINGENCY=LENIENT
 
 echo -e "\n--------------------------- DUPLICATE MARKING ---------------------------"
 
