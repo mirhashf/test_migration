@@ -4,6 +4,7 @@
 Usage:
     -1 <file1>, --file1 <file1>             The first FASTQ input.
     -2 <file2>, --file2 <file2>             The second FASTQ input.
+    -o <outfile>, --output <outfile>        The prefix to use for final BAM output.
     -t <threads>, --threads <threads>       The number of threads to run.
     
 Notes:
@@ -14,15 +15,47 @@ import os
 import sys
 import subprocess
 from threading import Thread
-from optparse import OptionParser
 from math import floor
 
 STAMPY="/home/ajminich/programs/stampy"
+MERGER="/home/ajminich/programs/picard/dist/MergeSamFiles.jar"
 INPUT1_FLAGS=["-1", "--file1"]
 INPUT2_FLAGS=["-2", "--file2"]
+OUTPUT_FLAGS=["-o", "--output"]
 THREAD_FLAGS=["-t", "--threads"]
 
-def stampy_threaded(file1, file2, numThreads, args):
+class StampyThread(Thread):
+
+    def __init__(self, readsFile1, readsFile2, outFilePrefix, args):
+        Thread.__init__(self)
+        self.readsFile1 = readsFile1
+        self.readsFile2 = readsFile2
+        self.outFilePrefix = outFilePrefix
+        self.args = args
+
+    def run(self):
+        
+        # Create read args
+        reads = ["-M", self.readsFile1 + "," + self.readsFile2]
+        
+        # Perform the alignment
+        samFile = self.outFilePrefix + ".sam"
+        
+        print >>sys.stderr, "Aligning partition files '%s' and '%s' into '%s'." % \
+            (self.readsFile1, self.readsFile2, samFile)
+
+        samWriter = open(samFile, 'w')
+        subprocess.call([STAMPY] + self.args + reads, stdout=samWriter)
+        samWriter.close()
+
+        # Convert from SAM to BAM
+        bamFile = self.outFilePrefix + ".bam"
+        bamWriter = open(bamFile, 'w')
+        subprocess.call(["samtools", "view", "-bS", samFile], stdout=bamWriter)
+        bamWriter.close()
+        
+
+def stampy_threaded(file1, file2, outFilePrefix, numThreads, args):
     
     # Divide files up into equal parts
     
@@ -40,35 +73,45 @@ def stampy_threaded(file1, file2, numThreads, args):
 
     # Start multi-threaded Stampy
     threads = []
+    outFiles = []
     for threadIndex in range(numThreads):
 
         reads1 = divFiles1[threadIndex]
         reads2 = divFiles2[threadIndex]
-        
-        # Create read args
-        reads = ["-M", reads1 + "," + reads2]
-        
-        print >>sys.stderr, "Starting Stampy thread #%i on partition files '%s' and '%s'." % (threadIndex + 1, reads1, reads2)
 
-        thread = subprocess.Popen([STAMPY] + args + reads)
+        threadOutFile = outFilePrefix + "_thread_" + str(threadIndex)
+        outFiles.append(threadOutFile)
+        
+        # Activate thread here
+        thread = StampyThread(reads1, reads2, threadOutFile, args)
+        thread.start()
         threads.append(thread)
     
     print >>sys.stderr, "All threads have been spooled, now waiting for Stampy to complete."
 
     # Wait for threads to finish
     for threadIndex in range(numThreads):
-        threads[threadIndex].wait()
-        print >>sys.stderr, "Thread #%i: finished." % (threadIndex + 1)
+        threads[threadIndex].join()
+        print >>sys.stderr, "Stampy Thread #%i: finished" % (threadIndex + 1)
         
     print >>sys.stderr, "All threads finished."
         
+    # Concatenate BAM files
+    finalFile = outFilePrefix + ".bam"
+
+    bamFiles = [file + ".bam" for file in outFiles]
+    
+    subprocess.call(["samtools", "merge", outFilePrefix + ".bam"] + bamFiles)
+        
     # Cleanup
-    print >>sys.stderr, "Cleaning up partitioned reads files."
+    print >>sys.stderr, "Cleaning up partitioned files."
     for fileIndex in range(numThreads):
         os.remove(divFiles1[fileIndex])
         os.remove(divFiles2[fileIndex])
+        os.remove(outFiles[fileIndex] + ".sam")
+        os.remove(outFiles[fileIndex] + ".bam")
     
-    print >>sys.stderr, "Stampy alignment complete."
+    print >>sys.stderr, "Stampy alignment complete: alignment file available as "
     
 
 def partitionFiles(file1, file2, numLines, numParts):
@@ -156,11 +199,12 @@ if __name__ == "__main__":
     
     # Get input files
     (file1_def, file1, args) = parse(args, INPUT1_FLAGS)    
-    (file2_def, file2, args) = parse(args, INPUT2_FLAGS)    
+    (file2_def, file2, args) = parse(args, INPUT2_FLAGS)
+    (outfile_def, outFilePrefix, args) = parse(args, OUTPUT_FLAGS)    
     (threads_def, threads, args) = parse(args, THREAD_FLAGS)
 
-    if (file1_def and file2_def and threads_def):
-        stampy_threaded(file1, file2, int(threads), args)
+    if (file1_def and file2_def and outfile_def and threads_def):
+        stampy_threaded(file1, file2, outFilePrefix, int(threads), args)
         sys.exit()
     else:
         print >>sys.stderr, __doc__
