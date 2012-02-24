@@ -105,6 +105,7 @@ def stampy_threaded(file1, file2, outFilePrefix, numThreads, args):
 
     bamFiles = [file + ".bam" for file in outFiles]
     
+    logger.info("Merging BAM output files.")
     subprocess.call(["samtools", "merge", outFilePrefix + ".bam"] + bamFiles)
         
     # Cleanup
