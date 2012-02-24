@@ -11,9 +11,8 @@ Notes:
 - Using the -M tag is unnecessary, since the multi-threader takes care of
   providing the correct reads files to Stampy.
 """
-import os
-import sys
-import subprocess
+import os, sys, subprocess
+import logging
 from threading import Thread
 from math import floor
 
@@ -24,6 +23,11 @@ INPUT2_FLAGS=["-2", "--file2"]
 OUTPUT_FLAGS=["-o", "--output"]
 THREAD_FLAGS=["-t", "--threads"]
 
+# Setup logger
+FORMAT = '%(asctime)-15s %(levelname)s [%(funcName)s:%(lineno)d] %(message)s'
+logging.basicConfig(format=FORMAT)
+logger = logging.getLogger()
+    
 class StampyThread(Thread):
 
     def __init__(self, readsFile1, readsFile2, outFilePrefix, args):
@@ -41,8 +45,8 @@ class StampyThread(Thread):
         # Perform the alignment
         samFile = self.outFilePrefix + ".sam"
         
-        print >>sys.stderr, "Aligning partition files '%s' and '%s' into '%s'." % \
-            (self.readsFile1, self.readsFile2, samFile)
+        logger.info("Aligning partition files '%s' and '%s' into '%s'." % \
+            (self.readsFile1, self.readsFile2, samFile))
 
         samWriter = open(samFile, 'w')
         subprocess.call([STAMPY] + self.args + reads, stdout=samWriter)
@@ -59,16 +63,16 @@ def stampy_threaded(file1, file2, outFilePrefix, numThreads, args):
     
     # Divide files up into equal parts
     
-    print >>sys.stderr, "Getting size of each input file."
+    logger.info("Getting size of each input file.")
     lines1 = file_len(file1)
     lines2 = file_len(file2)
     
     if (lines1 != lines2):
-        print >>sys.stderr, "Error: file 1 (%i lines) is not the same length as file 2 (%i lines)." % \
-            (lines1, lines2)
+        logger.error("Error: file 1 (%i lines) is not the same length as file 2 (%i lines)." % \
+            (lines1, lines2))
         return
     
-    print >>sys.stderr, "Dividing %i-line files into %i equal parts." % (lines1, numThreads)
+    logger.info("Dividing %i-line files into %i equal parts." % (lines1, numThreads))
     (divFiles1, divFiles2) = partitionFiles(file1, file2, lines1, numThreads)
 
     # Start multi-threaded Stampy
@@ -87,14 +91,14 @@ def stampy_threaded(file1, file2, outFilePrefix, numThreads, args):
         thread.start()
         threads.append(thread)
     
-    print >>sys.stderr, "All threads have been spooled, now waiting for Stampy to complete."
+    logger.info("All threads have been spooled, now waiting for Stampy to complete.")
 
     # Wait for threads to finish
     for threadIndex in range(numThreads):
         threads[threadIndex].join()
-        print >>sys.stderr, "Stampy Thread #%i: finished" % (threadIndex + 1)
+        logger.info("Stampy Thread #%i: finished" % (threadIndex + 1))
         
-    print >>sys.stderr, "All threads finished."
+    logger.info("All threads finished.")
         
     # Concatenate BAM files
     finalFile = outFilePrefix + ".bam"
@@ -104,14 +108,14 @@ def stampy_threaded(file1, file2, outFilePrefix, numThreads, args):
     subprocess.call(["samtools", "merge", outFilePrefix + ".bam"] + bamFiles)
         
     # Cleanup
-    print >>sys.stderr, "Cleaning up partitioned files."
+    logger.info("Cleaning up partitioned files.")
     for fileIndex in range(numThreads):
         os.remove(divFiles1[fileIndex])
         os.remove(divFiles2[fileIndex])
         os.remove(outFiles[fileIndex] + ".sam")
         os.remove(outFiles[fileIndex] + ".bam")
     
-    print >>sys.stderr, "Stampy alignment complete: alignment file available as "
+    logger.info("Stampy alignment complete: alignment file available as '" + finalFile + "'.")
     
 
 def partitionFiles(file1, file2, numLines, numParts):
@@ -122,7 +126,7 @@ def partitionFiles(file1, file2, numLines, numParts):
     # multiple of 4.
     fileLengths = 4 * floor(numLines / (4 * numParts))
     
-    print >>sys.stderr, "Partitioned files will be %i lines each." % fileLengths
+    logger.info("Partitioned files will be %i lines each." % fileLengths)
     
     f1 = open(file1, 'r')
     f2 = open(file2, 'r')
@@ -137,7 +141,7 @@ def partitionFiles(file1, file2, numLines, numParts):
         dividedFiles1.append(fout1)
         dividedFiles2.append(fout2)
 
-        print >>sys.stderr, "Creating partitioned files '%s' and '%s'." % (fout1, fout2)
+        logger.info("Creating partitioned files '%s' and '%s'." % (fout1, fout2))
 
         fw1 = open(fout1, 'w')
         fw2 = open(fout2, 'w')
@@ -174,7 +178,7 @@ def file_len(fname):
         for i, l in enumerate(f):
             pass
         
-    print >>sys.stderr, "File '%s': %i lines." % (fname, i + 1)
+    logger.info("File '%s': %i lines." % (fname, i + 1))
     return i + 1
 
 def parse(args, flags):
