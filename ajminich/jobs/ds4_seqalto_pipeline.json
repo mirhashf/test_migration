@@ -1,0 +1,156 @@
+{
+  "name" : "GATK Pipeline on ds4 (SeqAlto)",
+
+  "stdoutToConsole" : false,
+  "stdoutToLog" : false,
+
+  "stderrToConsole" : true,
+  "stderrToLog" : false,
+
+  "commands" : [
+	{
+		"executable" : "java",
+		"arguments" : [
+		  "-Xms5g",
+		  "-Xmx5g",
+		  "-jar",
+		  "/home/ajminich/programs/picard/dist/AddOrReplaceReadGroups.jar",
+		  "I=/mnt/scratch2/public/datasets/ds4/seqalto/ds4_trimmed.bam",
+		  "O=/mnt/scratch2/public/datasets/ds4/seqalto/ds4_trimmed_AG.bam",
+		  "SORT_ORDER=coordinate",
+		  "RGID=SIMUG21",
+		  "RGLB=READGROUPLIBRARY1",
+		  "RGPL=illumina",
+		  "RGSM=Blah",
+		  "RGPU=hi",
+		  "VALIDATION_STRINGENCY=LENIENT",
+		  "TMP_DIR=/tmp"
+		  ],
+		"options" : { },
+		"stderrFile" : "/mnt/scratch2/public/datasets/ds4/seqalto/ds4_trimmed_AG.log",
+		"attachStderr" : true
+	},
+	{
+		"executable" : "java",
+		"arguments" : [
+		  "-Xms5g",
+		  "-Xmx5g",
+		  "-jar",
+		  "/home/ajminich/programs/picard/dist/SortSam.jar",
+		  "I=/mnt/scratch2/public/datasets/ds4/seqalto/ds4_trimmed_AG.bam",
+		  "O=/mnt/scratch2/public/datasets/ds4/seqalto/ds4_trimmed.csorted.bam",
+		  "SORT_ORDER=coordinate",
+		  "VALIDATION_STRINGENCY=LENIENT"
+		  ],
+		"options" : { },
+		"stderrFile" : "/mnt/scratch2/public/datasets/ds4/seqalto/ds4_trimmed_sort.log",
+		"attachStderr" : true
+	},
+	{
+		"executable" : "java",
+		"arguments" : [
+		  "-Xms5g -Xmx5g",
+		  "-jar",
+		  "/home/ajminich/programs/picard/dist/MarkDuplicates.jar",
+		  "I=/mnt/scratch2/public/datasets/ds4/seqalto/ds4_trimmed.csorted.bam",
+		  "O=/mnt/scratch2/public/datasets/ds4/seqalto/ds4_trimmed_marked.csorted.bam",
+		  "M=/mnt/scratch2/public/datasets/ds4/seqalto/ds4_trimmed_marked.metrics",
+		  "ASSUME_SORTED=true",
+		  "REMOVE_DUPLICATES=true",
+		  "TMP_DIR=/tmp"
+		  ],
+		"options" : { },
+		"stderrFile" : "/mnt/scratch2/public/datasets/ds4/seqalto/ds4_trimmed_mark.log",
+		"attachStderr" : true
+	},
+	{
+		"executable" : "java",
+		"arguments" : [
+		  "-Xms5g -Xmx5g",
+		  "-jar",
+		  "/home/ajminich/programs/picard/dist/BuildBamIndex.jar",
+		  "I=/mnt/scratch2/public/datasets/ds4/seqalto/ds4_trimmed_marked.csorted.bam",
+		  "VALIDATION_STRINGENCY=LENIENT"
+		  ],
+		"options" : { }
+	},
+	{
+		"executable" : "java",
+		"arguments" : [
+		  "-Xms5g -Xmx5g",
+		  "-jar",
+		  "/home/ajminich/programs/gatk/dist/GenomeAnalysisTK.jar"
+		  ],
+		"options" : {
+		  "-T" : "RealignerTargetCreator",
+		  "-I" : "/mnt/scratch2/public/datasets/ds4/seqalto/ds4_trimmed_marked.csorted.bam",
+		  "-R" : "/mnt/scratch2/public/datasets/chr15_21.fa",
+		  "-o" : "/mnt/scratch2/public/datasets/ds4/seqalto/ds4_trimmed_realign.intervals",
+		  "-et" : "NO_ET",
+		  "-nt" : "16"
+		  }
+	},
+	{
+		"executable" : "java",
+		"arguments" : [
+		  "-Xms5g -Xmx5g",
+		  "-jar",
+		  "/home/ajminich/programs/gatk/dist/GenomeAnalysisTK.jar"
+		  ],
+		"options" : {
+		  "-T" : "IndelRealigner",
+		  "-I" : "/mnt/scratch2/public/datasets/ds4/seqalto/ds4_trimmed_marked.csorted.bam",
+		  "-R" : "/mnt/scratch2/public/datasets/chr15_21.fa",
+		  "-o" : "/mnt/scratch2/public/datasets/ds4/seqalto/ds4_trimmed_realign.csorted.bam",
+		  "-targetIntervals" : "/mnt/scratch2/public/datasets/ds4/seqalto/ds4_trimmed_realign.intervals",
+		  "-et" : "NO_ET",
+		  "-nt" : "16"
+		  }
+	},
+	{
+		"executable" : "java",
+		"arguments" : [
+		  "-Xms5g -Xmx5g",
+		  "-jar",
+		  "/home/ajminich/programs/picard/dist/BuildBamIndex.jar",
+		  "I=/mnt/scratch2/public/datasets/ds4/seqalto/ds4_trimmed_realign.csorted.bam",
+		  "VALIDATION_STRINGENCY=LENIENT"
+		  ],
+		"options" : { }
+	},
+	{
+		"executable" : "java",
+		"arguments" : [
+		  "-Xms5g -Xmx5g",
+		  "-jar",
+		  "/home/ajminich/programs/gatk/dist/GenomeAnalysisTK.jar",
+		  "-cov ReadGroupCovariate",
+		  "-cov QualityScoreCovariate",
+		  "-cov CycleCovariate",
+		  "-cov DinucCovariate"
+		  ],
+		"options" : {
+		  "-T" : "CountCovariates",
+		  "-R" : "/mnt/scratch2/public/datasets/chr15_21.fa",
+		  "-knownSites" : "/mnt/scratch0/public/data/variants/dbSNP/dbsnp_132.hg19.vcf",
+		  "-I" : "/mnt/scratch2/public/datasets/ds4/seqalto/ds4_trimmed_realign.csorted.bam",
+		  "-recalFile" : "/mnt/scratch2/public/datasets/ds4/seqalto/ds4_trimmed_realign.csv",
+		  "-et" : "NO_ET",
+		  "-nt" : "16"
+		  }
+	},
+	{
+		"executable" : "java",
+		"arguments" : [
+		  "-Xms5g -Xmx5g",
+		  "-jar",
+		  "/home/ajminich/programs/picard/dist/BuildBamIndex.jar",
+		  "I=/mnt/scratch2/public/datasets/ds4/seqalto/ds4_trimmed_realign.csorted.bam",
+		  "VALIDATION_STRINGENCY=LENIENT"
+		  ],
+		"options" : { }
+	}
+  ],
+
+  "email" : "aj.minich@binatechnologies.com"
+}
