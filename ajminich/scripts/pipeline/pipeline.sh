@@ -15,7 +15,7 @@ GATK=/home/ajminich/programs/gatk/dist
 GATK_FAST=/home/ajminich/programs/gatk-fast/software/gatk/dist/
 SNP=/mnt/scratch0/public/data/variants/dbSNP/dbsnp_132.hg19.vcf
 
-tmp=/mnt/scratch0/ajminich
+tmp=/tmp
 pipeline_threads=16
 
 if [[ $# -lt 4 ]]; then
@@ -74,11 +74,11 @@ aligned_reads=${alignment_file}
 
 echo -e "\n--------------------------- SAM-to-BAM CONVERSION AND SORTING ---------------------------"
 
-conversion_start=$(timer)
+#conversion_start=$(timer)
 
-samtools view -bS ${aligned_reads}.sam > ${aligned_reads}.bam
+#samtools view -bS ${aligned_reads}.sam > ${aligned_reads}.bam
 
-echo "SAM-to-BAM Conversion: $(timer ${conversion_start})" | tee -a ${log_file}
+#echo "SAM-to-BAM Conversion: $(timer ${conversion_start})" | tee -a ${log_file}
 
 groups_start=$(timer)
 
