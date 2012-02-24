@@ -27,6 +27,7 @@ THREAD_FLAGS=["-t", "--threads"]
 FORMAT = '%(asctime)-15s %(levelname)s [%(funcName)s:%(lineno)d] %(message)s'
 logging.basicConfig(format=FORMAT)
 logger = logging.getLogger()
+logger.setLevel(logging.INFO)
     
 class StampyThread(Thread):
 
@@ -114,7 +115,7 @@ def stampy_threaded(file1, file2, outFilePrefix, numThreads, args):
         os.remove(divFiles1[fileIndex])
         os.remove(divFiles2[fileIndex])
         os.remove(outFiles[fileIndex] + ".sam")
-        os.remove(outFiles[fileIndex] + ".bam")
+        #os.remove(outFiles[fileIndex] + ".bam")
     
     logger.info("Stampy alignment complete: alignment file available as '" + finalFile + "'.")
     
