@@ -26,22 +26,22 @@ else
     grep "pa;" ${align}.sam > ${align}.pa.sam
     grep "ma;" ${align}.sam > ${align}.ma.sam
 
-    ${seqalto} check_pair \
-        ${genome_sim}.pa.map \
-        ${align}.pa.sam \
-        ${wiggle} \
-        ${num_pairs_half} \
-        ${min_mapq} \
-        ${min_len} \
-        ${align}\_checkPa \
+    ${seqalto} -mode check_pair \
+        -map_file ${genome_sim}.pa.map \
+        -sam_file ${align}.pa.sam \
+        -wiggle_bp ${wiggle} \
+        -num_pairs ${num_pairs_half} \
+        -min_mapq ${min_mapq} \
+        -min_len ${min_len} \
+        -output_prefix ${align}\_checkPa \
         > ${align}\_pa.out
-    ${seqalto} check_pair \
-        ${genome_sim}.ma.map \
-        ${align}.ma.sam \
-        ${wiggle} \
-        ${num_pairs_half} \
-        ${min_mapq} \
-        ${min_len} \
-        ${align}\_checkMa \
+    ${seqalto} -mode check_pair \
+        -map_file ${genome_sim}.ma.map \
+        -sam_file ${align}.ma.sam \
+        -wiggle_bp ${wiggle} \
+        -num_pairs ${num_pairs_half} \
+        -min_mapq ${min_mapq} \
+        -min_len ${min_len} \
+        -output_prefix ${align}\_checkMa \
         > ${align}\_ma.out
 fi
