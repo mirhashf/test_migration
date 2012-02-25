@@ -16,7 +16,7 @@ import logging
 from threading import Thread
 from math import floor
 
-STAMPY="/home/ajminich/programs/stampy"
+STAMPY="/home/ajminich/programs/stampy-1.0.14/stampy.py"
 MERGER="/home/ajminich/programs/picard/dist/MergeSamFiles.jar"
 INPUT1_FLAGS=["-1", "--file1"]
 INPUT2_FLAGS=["-2", "--file2"]

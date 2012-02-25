@@ -35,12 +35,12 @@ def bwa(reference, file1, file2, outFilePrefix, numThreads):
         
     logger.info("Running SAM pairing on SAI files '" + saiFile1 + "' and '" + saiFile2 + "'.")        
     
-    finalBam = outFilePrefix + "bam"
-    bamWriter = open(finalBam, 'w')
-    subprocess.call([BWA, "sampe", reference, saiFile1, saiFile2, file1, file2], stdout=bamWriter)
-    bamWriter.close()
+    finalSam = outFilePrefix + ".sam"
+    samWriter = open(finalSam, 'w')
+    subprocess.call([BWA, "sampe", reference, saiFile1, saiFile2, file1, file2], stdout=samWriter)
+    samWriter.close()
         
-    logger.info("BWA alignment complete: alignment file available as '" + finalBam + "'.")
+    logger.info("BWA alignment complete: alignment file available as '" + finalSam + "'.")
  
 if __name__ == "__main__":
 
