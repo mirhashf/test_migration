@@ -1,18 +1,12 @@
 #!/usr/bin/env python
 """Runs the GATK pipeline on an alignment.
-
-Notes:
 - Requires paired reads.
-
-Upcoming Improvements:
-- Output file checking, where if the output file was not generated, the script
-  will mention so and exit.
-- Timers for all functions.
 """
 import os, sys, subprocess
 import logging
 from optparse import OptionParser
 from ConfigParser import ConfigParser
+from time import clock
 
 # Setup logger
 FORMAT = '%(asctime)-15s %(levelname)s [%(funcName)s:%(lineno)d] %(message)s'
@@ -38,6 +32,9 @@ class PipelineRunner:
         
         # Import configuration
         self.__loadConfig__(self.DEFAULT_CONFIG_FILE)
+        
+        # Create timer structure
+        self.__runTimes__ = []        
         
         logger.info("Pipeline Runner created.")
         
@@ -72,6 +69,13 @@ class PipelineRunner:
         
         # Get the full file path without the extension
         fileNameBase = self.__outputDir__ + os.path.splitext(os.path.basename(alignmentFile))[0]
+
+        # Create necessary directories        
+        if not os.path.exists(self.__outputDir__):
+            os.makedirs(self.__outputDir__)        
+        
+        # Reset timer structure
+        self.__runTimes__ = []
         
         # Convert alignment to BAM if necessary
         if (alignmentFile.endswith(".sam")):
@@ -82,7 +86,7 @@ class PipelineRunner:
 
         # Define file names
         groupsFile      = fileNameBase + ".groups.bam"
-        sortedFile      = fileNameBase + ".sorted.bam"
+        sortedFile      = fileNameBase + ".csorted.bam"
         markedFile      = fileNameBase + ".marked.bam"
         metricsFile     = fileNameBase + ".metrics"
         intervalsFile   = fileNameBase + ".realign.intervals"
@@ -117,17 +121,29 @@ class PipelineRunner:
         
         # Unified Genotyper Variant Calling
         self.callVariants(reference, tableRecalFile, variantsFile)
+
+        # Output runtimes
+        for entry in self.__runTimes__:
+            logger.info(entry[0] + ": " + entry[1] + " seconds")
             
         logger.info("GATK pipeline complete: results files available in '" + self.__outputDir__ + "'.")
- 
+         
     def convertToBam(self, inFile, outFile):
         logger.info("Converting file '" + inFile + "' to BAM format.")
+
+        startTime = clock()        
+        
         bamWriter = open(outFile, 'w')
         subprocess.call([self.__samtools__, "view", "-bS", inFile], stdout=bamWriter)
         bamWriter.close()
+        self.__checkFile__(outFile)
+        
+        self.__runTimes__.append(("Convert to BAM", clock() - startTime))
     
     def addOrReplaceGroups(self, inFile, outFile, sortOrder):
         logger.info("Adding/Replacing Read Groups in '" + inFile + "'.")
+        
+        startTime = clock()
         
         subprocess.call(self.__getJavaArgs__() + [
              "-jar", self.__picard__ + "/AddOrReplaceReadGroups.jar",
@@ -143,9 +159,14 @@ class PipelineRunner:
              "TMP_DIR=" + self.__tmp__
             ]
         )
+        self.__checkFile__(outFile)
+        
+        self.__runTimes__.append(("Add or Replace Groups", clock() - startTime))
         
     def sort(self, inFile, outFile, sortOrder):
-        logger.info("Adding/replacing read groups in '" + inFile + "'.")
+        logger.info("Sorting file '" + inFile + "' by coordinate.")
+        
+        startTime = clock()
         
         subprocess.call(self.__getJavaArgs__() + [
              "-jar", self.__picard__ + "/SortSam.jar",
@@ -156,9 +177,14 @@ class PipelineRunner:
              "TMP_DIR=" + self.__tmp__
             ]
         )
+        self.__checkFile__(outFile)
+
+        self.__runTimes__.append(("Sorting", clock() - startTime))
         
     def removeDuplicates(self, inFile, outFile, metricsFile, assumeSorted):
         logger.info("Marking duplicates in '" + inFile + "'.")
+        
+        startTime = clock()
         
         subprocess.call(self.__getJavaArgs__() + [
              "-jar", self.__picard__ + "/MarkDuplicates.jar",
@@ -171,9 +197,14 @@ class PipelineRunner:
              "TMP_DIR=" + self.__tmp__
             ]
         )
+        self.__checkFile__(outFile)
+        
+        self.__runTimes__.append(("Remove Duplicates", clock() - startTime))
         
     def fastRealign(self, reference, inFile, outFile, recalFile):
         logger.info("Fast Realigning '" + inFile + "'.")
+        
+        startTime = clock()
         
         subprocess.call(self.__getJavaArgs__() + [
              "-jar", self.__fastGatk__ + "/GenomeAnalysisTK.jar",
@@ -186,9 +217,14 @@ class PipelineRunner:
              "-recalFile", recalFile
             ]
         )
+        self.__checkFile__(outFile)
+        
+        self.__runTimes__.append(("Fast Realign", clock() - startTime))
         
     def realign(self, reference, inFile, outFile, intervalsFile):
         logger.info("Realigning '" + inFile + "'.")
+        
+        startTime = clock()
         
         # Realigner Target Creator
         subprocess.call(self.__getJavaArgs__() + [
@@ -201,6 +237,7 @@ class PipelineRunner:
              "-nt", str(self.__numThreads__)
             ]
         )
+        self.__checkFile__(intervalsFile)
         
         # Indel Realigner
         subprocess.call(self.__getJavaArgs__() + [
@@ -214,14 +251,19 @@ class PipelineRunner:
              "-nt", str(self.__numThreads__)
             ]
         )
+        self.__checkFile__(outFile)
+        
+        self.__runTimes__.append(("Realignment", clock() - startTime))
         
     def countCovariates(self, reference, inFile, recalFile):
         logger.info("Counting Covariates in '" + inFile + "'.")
         
+        startTime = clock()
+        
         subprocess.call(self.__getJavaArgs__() + [
              "-jar", self.__gatk__ + "/GenomeAnalysisTK.jar",
              "-T", "CountCovariates",
-             "-cov", "ReadGroupCovariate"
+             "-cov", "ReadGroupCovariate",
              "-cov", "QualityScoreCovariate",
              "-cov", "CycleCovariate",
              "-cov", "DinucCovariate",
@@ -233,9 +275,14 @@ class PipelineRunner:
              "-nt", str(self.__numThreads__)
             ]
         )
+        self.__checkFile__(recalFile)
+        
+        self.__runTimes__.append(("Counting Covariates", clock() - startTime))
         
     def tableRecalibration(self, reference, inFile, outFile, recalFile):
         logger.info("Recalibrating table in '" + inFile + "'.")
+        
+        startTime = clock()
           
         subprocess.call(self.__getJavaArgs__() + [
              "-jar", self.__gatk__ + "/GenomeAnalysisTK.jar",
@@ -244,14 +291,19 @@ class PipelineRunner:
              "-I", inFile,
              "-o", outFile,
              "-baq", "RECALCULATE",
-             "--doNotWriteOriginalQuals"
+             "--doNotWriteOriginalQuals",
              "-recalFile", recalFile,
              "-et", self.__et__
             ]
         )
+        self.__checkFile__(outFile)
+        
+        self.__runTimes__.append(("Table Recalibration", clock() - startTime))
         
     def callVariants(self, reference, inFile, outFile):
         logger.info("Performing variant calling on '" + inFile + "'.")
+          
+        startTime = clock()
           
         subprocess.call(self.__getJavaArgs__() + [
              "-jar", self.__gatk__ + "/GenomeAnalysisTK.jar",
@@ -266,12 +318,15 @@ class PipelineRunner:
              "-baq", "CALCULATE_AS_NECESSARY",
              "-dcov", self.__coverageDepth__,
              "-stand_call_conf", self.__standCallConf__,
-             "-stand_emit_conf", self.__standEmitConfg__,
+             "-stand_emit_conf", self.__standEmitConf__,
              "-glm", self.__glm__,
              "-et", self.__et__,
              "-nt", str(self.__numThreads__)
             ]
         )
+        self.__checkFile__(outFile)
+        
+        self.__runTimes__.append(("Variant Calling", clock() - startTime))
     
     def rebuildIndex(self, fileName):
         subprocess.call(self.__getJavaArgs__() + [
@@ -281,6 +336,13 @@ class PipelineRunner:
              "TMP_DIR=" + self.__tmp__
             ]
         )
+        
+    def __checkFile__(self, filename):
+        try:
+            open(filename)
+        except IOError as e:
+            logger.error("File '" + filename + "' does not exist; aborting.")
+            sys.exit()
         
     def __loadConfig__(self, configFile):
         
