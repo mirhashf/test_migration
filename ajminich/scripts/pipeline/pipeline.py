@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 """Runs the GATK pipeline on an alignment.
 - Requires paired reads.
+
+Needed Fixes:
+- do not perform realignment if the .intervals file is empty
 """
 import os, sys, subprocess
 import logging
@@ -66,7 +69,7 @@ class PipelineRunner:
         logger.info("Fast Mode:        " + ("on" if self.__fastMode__ else "off"))
         logger.info("Output Directory: " + self.__outputDir__)
         logger.info("Chromosomes:      " + (("chr" + str(self.__chrom__)) if self.__singleChrom__ else "all"))
-        
+
         # Get the full file path without the extension
         fileNameBase = self.__outputDir__ + os.path.splitext(os.path.basename(alignmentFile))[0]
 
@@ -86,7 +89,6 @@ class PipelineRunner:
 
         # Define file names
         groupsFile      = fileNameBase + ".groups.bam"
-        sortedFile      = fileNameBase + ".csorted.bam"
         markedFile      = fileNameBase + ".marked.bam"
         metricsFile     = fileNameBase + ".metrics"
         intervalsFile   = fileNameBase + ".realign.intervals"
@@ -98,11 +100,8 @@ class PipelineRunner:
         # Add/Remove Groups
         self.addOrReplaceGroups(bamFile, groupsFile, 'coordinate')
         
-        # Sort BAM
-        self.sort(groupsFile, sortedFile, 'coordinate')
-        
         # Remove Duplicates
-        self.removeDuplicates(sortedFile, markedFile, metricsFile, True)
+        self.removeDuplicates(groupsFile, markedFile, metricsFile, True)
         self.rebuildIndex(markedFile)
 
         # Realign Reads        
@@ -124,7 +123,7 @@ class PipelineRunner:
 
         # Output runtimes
         for entry in self.__runTimes__:
-            logger.info(entry[0] + ": " + entry[1] + " seconds")
+            logger.info(entry[0] + ": " + str(entry[1]) + " seconds")
             
         logger.info("GATK pipeline complete: results files available in '" + self.__outputDir__ + "'.")
          
@@ -247,8 +246,7 @@ class PipelineRunner:
              "-I", inFile,
              "-o", outFile,
              "-targetIntervals", intervalsFile,
-             "-et", self.__et__,
-             "-nt", str(self.__numThreads__)
+             "-et", self.__et__
             ]
         )
         self.__checkFile__(outFile)
