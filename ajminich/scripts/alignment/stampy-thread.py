@@ -53,13 +53,6 @@ class StampyThread(Thread):
         subprocess.call([STAMPY] + self.args + reads, stdout=samWriter)
         samWriter.close()
 
-        # Convert from SAM to BAM
-        bamFile = self.outFilePrefix + ".bam"
-        bamWriter = open(bamFile, 'w')
-        subprocess.call(["samtools", "view", "-bS", samFile], stdout=bamWriter)
-        bamWriter.close()
-        
-
 def stampy_threaded(file1, file2, outFilePrefix, numThreads, args):
     
     # Divide files up into equal parts
@@ -101,13 +94,17 @@ def stampy_threaded(file1, file2, outFilePrefix, numThreads, args):
         
     logger.info("All threads finished.")
         
-    # Concatenate BAM files
-    finalFile = outFilePrefix + ".bam"
+    # Concatenate SAM files
+    finalFile = outFilePrefix + ".csorted.bam"
 
-    bamFiles = [file + ".bam" for file in outFiles]
+    samFiles = ["I=" + file + ".sam" for file in outFiles]
     
-    logger.info("Merging BAM output files.")
-    subprocess.call(["samtools", "merge", outFilePrefix + ".bam"] + bamFiles)
+    logger.info("Sorting and merging BAM output files.")
+    subprocess.call(["java", "-jar", MERGER,
+        "OUTPUT=" + finalFile,
+        "SORT_ORDER=coordinate",
+        "MERGE_SEQUENCE_DICTIONARIES=true"
+        ] + samFiles)
         
     # Cleanup
     logger.info("Cleaning up partitioned files.")
@@ -115,8 +112,7 @@ def stampy_threaded(file1, file2, outFilePrefix, numThreads, args):
         os.remove(divFiles1[fileIndex])
         os.remove(divFiles2[fileIndex])
         os.remove(outFiles[fileIndex] + ".sam")
-        #os.remove(outFiles[fileIndex] + ".bam")
-    
+        
     logger.info("Stampy alignment complete: alignment file available as '" + finalFile + "'.")
     
 
