@@ -6,13 +6,12 @@ Needed Fixes:
 - do not perform realignment if the .intervals file is empty
 - do not perform add/remove read groups if the RG tag is already in the header
 - do not perform sorting if the BAM file is already sorted by coordinate
-- fix timing, since all results show as 0.0 seconds
 """
 import os, sys, subprocess
 import logging
 from optparse import OptionParser
 from ConfigParser import ConfigParser
-from time import clock
+from time import time
 
 # Setup logger
 FORMAT = '%(asctime)-15s %(levelname)s [%(funcName)s:%(lineno)d] %(message)s'
@@ -126,19 +125,19 @@ class PipelineRunner:
     def convertToBam(self, inFile, outFile):
         logger.info("Converting file '" + inFile + "' to BAM format.")
 
-        startTime = clock()        
+        startTime = time()        
         
         bamWriter = open(outFile, 'w')
         subprocess.call([self.__samtools__, "view", "-bS", inFile], stdout=bamWriter)
         bamWriter.close()
         self.__checkFile__(outFile)
         
-        self.__runTimes__.append(("Convert to BAM", clock() - startTime))
+        self.__runTimes__.append(("Convert to BAM", time() - startTime))
     
     def addOrReplaceGroups(self, inFile, outFile, sortOrder):
         logger.info("Adding/Replacing Read Groups in '" + inFile + "'.")
         
-        startTime = clock()
+        startTime = time()
         
         subprocess.call(self.__getJavaArgs__() + [
              "-jar", self.__picard__ + "/AddOrReplaceReadGroups.jar",
@@ -156,12 +155,12 @@ class PipelineRunner:
         )
         self.__checkFile__(outFile)
         
-        self.__runTimes__.append(("Add or Replace Groups", clock() - startTime))
+        self.__runTimes__.append(("Add or Replace Groups", time() - startTime))
         
     def sort(self, inFile, outFile, sortOrder):
         logger.info("Sorting file '" + inFile + "' by coordinate.")
         
-        startTime = clock()
+        startTime = time()
         
         subprocess.call(self.__getJavaArgs__() + [
              "-jar", self.__picard__ + "/SortSam.jar",
@@ -174,12 +173,12 @@ class PipelineRunner:
         )
         self.__checkFile__(outFile)
 
-        self.__runTimes__.append(("Sorting", clock() - startTime))
+        self.__runTimes__.append(("Sorting", time() - startTime))
         
     def removeDuplicates(self, inFile, outFile, metricsFile, assumeSorted):
         logger.info("Marking duplicates in '" + inFile + "'.")
         
-        startTime = clock()
+        startTime = time()
         
         subprocess.call(self.__getJavaArgs__() + [
              "-jar", self.__picard__ + "/MarkDuplicates.jar",
@@ -194,12 +193,12 @@ class PipelineRunner:
         )
         self.__checkFile__(outFile)
         
-        self.__runTimes__.append(("Remove Duplicates", clock() - startTime))
+        self.__runTimes__.append(("Remove Duplicates", time() - startTime))
         
     def fastRealign(self, reference, inFile, outFile, recalFile):
         logger.info("Fast Realigning '" + inFile + "'.")
         
-        startTime = clock()
+        startTime = time()
         
         subprocess.call(self.__getJavaArgs__() + [
              "-jar", self.__fastGatk__ + "/GenomeAnalysisTK.jar",
@@ -214,12 +213,12 @@ class PipelineRunner:
         )
         self.__checkFile__(outFile)
         
-        self.__runTimes__.append(("Fast Realign", clock() - startTime))
+        self.__runTimes__.append(("Fast Realign", time() - startTime))
         
     def realign(self, reference, inFile, outFile, intervalsFile):
         logger.info("Realigning '" + inFile + "'.")
         
-        startTime = clock()
+        startTime = time()
         
         # Realigner Target Creator
         subprocess.call(self.__getJavaArgs__() + [
@@ -247,12 +246,12 @@ class PipelineRunner:
         )
         self.__checkFile__(outFile)
         
-        self.__runTimes__.append(("Realignment", clock() - startTime))
+        self.__runTimes__.append(("Realignment", time() - startTime))
         
     def countCovariates(self, reference, inFile, recalFile):
         logger.info("Counting Covariates in '" + inFile + "'.")
         
-        startTime = clock()
+        startTime = time()
         
         subprocess.call(self.__getJavaArgs__() + [
              "-jar", self.__gatk__ + "/GenomeAnalysisTK.jar",
@@ -271,12 +270,12 @@ class PipelineRunner:
         )
         self.__checkFile__(recalFile)
         
-        self.__runTimes__.append(("Counting Covariates", clock() - startTime))
+        self.__runTimes__.append(("Counting Covariates", time() - startTime))
         
     def tableRecalibration(self, reference, inFile, outFile, recalFile):
         logger.info("Recalibrating table in '" + inFile + "'.")
         
-        startTime = clock()
+        startTime = time()
           
         subprocess.call(self.__getJavaArgs__() + [
              "-jar", self.__gatk__ + "/GenomeAnalysisTK.jar",
@@ -292,12 +291,12 @@ class PipelineRunner:
         )
         self.__checkFile__(outFile)
         
-        self.__runTimes__.append(("Table Recalibration", clock() - startTime))
+        self.__runTimes__.append(("Table Recalibration", time() - startTime))
         
     def callVariants(self, reference, inFile, outFile):
         logger.info("Performing variant calling on '" + inFile + "'.")
           
-        startTime = clock()
+        startTime = time()
           
         subprocess.call(self.__getJavaArgs__() + [
              "-jar", self.__gatk__ + "/GenomeAnalysisTK.jar",
@@ -320,7 +319,7 @@ class PipelineRunner:
         )
         self.__checkFile__(outFile)
         
-        self.__runTimes__.append(("Variant Calling", clock() - startTime))
+        self.__runTimes__.append(("Variant Calling", time() - startTime))
     
     def rebuildIndex(self, fileName):
         subprocess.call(self.__getJavaArgs__() + [
