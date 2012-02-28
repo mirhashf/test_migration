@@ -4,6 +4,8 @@
 
 Needed Fixes:
 - do not perform realignment if the .intervals file is empty
+- do not perform sorting if the BAM file is already sorted by coordinate
+- fix timing, since all results show as 0.0 seconds
 """
 import os, sys, subprocess
 import logging
