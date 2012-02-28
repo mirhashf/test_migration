@@ -10,6 +10,7 @@ Usage:
 Notes:
 - Using the -M tag is unnecessary, since the multi-threader takes care of
   providing the correct reads files to Stampy.
+- Final output file (<outfile>.csorted.bam) is already sorted by coordinate.
 """
 import os, sys, subprocess
 import logging
@@ -111,7 +112,7 @@ def stampy_threaded(file1, file2, outFilePrefix, numThreads, args):
     for fileIndex in range(numThreads):
         os.remove(divFiles1[fileIndex])
         os.remove(divFiles2[fileIndex])
-        os.remove(outFiles[fileIndex] + ".sam")
+        #os.remove(outFiles[fileIndex] + ".sam")
         
     logger.info("Stampy alignment complete: alignment file available as '" + finalFile + "'.")
     
