@@ -4,6 +4,7 @@
 
 Needed Fixes:
 - do not perform realignment if the .intervals file is empty
+- do not perform add/remove read groups if the RG tag is already in the header
 - do not perform sorting if the BAM file is already sorted by coordinate
 - fix timing, since all results show as 0.0 seconds
 """
@@ -82,13 +83,6 @@ class PipelineRunner:
         # Reset timer structure
         self.__runTimes__ = []
         
-        # Convert alignment to BAM if necessary
-        if (alignmentFile.endswith(".sam")):
-            bamFile = fileNameBase + ".bam"
-            self.convertToBam(alignmentFile, bamFile)
-        else:
-            bamFile = alignmentFile
-
         # Define file names
         groupsFile      = fileNameBase + ".groups.bam"
         markedFile      = fileNameBase + ".marked.bam"
@@ -100,7 +94,7 @@ class PipelineRunner:
         variantsFile    = fileNameBase + ".vcf"
         
         # Add/Remove Groups
-        self.addOrReplaceGroups(bamFile, groupsFile, 'coordinate')
+        self.addOrReplaceGroups(alignmentFile, groupsFile, 'coordinate')
         
         # Remove Duplicates
         self.removeDuplicates(groupsFile, markedFile, metricsFile, True)
@@ -388,7 +382,8 @@ if __name__ == "__main__":
 
     usage = "Usage: %prog [options] <reference> <alignment_file> <file2>\n" + \
         "        <reference>           - the genome reference in FASTA format (pre-indexed)\n" + \
-        "        <alignment_file>      - the alignment file in SAM or BAM format"
+        "        <alignment_file>      - the alignment file in SAM or BAM format\n" + \
+        "        -h                    - show extended help"
     parser = OptionParser(usage=usage)
     
     parser.add_option("-t", "--threads", dest="threads",
@@ -429,7 +424,7 @@ if __name__ == "__main__":
         runner.setOutputDir(options.outputDir)
         
         if (options.chrom > 0):
-            runner.setChroms(options.chrom)
+            runner.setChrom(options.chrom)
             
         if (options.configFile != None):
             runner.setConfigFile(options.configFile)
