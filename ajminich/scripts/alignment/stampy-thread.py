@@ -104,7 +104,8 @@ def stampy_threaded(file1, file2, outFilePrefix, numThreads, args):
     subprocess.call(["java", "-jar", MERGER,
         "OUTPUT=" + finalFile,
         "SORT_ORDER=coordinate",
-        "MERGE_SEQUENCE_DICTIONARIES=true"
+        "MERGE_SEQUENCE_DICTIONARIES=true",
+        "VALIDATION_STRINGENCY=LENIENT"
         ] + samFiles)
         
     # Cleanup
