@@ -5,7 +5,7 @@
 Needed Fixes:
 - do not perform realignment if the .intervals file is empty
 - do not perform add/remove read groups if the RG tag is already in the header
-- do not perform sorting if the BAM file is already sorted by coordinate
+- do not perform sorting if the input BAM file is already sorted by coordinate
 """
 import os, sys, subprocess
 import logging
@@ -309,12 +309,14 @@ class PipelineRunner:
              "-A", "DepthOfCoverage",
              "-A", "MappingQualityZero",
              "-baq", "CALCULATE_AS_NECESSARY",
+             "-rf", "BadCigar",
              "-dcov", self.__coverageDepth__,
              "-stand_call_conf", self.__standCallConf__,
              "-stand_emit_conf", self.__standEmitConf__,
              "-glm", self.__glm__,
              "-et", self.__et__,
-             "-nt", str(self.__numThreads__)
+             "-nt", str(self.__numThreads__),
+             "-S", self.__validation__
             ]
         )
         self.__checkFile__(outFile)
