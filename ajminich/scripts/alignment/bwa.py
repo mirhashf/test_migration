@@ -8,8 +8,8 @@ import os, sys, subprocess
 import logging
 from optparse import OptionParser
 
-#BWA="/home/ajminich/programs/bwa-0.6.1/bwa"
-BWA="/home/ajminich/programs/bwa-0.5.9/bwa"
+BWA="/home/ajminich/programs/bwa-0.6.1/bwa"
+#BWA="/home/ajminich/programs/bwa-0.5.9/bwa"
 
 # Setup logger
 FORMAT = '%(asctime)-15s %(levelname)s [%(funcName)s:%(lineno)d] %(message)s'
