@@ -7,8 +7,9 @@ TRIMMER="/home/ajminich/programs/sandbox/ajminich/scripts/trimBWAstyle.pl"
 if [[ $# -lt 2 ]]; then
     echo "Read Trimmer"
     echo "Usage: trimmer.sh <reads_prefix> <quality>"
-    echo ""
     echo "Trims reads in the BWA style and writes the FASTQ files to <reads_prefix>_trimmed_#.fq."
+    echo "  <reads_prefix>  - the read prefix (<prefix>_1.fq and <prefix>_2.fq)"
+    echo "  <quality>       - the quality score to trim to"
 else
     reads=${1}
     quality=${2}
