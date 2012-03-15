@@ -6,6 +6,8 @@
 # Runs GATK pipeline on a given alignment file.
 # Logs output to <alignment_file>_<pipeline>.log
 #
+# NOTE: THIS SCRIPT IS DEPRECATED. PLEASE USE THE NEWER AND MORE FEATURE-COMPLETE
+# PYTHON-BASED RUNNER IN seqalto/software/tools/loomis/reduoso.
 
 VERSION=1.03
 
@@ -20,6 +22,7 @@ pipeline_threads=16
 
 if [[ $# -lt 4 ]]; then
     echo "Pipeline Runner v${VERSION}"
+    echo "NOTE: this function is deprecated. Please use Reduoso instead."
     echo "Usage: pipeline.sh <reference> <alignment_file>.sam <pipeline> <chroms>"
     echo ""
     echo "Reference:            location of the reference FASTA file, pre-indexed"
