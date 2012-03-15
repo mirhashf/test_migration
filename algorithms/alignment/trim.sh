@@ -1,6 +1,11 @@
 #!/bin/bash -eu
 
-TRIMMER="trimBWAstyle.pl"
+# Set the trimmer script path
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ] ; do SOURCE="$(readlink "$SOURCE")"; done
+DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+
+TRIMMER=${DIR}/"trimBWAstyle.pl"
 
 # Trims reads.
 
