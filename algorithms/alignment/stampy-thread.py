@@ -101,12 +101,12 @@ def stampy_threaded(file1, file2, outFilePrefix, numThreads, args):
     samFiles = ["I=" + file + ".sam" for file in outFiles]
     
     logger.info("Sorting and merging BAM output files.")
-    subprocess.call(["java", "-jar", MERGER,
-        "OUTPUT=" + finalFile,
-        "SORT_ORDER=coordinate",
-        "MERGE_SEQUENCE_DICTIONARIES=true",
-        "VALIDATION_STRINGENCY=LENIENT"
-        ] + samFiles)
+    #subprocess.call(["java", "-jar", MERGER,
+    #    "OUTPUT=" + finalFile,
+    #    "SORT_ORDER=coordinate",
+    #    "MERGE_SEQUENCE_DICTIONARIES=true",
+    #    "VALIDATION_STRINGENCY=LENIENT"
+    #    ] + samFiles)
         
     # Cleanup
     logger.info("Cleaning up partitioned files.")
