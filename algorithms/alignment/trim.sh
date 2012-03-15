@@ -1,6 +1,6 @@
 #!/bin/bash -eu
 
-TRIMMER="/home/ajminich/programs/sandbox/ajminich/scripts/trimBWAstyle.pl"
+TRIMMER="trimBWAstyle.pl"
 
 # Trims reads.
 
