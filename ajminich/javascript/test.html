@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>HTML/Javascript Test</title>
+    <script src="test.js" type="text/javascript"></script>
+</head>
+
+<body>
+    
+    <a href="#" onclick="toggle('content1', this)">Expand</a> close reads<br>
+    <table id='content1' style="display:none">
+        <tr>
+	    <td>This table will be hidden on click of the link above it.</td>
+            <td>But it's important to remember how all this goes together.</td>
+	</tr><tr>
+            <td>Yes, it's very important.</td>
+            <td>You and I must understand there is no plan...</td>
+        </tr>
+    </table>
+    
+    <hr>
+    
+    <a href="#" onclick="toggle('content2')">Expand/contract close reads</a>
+    <div id="content2" style="display:none">
+        Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Nunc fermentum.
+    </div>
+
+
+</body>
+
+</html>
