@@ -20,7 +20,7 @@ def getShortestCommonSequence(s):
     Utilizes a modified Z algorithm.
     '''
     
-    result = {}
+    result = []
  
     # The longest possible common sequence is the entire string.
     # The second longest possible sequence is half of the string,
@@ -44,7 +44,7 @@ def getShortestCommonSequence(s):
                 l = k
         else:
             kOld = k - l
-            zOld = result[kOld]
+            zOld = result[kOld - 1]
             b = r - k + 1
             if zOld < b:
                 zk = zOld
@@ -59,7 +59,7 @@ def getShortestCommonSequence(s):
                 zk = si
                 r = zk + k - 1
                 l = k
-        result[k] = zk
+        result.append(zk)
         
         # Check if the length of P is actually the rest of the string
         if zk == len(s) - k:
