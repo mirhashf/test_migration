@@ -1,0 +1,17 @@
+#! /bin/bash
+# Starts a simple HTTP server from the current directory.
+
+# Once started, you can navigate to t-rex:<port> in any browser to
+# access the files on T-Rex.
+
+if [ ${#} -gt 0 ]
+then
+  port=$1
+else
+  port=8080
+fi
+
+currentDir=`pwd -P`
+
+echo "Starting local server (t-rex:${port}) from ${currentDir}."
+python -m SimpleHTTPServer ${port}
