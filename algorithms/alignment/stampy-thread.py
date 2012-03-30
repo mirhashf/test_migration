@@ -134,7 +134,7 @@ def partitionFiles(file1, file2, numLines, numParts):
     dividedFiles1 = []
     dividedFiles2 = []
     
-    for fileIndex in range(numParts):
+    for fileIndex in range(int(numParts)):
         fout1 = file1 + "_" + str(fileIndex)
         fout2 = file2 + "_" + str(fileIndex)
         
@@ -146,7 +146,7 @@ def partitionFiles(file1, file2, numLines, numParts):
         fw1 = open(fout1, 'w')
         fw2 = open(fout2, 'w')
         
-        for lineNum in range(fileLengths):
+        for lineNum in range(int(fileLengths)):
             fw1.write(f1.readline())
             fw2.write(f2.readline())
             
@@ -160,8 +160,10 @@ def partitionFiles(file1, file2, numLines, numParts):
     fw1 = open(dividedFiles1[-1], 'a')
     fw2 = open(dividedFiles2[-1], 'a')
         
-    while (line1 != "" or line2 != ""):
+    while (line1 != ""):
         fw1.write(f1.readline())
+        
+    while (line2 != ""):
         fw2.write(f2.readline())
         
     fw1.close()
