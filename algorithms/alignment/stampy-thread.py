@@ -154,17 +154,19 @@ def partitionFiles(file1, file2, numLines, numParts):
         fw2.close()
     
     # Finish up the files if necessary, just putting all the extra reads in the last file
+    fw1 = open(dividedFiles1[-1], 'a')
+    fw2 = open(dividedFiles2[-1], 'a')
+    
     line1 = f1.readline()
     line2 = f2.readline()
         
-    fw1 = open(dividedFiles1[-1], 'a')
-    fw2 = open(dividedFiles2[-1], 'a')
-        
     while (line1 != ""):
-        fw1.write(f1.readline())
+        fw1.write(line1)
+        line1 = f1.readline()
         
     while (line2 != ""):
-        fw2.write(f2.readline())
+        fw2.write(line2)
+        line2 = f2.readline()
         
     fw1.close()
     fw2.close()
