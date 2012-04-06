@@ -9,7 +9,7 @@ if [[ $# -lt 1 ]]; then
     echo "  <finalBamFile>   - the final BAM file to output"
     echo "  <samPrefix>      - the prefix for the SAM files. If no prefix"
     echo "                     is provided, all SAM files will be merged."
-    return
+    exit
 elif [[ $# -lt 2 ]]; then
     echo "Merging all SAM files in this directory."
     samPrefix=""
