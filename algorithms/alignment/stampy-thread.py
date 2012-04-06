@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-"""Runs Stampy with multiple threads to speed up the alignment.
+"""Stampy Threader v1.0.1
+Runs Stampy with multiple threads to speed up the alignment.
 
 Usage:
     -1 <file1>, --file1 <file1>             The first FASTQ input.
@@ -17,8 +18,8 @@ import logging
 from threading import Thread
 from math import floor
 
-STAMPY="/home/ajminich/programs/stampy-1.0.14/stampy.py"
-MERGER="/home/ajminich/programs/picard/dist/MergeSamFiles.jar"
+STAMPY="/home/ajminich/programs/stampy-1.0.17/stampy.py"
+MERGER="/home/ajminich/programs/shared/picard/dist/MergeSamFiles.jar"
 INPUT1_FLAGS=["-1", "--file1"]
 INPUT2_FLAGS=["-2", "--file2"]
 OUTPUT_FLAGS=["-o", "--output"]
@@ -101,19 +102,19 @@ def stampy_threaded(file1, file2, outFilePrefix, numThreads, args):
     samFiles = ["I=" + file + ".sam" for file in outFiles]
     
     logger.info("Sorting and merging BAM output files.")
-    #subprocess.call(["java", "-jar", MERGER,
-    #    "OUTPUT=" + finalFile,
-    #    "SORT_ORDER=coordinate",
-    #    "MERGE_SEQUENCE_DICTIONARIES=true",
-    #    "VALIDATION_STRINGENCY=LENIENT"
-    #    ] + samFiles)
+    subprocess.call(["java", "-jar", MERGER,
+        "OUTPUT=" + finalFile,
+        "SORT_ORDER=coordinate",
+        "MERGE_SEQUENCE_DICTIONARIES=true",
+        "VALIDATION_STRINGENCY=LENIENT"
+        ] + samFiles)
         
     # Cleanup
     logger.info("Cleaning up partitioned files.")
     for fileIndex in range(numThreads):
         os.remove(divFiles1[fileIndex])
         os.remove(divFiles2[fileIndex])
-        #os.remove(outFiles[fileIndex] + ".sam")
+        os.remove(outFiles[fileIndex] + ".sam")
         
     logger.info("Stampy alignment complete: alignment file available as '" + finalFile + "'.")
     
