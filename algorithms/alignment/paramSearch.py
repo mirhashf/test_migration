@@ -48,7 +48,7 @@ def runValidation(executable, alignedFile, goldenFile):
         if nextline.startswith("Report:"):
             header = nextline.replace("Report:","")
         elif header != "" and nextline != "":
-            result = nextline
+            result = nextline.replace('\n','')
             
         sys.stdout.write(nextline)
         sys.stdout.flush()
@@ -97,6 +97,7 @@ def runLoop(seqaltoExec, alignstats, index, fastq1, fastq2, goldenFile, outputDi
             (header, result) = runValidation(alignstats, alignedFile, goldenFile)
         
         outWriter.write(outString + result + "," + str(runTime) + "\n")
+        outWriter.flush()
         
     outWriter.close()
            
