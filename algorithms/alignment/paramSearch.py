@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""%prog [options] <index.fa> <fastq1.fq> <fastq2.fq>
+"""%prog [options] <index.fa> <fastq1.fq> <fastq2.fq> <golden_bamfile> <results_file>
 
 Parameter Search v1.0.0
 
@@ -9,11 +9,13 @@ combination."""
 import os
 import sys
 import subprocess
+from seqalto import SeqAlto
 from optparse import OptionParser
 import itertools
 import ConfigParser
 import logging
 
+DEFAULT_CONFIG_FILE = os.path.split(sys.argv[0])[0] + "/paramSearch.cfg"
 modes = ["combinatorial", "sequential"]
 
 # Setup logger
@@ -22,12 +24,93 @@ logging.basicConfig(format=FORMAT)
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-def runLoop(seqalto, alignstats, index, fastq1, fastq2, numThreads, kmerSize, paramsListMap):
-
-    for paramCombination in paramsListMap:
-        print paramCombination
+def runValidation(executable, alignedFile, goldenFile):
+    ''' Runs the AlignStats validation and returns a tuple of (header, report).
+    '''
     
-   # aligner -mode align -idx ../chr15_21.fa_"$kmersize".sidx -s -logtostderr -p $numthreads -1 ./ds4_trimmed_1.fq -2 ./ds4_trimmed_2.fq -max_occ $max_num_hash -u > $samfile 2>$samfile.log
+    p = subprocess.Popen(["java", "-jar", executable,
+        goldenFile, alignedFile,
+        "--names", "golden,seqalto",
+        "--basicReport",
+        "--f1gold"
+        ], stdout=subprocess.PIPE)
+    
+    header = ""
+    result = ""
+    
+    # Poll process for new output until finished
+    while True:
+        nextline = p.stdout.readline()
+        if nextline == '' and p.poll() != None:
+            break
+        
+        # If line starts with "Report:", capture it as the header
+        if nextline.startswith("Report:"):
+            header = nextline.replace("Report:","")
+        elif header != "" and nextline != "":
+            result = nextline
+            
+        sys.stdout.write(nextline)
+        sys.stdout.flush()
+     
+    return (header, result)
+
+def runLoop(seqaltoExec, alignstats, index, fastq1, fastq2, goldenFile, outputDir,
+            resultsFile, seqOutput, numThreads, paramsListMap):
+
+    # Set up output directory
+    if (outputDir is None or outputDir == ""):
+        outputDir = "./"
+    elif (not outputDir.endswith("/")):
+        outputDir = outputDir + "/"
+    
+    # Create necessary directories        
+    if not os.path.exists(outputDir):
+        os.makedirs(outputDir)    
+
+    seqalto = SeqAlto(seqaltoExec)
+
+    # Initialize output file
+    outWriter = open(outputDir + resultsFile, 'w')
+    outWriter.write(getFlags(paramsListMap[0]))
+    outWriter.write("Identical,Close,Far,Mapped-Multi,Multi-Mapped,Mapped-Unmapped,Unmapped-Mapped,Time\n")
+    
+    for paramCombination in paramsListMap:
+    
+        paramCombination["-p"] = numThreads
+        logger.info("Using parameter combination: " + str(paramCombination))
+    
+        alignedFile = outputDir + seqOutput
+    
+        # Run SeqAlto
+        segfaulted = seqalto.align(index, fastq1, fastq2, alignedFile, paramCombination)
+        
+        runTime = seqalto.getElapsedTime()
+        
+        outString = getValues(paramCombination)
+        
+        if segfaulted:
+            result = "segfault"
+        else:
+            
+            # Run validation and get the result
+            (header, result) = runValidation(alignstats, alignedFile, goldenFile)
+        
+        outWriter.write(outString + result + "," + str(runTime) + "\n")
+        
+    outWriter.close()
+           
+def getFlags(paramCombination):
+    flags = ""
+    for key in paramCombination:
+        flags += key + ","
+    return flags
+
+def getValues(paramCombination):
+    values = ""
+    for key in paramCombination:
+        values += str(paramCombination[key]) + ","
+    return values
            
 def parseItems(items, mode):
     
@@ -86,12 +169,12 @@ if __name__ == "__main__":
     parser.add_option("-c", "--config", dest="config",
                       help="Parameter search configuration to use",
                       type="string",
-                      default="paramSearch.cfg",
+                      default=DEFAULT_CONFIG_FILE,
                       metavar="<cfg_file>")
     parser.add_option("-d", "--outputDir", dest="outputDir",
                       help="Output directory for alignment files",
                       type="string",
-                      default="./",
+                      default=".",
                       metavar="<outputDir>")
     parser.add_option("-m", "--mode", dest="mode",
                       help="Combination mode to use for parameter space",
@@ -101,9 +184,9 @@ if __name__ == "__main__":
     
     (options, args) = parser.parse_args()
 
-    if (len(args) == 3):
+    if (len(args) == 5):
     
-        (index, fastq1, fastq2) = args
+        (index, fastq1, fastq2, goldenFile, resultsFile) = args
         
         # Parse configuration file
         logger.info("Using configuration file '" + options.config + "'.")
@@ -113,12 +196,15 @@ if __name__ == "__main__":
         seqalto         = config.get('Executables', 'seqalto')
         alignstats      = config.get('Executables', 'alignstats')
         
+        outputSamFile   = config.get('Configuration', 'outputFile')
         numThreads      = config.getint('Configuration', 'numThreads')
-        kmerSize        = config.getint('Configuration', 'kmerSize')
         
         paramsListMap       = parseItems(config.items('Parameters'), options.mode)
         
-        runLoop(seqalto, alignstats, index, fastq1, fastq2, numThreads, kmerSize, paramsListMap)
+        runLoop(seqalto, alignstats, index, fastq1, fastq2, goldenFile,
+                options.outputDir, resultsFile, outputSamFile, numThreads,
+                paramsListMap)
+        
         sys.exit()
     else:
         parser.print_help(file=sys.stderr)
