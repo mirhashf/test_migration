@@ -13,8 +13,8 @@ ln -s ~/bin/seqalto ~/programs/aligner.aws
 # Set up /ebs
 echo "Setting up EBS persistent storage."
 chmod a+rw /ebs
-mkdir /ebs/data
-mkdir /ebs/execution
+mkdir -p /ebs/data
+mkdir -p /ebs/execution
 
 # Set up /mnt
 chmod a+rw /mnt
