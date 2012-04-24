@@ -8,7 +8,7 @@ echo "Setting up most recent version of SeqAlto aligner from S3."
 s3cmd get s3://bina.programs/aligner.aws ~/programs/aligner.aws
 chmod a+x ~/programs/aligner.aws
 rm ~/bin/seqalto
-ln -s ~/bin/seqalto ~/programs/aligner.aws
+ln -s ~/programs/aligner.aws ~/bin/seqalto
 
 # Set up /ebs
 echo "Setting up EBS persistent storage."
