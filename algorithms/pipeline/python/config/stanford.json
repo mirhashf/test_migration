@@ -1,0 +1,105 @@
+{
+  "name"                  : "Standard Variant Calling Pipeline Configuration",
+  "loggerFormat"          : "%(asctime)-15s %(levelname)s [%(funcName)s:%(lineno)d] %(message)s",
+
+  "files" : {
+    "dbsnp"               : "/mnt/scratch0/public/data/variants/dbSNP/dbsnp_132.hg19.vcf",
+    "tmp"                 : "/tmp"
+  },
+    
+  "java" : {
+    "initialHeap"         : "5g",
+    "maximumHeap"         : "5g",
+    "validation"          : "LENIENT"
+  },
+  
+  "picard" : {
+    
+    "executable"          : "/mnt/scratch2/public/programs/picard/dist",
+    "samtools"            : "samtools",
+    "runAddReplaceGroups" : "on",
+    "runRemoveDuplicates" : "on",
+    
+    "addReplaceGroups" : {
+      "arguments" : [
+    
+      ],
+      "options" : {
+        "RGID"            : "SIMUG21",
+        "RGLB"            : "READGROUPLIBRARY1",
+        "RGPL"            : "illumina",
+        "RGSM"            : "Blah",
+        "RGPU"            : "hi"
+      }
+    }
+  },
+  
+  "gatk" : {
+    
+    "executable"          : "/mnt/scratch2/public/programs/third_party_branch/master/software/gatk/dist/GenomeAnalysisTK.jar",
+    "fastRealigner"       : "/mnt/scratch2/public/programs/third_party_branch/gatk_fast/software/gatk/dist/GenomeAnalysisTK.jar",
+    "combinedGenotyper"   : "/mnt/scratch2/public/programs/third_party_branch/CombinedGenotyper/software/gatk/dist/GenomeAnalysisTK.jar",
+    
+    "runRealign"          : "on",
+    "runRecal"            : "on",
+    "fastRealignMode"     : "off",
+    "combinedMode"        : "off",
+    "numThreads"          : 16,
+    "et"                  : "NO_ET",
+  
+    "fastRealign" : {
+      "arguments" : [
+        "-standard"
+      ],
+      "options" : { }
+    },
+    
+    "realignerTargetCreator" : {
+      "arguments" : [ ],
+      "options" : { }
+    },
+    
+    "indelRealigner" : {
+      "arguments" : [ ],
+      "options" : { }
+    },
+    
+    "countCovariates" : {
+      "arguments" : [
+        "-cov", "ReadGroupCovariate",
+        "-cov", "QualityScoreCovariate",
+        "-cov", "CycleCovariate",
+        "-cov", "DinucCovariate"
+      ],
+      "options" : { }
+    },
+    
+    "tableRecalibration" : {
+      "arguments" : [
+        "--doNotWriteOriginalQuals"
+      ],
+      "options" : {
+        "-baq"            : "RECALCULATE"
+      }
+    },
+             
+    "callVariants" : {
+      "arguments" : [
+        "-A", "AlleleBalance",
+        "-A", "DepthOfCoverage",
+        "-A", "MappingQualityZero"
+      ],
+      "options" : {
+        "-baq"            : "CALCULATE_AS_NECESSARY",
+        "-rf"             : "BadCigar",
+        "-dcov"           : 1000,
+        "-stand_call_conf" : 30.0,
+        "-stand_emit_conf" : 10.0,
+        "-glm"            : "BOTH"
+      }
+      
+    }
+    
+  }
+
+}
