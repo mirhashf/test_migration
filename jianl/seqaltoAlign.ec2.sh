@@ -37,7 +37,8 @@ sudo java -Xms5g -Xmx5g -jar ~/programs/picard/dist/SortSam.jar \
 	INPUT=/ebs/execution/seqalto_$1.bam \
 	VALIDATION_STRINGENCY=LENIENT \
 	OUTPUT=/ebs/execution/seqalto_$1.csorted.bam \
-	SORT_ORDER=coordinate
+	SORT_ORDER=coordinate \
+	TMP_DIR=$TMP
 
 sudo java -Xms5g -Xmx5g -jar ~/programs/picard/dist/BuildBamIndex.jar \
 	INPUT=/ebs/execution/seqalto_$1.csorted.bam \
