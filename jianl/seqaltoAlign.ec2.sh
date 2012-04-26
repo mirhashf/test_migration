@@ -1,4 +1,4 @@
-TMP=~/tmp
+TMP=~/mnt
 sudo s3cmd get s3://seqalto/$1_*.fq.gz ~/data/
 sudo gunzip ~/data/$1_*.fq.gz
 sudo ~/bin/trim ~/data/$1 30 
