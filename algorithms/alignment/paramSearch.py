@@ -32,7 +32,8 @@ def runValidation(executable, alignedFile, goldenFile):
         goldenFile, alignedFile,
         "--names", "golden,seqalto",
         "--basicReport",
-        "--f1gold"
+        "--f1gold",
+        "--sort2"
         ], stdout=subprocess.PIPE)
     
     header = ""

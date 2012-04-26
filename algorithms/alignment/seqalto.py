@@ -27,7 +27,8 @@ class SeqAlto:
             "-idx", index,
             "-1", fastq1,
             "-2", fastq2,
-            "-logtostderr"]
+            "-logtostderr",
+	    "--nw_disable_match_at_ends"]
     
         optionsList = []
         for option in paramsMap:
