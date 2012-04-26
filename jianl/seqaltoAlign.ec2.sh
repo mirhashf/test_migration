@@ -4,7 +4,9 @@ if [[ ${#} -lt 2 ]]; then
   echo "SeqAlto Alignment Script"
   echo "Written by Jian Li, April 2012"
   echo ""
-  echo "Use: sudo ${0} <read_prefix>.fq.gz <library>"
+  echo "Use: sudo ${0} <read_prefix>_#.fq.gz <library>"
+  echo "  <read_prefix> - the read from s3://seqalto/ to use (for example, A804NLABXX.s_5)"
+  echo "  <library>     - the library to use in add/replace groups (SLB for saliva, BLB for blood)"
 
   return
 fi
