@@ -11,7 +11,7 @@ if [[ ${#} -lt 2 ]]; then
   return
 fi
 
-TMP=~/mnt
+TMP=/mnt
 
 # Get the reads and trim them to quality level 30
 sudo s3cmd get s3://seqalto/$1_*.fq.gz ~/data/
