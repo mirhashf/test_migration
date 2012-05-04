@@ -21,12 +21,12 @@ chmod a+rw /mnt
 
 # Set up needed files
 echo "Getting FASTA Index and generating Seqalto index."
-s3cmd get s3://bina.data/hg19/ucsc.hg19.fasta /ebs/data/hg19.fa
+s3cmd get s3://bina.data/hg19/hg19.major.fasta /ebs/data/hg19.major.fa
 ~/programs/aligner.aws -mode index \
-    -ref /ebs/data/hg19.fa \
+    -ref /ebs/data/hg19.major.fa \
     -index_mode 0 \
     -kmer_size 22 \
-    -index_name /ebs/data/hg19.fa_22.sidx \
+    -index_name /ebs/data/hg19.major.fa_22.sidx \
     -logtostderr
 
 
