@@ -25,7 +25,7 @@ FINAL_BAM=${3}
 PICARD=/mnt/scratch2/public/programs/picard
 TMP=/tmp
 
-header=`samtools view -h ${INPUT_FILE}`
+header=`samtools view -H ${INPUT_FILE}`
 if [[ "${header}" == *SO:coordinate* ]]
 then
   echo "Input file is already sorted by coordinate.";
