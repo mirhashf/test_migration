@@ -1,7 +1,7 @@
 #!/bin/bash
 # SeqAlto Alignment for Snyder Reads Data
 
-if [[ ${#} -lt 2 ]]; then
+if [[ ${#} -lt 1 ]]; then
   echo "SeqAlto Alignment Script"
   echo "Written by Jian Li, April 2012"
   echo "Modified by AJ Minich, May 2012"
@@ -9,7 +9,7 @@ if [[ ${#} -lt 2 ]]; then
   echo "Use: sudo ${0} <read_prefix>_#.fq.gz"
   echo "  <read_prefix> - the read from s3://seqalto/ to use (for example, A804NLABXX.s_5)"
   
-  return
+  exit 0
 fi
 
 LANE=${1}
