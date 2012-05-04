@@ -1,0 +1,94 @@
+{
+  "name"                  : "Standard Variant Calling Pipeline Configuration",
+  "dbsnp"               : "/ebs/data/dbsnp.hg19.vcf",
+    
+  "java" : {
+    "initialHeap"         : "5g",
+    "maximumHeap"         : "5g",
+    "validation"          : "LENIENT"
+  },
+  
+  "picard" : {
+    
+    "runAddReplaceGroups" : false,
+    "runRemoveDuplicates" : false,
+    
+    "addReplaceGroups" : {
+      "arguments" : [
+    
+      ],
+      "options" : {
+        "RGID"            : "SIMUG21",
+        "RGLB"            : "READGROUPLIBRARY1",
+        "RGPL"            : "illumina",
+        "RGSM"            : "Blah",
+        "RGPU"            : "hi"
+      }
+    }
+  },
+  
+  "gatk" : {
+    
+    "executable"          : "/home/ubuntu/programs/third_party_branch/master/software/gatk/dist/GenomeAnalysisTK.jar",
+    "fastRealigner"       : "",
+    "combinedGenotyper"   : "",
+    
+    "runRealign"          : true,
+    "runRecal"            : true,
+    "fastRealignMode"     : false,
+    "combinedMode"        : false,
+    "numThreads"          : 8,
+    "et"                  : "STANDARD",
+  
+    "realignerTargetCreator" : {
+      "arguments" : [ ],
+      "options" : { }
+    },
+    
+    "indelRealigner" : {
+      "arguments" : [ ],
+      "options" : { }
+    },
+    
+    "countCovariates" : {
+      "arguments" : [
+        "-cov", "ReadGroupCovariate",
+        "-cov", "QualityScoreCovariate",
+        "-cov", "CycleCovariate",
+        "-cov", "DinucCovariate"
+      ],
+      "options" : { }
+    },
+    
+    "tableRecalibration" : {
+      "arguments" : [
+        "--doNotWriteOriginalQuals"
+      ],
+      "options" : {
+        "-baq"            : "RECALCULATE"
+      }
+    },
+
+    "fastRealign" : {
+      "arguments" : [
+        "--standard_covs"
+       ],
+      "options"   : { }
+    },
+             
+    "callVariants" : {
+      "arguments" : [ ],
+      "options" : {
+        "--annotation"    : "AlleleBalance,DepthOfCoverage,MappingQualityZero",
+        "--baq"           : "CALCULATE_AS_NECESSARY",
+        "--read_filter"   : "BadCigar",
+        "--downsample_to_coverage" : 1000,
+        "--standard_min_confidence_threshold_for_calling" : 30.0,
+        "--standard_min_confidence_threshold_for_emitting" : 10.0,
+        "--genotype_likelihoods_model" : "BOTH"
+      }
+      
+    } 
+  }
+
+}
