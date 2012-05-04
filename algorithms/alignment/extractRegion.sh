@@ -22,9 +22,10 @@ INPUT_FILE=${1}
 REGION=${2}
 FINAL_BAM=${3}
 
+PICARD=/mnt/scratch2/public/programs/picard
 TMP=/tmp
 
-header=`/bin/samtools view -h ${INPUT_FILE}`
+header=`samtools view -h ${INPUT_FILE}`
 if [[ "${header}" == *SO:coordinate* ]]
 then
   echo "Input file is already sorted by coordinate.";
@@ -35,7 +36,7 @@ else
 
   SORTED_BAM=${INPUT_FILE}.sorted
 
-    sudo java -Xms5g -Xmx5g -jar ~/programs/picard/dist/SortSam.jar \
+    java -Xms5g -Xmx5g -jar ${PICARD}/dist/SortSam.jar \
         INPUT=${INPUT_FILE} \
         VALIDATION_STRINGENCY=LENIENT \
         OUTPUT=${SORTED_BAM} \
@@ -43,11 +44,11 @@ else
         TMP_DIR=${TMP}
 fi
 
-sudo java -Xms5g -Xmx5g -jar ~/programs/picard/dist/BuildBamIndex.jar \
+java -Xms5g -Xmx5g -jar ${PICARD}/dist/BuildBamIndex.jar \
 	INPUT=${SORTED_BAM} \
 	VALIDATION_STRINGENCY=LENIENT
 
 # Get just the reads aligned to the selected region
 echo "Getting reads in the region: ${REGION}"
-sudo /bin/samtools view -bh ${SORTED_BAM} \
+samtools view -bh ${SORTED_BAM} \
     ${REGION} > ${FINAL_BAM}
