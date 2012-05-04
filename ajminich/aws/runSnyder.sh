@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Runs the Snyder EC2 script on the specified lanes, and uploads the results to EC2.
+# Note: should be run as sudo.
 
 SNYDER_EC2_SCRIPT=~/sandbox/ajminich/aws/seqaltoAlign.ec2.sh
 S3_FOLDER=s3://bina.results/snyder/hg19.major/
