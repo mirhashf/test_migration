@@ -6,15 +6,13 @@ if [[ ${#} -lt 2 ]]; then
   echo "Written by Jian Li, April 2012"
   echo "Modified by AJ Minich, May 2012"
   echo ""
-  echo "Use: sudo ${0} <read_prefix>_#.fq.gz <library>"
+  echo "Use: sudo ${0} <read_prefix>_#.fq.gz"
   echo "  <read_prefix> - the read from s3://seqalto/ to use (for example, A804NLABXX.s_5)"
-  echo "  <library>     - the library to use in add/replace groups (SLB for saliva, BLB for blood)"
-
+  
   return
 fi
 
 LANE=${1}
-LIB=${2}
 
 TMP=/mnt
 QUAL=30
@@ -26,9 +24,8 @@ SEQALTO_OUT_SAM=${EXECUTION_FOLDER}/seqalto_${LANE}.sam
 SEQALTO_OUT_BAM=${EXECUTION_FOLDER}/seqalto_${LANE}.bam
 SORTED_BAM=${EXECUTION_FOLDER}/seqalto_${LANE}.sorted.bam
 SORTED_REGION_BAM=${EXECUTION_FOLDER}/seqalto_${LANE}.${REGION}.csorted.bam
-SORTED_AG_REGION_BAM=${EXECUTION_FOLDER}/seqalto_${LANE}.${REGION}_AG.bam
 
-echo "Running Seqalto alignment on Snyder lane ${LANE} from sample {$LIB}."
+echo "Running Seqalto alignment on Snyder lane ${LANE}."
 
 # Get the reads and trim them to quality level 30
 s3cmd get s3://seqalto/${LANE}_*.fq.gz ${DATA_FOLDER}
@@ -80,18 +77,5 @@ echo "Getting reads in the region: ${REGION}"
 sudo /bin/samtools view -bh ${SORTED_BAM} \
     ${REGION} > ${SORTED_REGION_BAM}
 
-# Perform add/replace read groups
-java -Xms5g -Xmx5g -jar ~/programs/picard/dist/AddOrReplaceReadGroups.jar \
-	I=${SORTED_REGION_BAM} \
-	O=${SORTED_AG_REGION_BAM} \
-	SORT_ORDER=coordinate \
-	RGID=${LANE} \
-	RGLB=${LIB} \
-	RGPL=ILLUMINA \
-	RGSM=${LIB} \
-	RGPU=HiSeq \
-	VALIDATION_STRINGENCY=LENIENT  \
-	TMP_DIR=${TMP}
-
-echo "Execution complete."
+echo "Execution complete for lane ${LANE}."
 
