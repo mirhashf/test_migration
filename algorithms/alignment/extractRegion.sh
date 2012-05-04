@@ -2,7 +2,7 @@
 
 # Sorts a provided BAM file and extracts the sorted regions.
 
-if [[ ${#} -lt 4 ]]; then
+if [[ ${#} -lt 3 ]]; then
   echo "Region Extraction Script"
   echo "Written by Jian Li and AJ Minich, April-May 2012"
   echo ""
