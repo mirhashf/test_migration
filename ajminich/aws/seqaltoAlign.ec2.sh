@@ -20,7 +20,7 @@ TMP=/mnt
 QUAL=30
 REGION=chr1
 DATA_FOLDER=/snyder/data/
-EXECUTION_FOLDER=/snyder/execution/hg19.major/
+EXECUTION_FOLDER=.
 
 SEQALTO_OUT_SAM=${EXECUTION_FOLDER}/seqalto_${LANE}.sam
 SEQALTO_OUT_BAM=${EXECUTION_FOLDER}/seqalto_${LANE}.bam
