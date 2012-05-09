@@ -56,7 +56,7 @@ sudo time ~/bin/seqalto -mode align \
 # Convert to BAM and sort by coordinate
 echo "Converting to BAM..."
 sudo /bin/samtools view -bS ${SEQALTO_OUT_SAM} > ${SEQALTO_OUT_BAM}
-rm ${SEQALTO_OUT}
+rm ${SEQALTO_OUT_SAM}
 
 sudo java -Xms5g -Xmx5g -jar ~/programs/picard/dist/SortSam.jar \
 	INPUT=${SEQALTO_OUT_BAM} \
