@@ -1,17 +1,11 @@
 {
-  "name"                  : "Standard Variant Calling Pipeline Configuration",
-  "dbsnp"               : "/ebs/data/dbsnp.hg19.vcf",
-    
-  "java" : {
-    "initialHeap"         : "5g",
-    "maximumHeap"         : "5g",
-    "validation"          : "LENIENT"
-  },
+  "name"                  : "EC2 Variant Calling Pipeline Configuration - Regular",
+  "dbsnp"                 : "/mnt/data/dbsnp.hg19.vcf",
   
   "picard" : {
     
-    "runAddReplaceGroups" : false,
-    "runRemoveDuplicates" : false,
+    "runAddReplaceGroups" : true,
+    "runRemoveDuplicates" : true,
     
     "addReplaceGroups" : {
       "arguments" : [
@@ -26,7 +20,7 @@
       }
     }
   },
-  
+
   "gatk" : {
     
     "executable"          : "/home/ubuntu/programs/third_party_branch/master/software/gatk/dist/GenomeAnalysisTK.jar",
@@ -38,8 +32,8 @@
     "fastRealignMode"     : false,
     "combinedMode"        : false,
     "numThreads"          : 8,
-    "et"                  : "STANDARD",
-  
+    "et"                  : "NO_ET",
+    
     "realignerTargetCreator" : {
       "arguments" : [ ],
       "options" : { }
@@ -52,10 +46,7 @@
     
     "countCovariates" : {
       "arguments" : [
-        "-cov", "ReadGroupCovariate",
-        "-cov", "QualityScoreCovariate",
-        "-cov", "CycleCovariate",
-        "-cov", "DinucCovariate"
+        "--covariate", "ReadGroupCovariate,QualityScoreCovariate,CycleCovariate,DinucCovariate"
       ],
       "options" : { }
     },
@@ -65,15 +56,8 @@
         "--doNotWriteOriginalQuals"
       ],
       "options" : {
-        "-baq"            : "RECALCULATE"
+        "--baq"            : "RECALCULATE"
       }
-    },
-
-    "fastRealign" : {
-      "arguments" : [
-        "--standard_covs"
-       ],
-      "options"   : { }
     },
              
     "callVariants" : {
@@ -84,11 +68,14 @@
         "--read_filter"   : "BadCigar",
         "--downsample_to_coverage" : 1000,
         "--standard_min_confidence_threshold_for_calling" : 30.0,
-        "--standard_min_confidence_threshold_for_emitting" : 10.0,
+        "--standard_min_confidence_threshold_for_emitting" : 0.10,
         "--genotype_likelihoods_model" : "BOTH"
       }
       
     } 
+    
   }
-
 }
+
+
+

@@ -1,11 +1,11 @@
 {
-  "name"                  : "Fast Variant Calling Pipeline Configuration",
-  "dbsnp"               : "/ebs/data/dbsnp.hg19.vcf",
-    
+  "name"                  : "EC2 Variant Calling Pipeline Configuration - Fast",
+  "dbsnp"                 : "/mnt/data/dbsnp.hg19.vcf",
+  
   "picard" : {
     
-    "runAddReplaceGroups" : false,
-    "runRemoveDuplicates" : false,
+    "runAddReplaceGroups" : true,
+    "runRemoveDuplicates" : true,
     
     "addReplaceGroups" : {
       "arguments" : [
@@ -20,56 +20,27 @@
       }
     }
   },
-  
+
   "gatk" : {
     
     "executable"          : "/home/ubuntu/programs/third_party_branch/master/software/gatk/dist/GenomeAnalysisTK.jar",
     "fastRealigner"       : "/home/ubuntu/programs/third_party_branch/gatk_fast/software/gatk/dist/GenomeAnalysisTK.jar",
     "combinedGenotyper"   : "/home/ubuntu/programs/third_party_branch/CombinedGenotyper/software/gatk/dist/GenomeAnalysisTK.jar",
     
-    "runRealign"          : false,
+    "runRealign"          : true,
     "runRecal"            : true,
     "fastRealignMode"     : true,
     "combinedMode"        : true,
-    "numThreads"	  : 8,
+    "numThreads"          : 8,
     "et"                  : "NO_ET",
-  
+    
     "fastRealign" : {
       "arguments" : [
         "--standard_covs"
       ],
       "options" : { }
     },
-    
-    "realignerTargetCreator" : {
-      "arguments" : [ ],
-      "options" : { }
-    },
-    
-    "indelRealigner" : {
-      "arguments" : [ ],
-      "options" : { }
-    },
-    
-    "countCovariates" : {
-      "arguments" : [
-        "-cov", "ReadGroupCovariate",
-        "-cov", "QualityScoreCovariate",
-        "-cov", "CycleCovariate",
-        "-cov", "DinucCovariate"
-      ],
-      "options" : { }
-    },
-    
-    "tableRecalibration" : {
-      "arguments" : [
-        "--doNotWriteOriginalQuals"
-      ],
-      "options" : {
-        "--baq"            : "RECALCULATE"
-      }
-    },
-             
+
     "callVariants" : {
       "arguments" : [ ],
       "options" : {
@@ -78,12 +49,11 @@
         "--read_filter"   : "BadCigar",
         "--downsample_to_coverage" : 1000,
         "--standard_min_confidence_threshold_for_calling" : 30.0,
-        "--standard_min_confidence_threshold_for_emitting" : 10.0,
+        "--standard_min_confidence_threshold_for_emitting" : 0.10,
         "--genotype_likelihoods_model" : "BOTH"
       }
       
     }
-     
+    
   }
-
 }
