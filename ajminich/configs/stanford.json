@@ -46,7 +46,10 @@
     
     "countCovariates" : {
       "arguments" : [
-        "--covariate", "ReadGroupCovariate,QualityScoreCovariate,CycleCovariate,DinucCovariate"
+        "--covariate", "ReadGroupCovariate",
+        "--covariate", "QualityScoreCovariate",
+        "--covariate", "CycleCovariate",
+        "--covariate", "DinucCovariate"
       ],
       "options" : { }
     },
