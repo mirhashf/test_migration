@@ -24,9 +24,12 @@ package bina.seqalto.utilities.bamextractor;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import net.sf.samtools.BAMFileWriter;
+import net.sf.samtools.SAMFileHeader;
 import net.sf.samtools.SAMFileReader;
+import net.sf.samtools.SAMReadGroupRecord;
 import net.sf.samtools.SAMRecord;
 
 import org.kohsuke.args4j.CmdLineException;
@@ -57,6 +60,10 @@ public class BamExtractor {
   @Option(name = "--trim-quality", usage = "Quality with which to trim reads. Default: 30", required = false)
   int trimQuality = 30;
 
+  @Option(name = "--remove-flags", usage = "Remove RG, PL, PU, LB, SM flags. Default: false", required = false)
+  boolean removeFlags = false;
+
+  
   public static String newline = System.getProperty("line.separator");
 
   /** main function */
@@ -75,12 +82,25 @@ public class BamExtractor {
       SAMFileReader reader = new SAMFileReader(inBamFile);
       BAMFileWriter writer = new BAMFileWriter(outBamFile);
       
-      writer.setHeader(reader.getFileHeader());
+      SAMFileHeader header = reader.getFileHeader().clone();
       
+      if(removeFlags){
+       header.setReadGroups(new ArrayList<SAMReadGroupRecord>());
+      }
+      
+      writer.setHeader(header);
       
       for(SAMRecord r : reader){
+        
         int trimmedLength = getBwaTrimmedSize(trimQuality, r);
         if(trimmedLength >= minLenght && trimmedLength <= maxLenght){
+          if(removeFlags){
+            r.setAttribute("RG", null);
+            r.setAttribute("PL", null);
+            r.setAttribute("PU", null);
+            r.setAttribute("SM", null);
+          }
+          
           writer.addAlignment(r);
         }
       }
