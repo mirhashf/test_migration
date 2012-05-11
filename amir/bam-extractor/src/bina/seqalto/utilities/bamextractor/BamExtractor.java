@@ -31,6 +31,7 @@ import net.sf.samtools.SAMFileHeader;
 import net.sf.samtools.SAMFileReader;
 import net.sf.samtools.SAMReadGroupRecord;
 import net.sf.samtools.SAMRecord;
+import net.sf.samtools.SAMFileReader.ValidationStringency;
 
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
@@ -81,6 +82,8 @@ public class BamExtractor {
       
       SAMFileReader reader = new SAMFileReader(inBamFile);
       BAMFileWriter writer = new BAMFileWriter(outBamFile);
+      
+      reader.setValidationStringency(ValidationStringency.LENIENT);
       
       SAMFileHeader header = reader.getFileHeader().clone();
       
