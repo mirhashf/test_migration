@@ -94,7 +94,6 @@ public class BamExtractor {
       writer.setHeader(header);
       
       for(SAMRecord r : reader){
-        
         int trimmedLength = getBwaTrimmedSize(trimQuality, r);
         if(trimmedLength >= minLenght && trimmedLength <= maxLenght){
           if(removeFlags){
@@ -103,11 +102,9 @@ public class BamExtractor {
             r.setAttribute("PU", null);
             r.setAttribute("SM", null);
           }
-          
           writer.addAlignment(r);
         }
       }
-      
       writer.close();
       
     } catch (CmdLineException e) {
@@ -132,12 +129,12 @@ public class BamExtractor {
     byte[] qs;
     int pos, maxPos, area, maxArea;
     qs = r.getBaseQualities();
-    pos = qs.length - 1;
+    pos = qs.length;
     maxPos = pos;
     area = 0;
     maxArea = 0;
-    while (pos >= 0 && area >= 0) {
-      area += opt_q - qs[pos] - 33;
+    while (pos > 0 && area >= 0) {
+      area += opt_q - qs[pos-1];
       if (area > maxArea) {
         maxArea = area;
         maxPos = pos;
