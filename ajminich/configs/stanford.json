@@ -1,11 +1,11 @@
 {
   "name"                  : "EC2 Variant Calling Pipeline Configuration - Regular",
-  "dbsnp"                 : "/mnt/data/dbsnp.hg19.vcf",
+  "dbsnp"                 : "/ebs/data/dbsnp.hg19.vcf",
   
   "picard" : {
     
-    "runAddReplaceGroups" : true,
-    "runRemoveDuplicates" : true,
+    "runAddReplaceGroups" : false,
+    "runRemoveDuplicates" : false,
     
     "addReplaceGroups" : {
       "arguments" : [
@@ -27,7 +27,7 @@
     "fastRealigner"       : "",
     "combinedGenotyper"   : "",
     
-    "runRealign"          : true,
+    "runRealign"          : false,
     "runRecal"            : true,
     "fastRealignMode"     : false,
     "combinedMode"        : false,
@@ -45,13 +45,10 @@
     },
     
     "countCovariates" : {
-      "arguments" : [
-        "--covariate", "ReadGroupCovariate",
-        "--covariate", "QualityScoreCovariate",
-        "--covariate", "CycleCovariate",
-        "--covariate", "DinucCovariate"
-      ],
-      "options" : { }
+      "arguments" : [ ],
+      "options" : {
+	"--covariate"	: "ReadGroupCovariate,QualityScoreCovariate,CycleCovariate,DinucCovariate"
+      }
     },
     
     "tableRecalibration" : {
