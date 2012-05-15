@@ -77,6 +77,11 @@ public class BamExtractor {
     CmdLineParser parser = new CmdLineParser(this);
     parser.setUsageWidth(80);
     try {
+      System.out.println("In file: " + inBamFile);
+      System.out.println("Out file: " + outBamFile);
+      System.out.println("Min Read Length: " + minLenght);
+      System.out.println("Max Read Length: " + maxLenght);
+      System.out.println("Trim quality: " + trimQuality);
       parser.parseArgument(args);
       checkFileExists(inBamFile);
       
@@ -119,13 +124,11 @@ public class BamExtractor {
     }
   }
 
-
-
   /**
    * Get Trimed Read size then trimmed BWA Style. Inspired
    * by:http://wiki.bioinformatics.ucdavis.edu/index.php/TrimBWAstyle.pl
    */
-  private int getBwaTrimmedSize(int opt_q, SAMRecord r) {
+  public static int getBwaTrimmedSize(int opt_q, SAMRecord r) {
     byte[] qs;
     int pos, maxPos, area, maxArea;
     qs = r.getBaseQualities();
