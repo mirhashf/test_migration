@@ -77,12 +77,14 @@ public class BamExtractor {
     CmdLineParser parser = new CmdLineParser(this);
     parser.setUsageWidth(80);
     try {
+      parser.parseArgument(args);
+      
       System.out.println("In file: " + inBamFile);
       System.out.println("Out file: " + outBamFile);
       System.out.println("Min Read Length: " + minLenght);
       System.out.println("Max Read Length: " + maxLenght);
       System.out.println("Trim quality: " + trimQuality);
-      parser.parseArgument(args);
+      
       checkFileExists(inBamFile);
       
       SAMFileReader reader = new SAMFileReader(inBamFile);
