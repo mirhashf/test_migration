@@ -29,8 +29,8 @@ import boto
 # Based on http://bcbio.wordpress.com/2011/04/10/parallel-upload-to-amazon-s3-with-python-boto-and-multiprocessing/
 
 # Keys
-AWS_ACCESS_KEY_ID = 'AKIAIARKTAHR42HVHQQQ'
-AWS_SECRET_ACCESS_KEY = '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'
+AWS_ACCESS_KEY_ID="AKIAIARKTAHR42HVHQQQ"
+AWS_SECRET_ACCESS_KEY="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"
 
 # Set environment variables for AWS access keys
 os.putenv('AWS_ACCESS_KEY_ID', AWS_ACCESS_KEY_ID)
