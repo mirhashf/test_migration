@@ -24,7 +24,12 @@ package bina.seqalto.utilities.bamextractor;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.PriorityQueue;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -35,6 +40,9 @@ import net.sf.samtools.SAMFileHeader.SortOrder;
 import net.sf.samtools.SAMFileReader;
 import net.sf.samtools.SAMFileWriterImpl;
 import net.sf.samtools.SAMRecord;
+import net.sf.samtools.SAMRecordComparator;
+import net.sf.samtools.SAMRecordCoordinateComparator;
+import net.sf.samtools.SAMRecordQueryNameComparator;
 
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
@@ -61,16 +69,22 @@ public class ParallelSortSam {
 
   @Option(name = "--max-ram-records", usage = "Total number of records in ram.", required = false)
   int maxRecordsInRam = 1000000;
-  
 
-  /** main function 
-   * @throws InterruptedException */
+
+  /**
+   * main function
+   * 
+   * @throws InterruptedException
+   */
   public static void main(String[] args) throws IOException, InterruptedException {
     new ParallelSortSam().doMain(args);
   }
 
-  /** processes the passed command line options and runs a mode 
-   * @throws InterruptedException */
+  /**
+   * processes the passed command line options and runs a mode
+   * 
+   * @throws InterruptedException
+   */
   private void doMain(String[] args) throws IOException, InterruptedException {
     CmdLineParser parser = new CmdLineParser(this);
     parser.setUsageWidth(80);
@@ -79,50 +93,75 @@ public class ParallelSortSam {
       checkFileExists(inBamFile);
       ArrayList<SorterConsumer> consumers = new ArrayList<ParallelSortSam.SorterConsumer>();
 
-      final BlockingQueue<SAMRecord> queue = new ArrayBlockingQueue<SAMRecord>(1000000);
 
       SAMFileReader reader = new SAMFileReader(inBamFile);
       SAMFileHeader header = reader.getFileHeader();
+      Comparator<SAMRecord> comparator;
 
       if (sortOrder.equals("coordinate")) {
-        header.setSortOrder(SortOrder.coordinate);
+        comparator = new SAMRecordCoordinateComparator();
       } else if (sortOrder.equals("queryname")) {
-        header.setSortOrder(SortOrder.queryname);
+        comparator = new SAMRecordQueryNameComparator();
       } else {
         System.err.println("Invalid sort order!");
         return;
       }
 
+
+      Calendar now = Calendar.getInstance();
+
+
+      System.out.println(now.getTime() + " Started reading input.");
+
       // start threads that read
       for (int i = 0; i < numThreads; i++) {
-        SorterConsumer consumer = new SorterConsumer(queue, header, maxRecordsInRam/numThreads);
+        SorterConsumer consumer = new SorterConsumer(comparator);
         consumers.add(consumer);
+      }
+
+      int packet = 0;
+
+      for (SAMRecord read : reader) {
+        consumers.get(packet % numThreads).sortedList.add(read);
+      }
+
+      for (SorterConsumer consumer : consumers) {
         consumer.start();
       }
 
-      for (SAMRecord read : reader) {
-        queue.put(read);
+      for (SorterConsumer consumer : consumers) {
+        consumer.join();
       }
+
       
-      for(int i=0; i<numThreads; i++){
-        // to tell threads we are done. stop 
-        queue.add(null);
-      }
-      
+
+      System.out.println(now.getTime() + " Finished reading the file in...");
+
       BAMFileWriter merger = new BAMFileWriter(outBamFile);
-      
+
       merger.setHeader(header);
-      
-      for(SorterConsumer consumer : consumers){
-        SAMFileReader consumerReader = new SAMFileReader(consumer.getTmpFile());
-        for(SAMRecord record : consumerReader){
-          merger.addAlignment(record);
+      merger.setSortOrder(header.getSortOrder(), true);
+
+      PriorityQueue<SAMRecord> mergedHeap =
+          new PriorityQueue<SAMRecord>(maxRecordsInRam, comparator);
+
+      for (SorterConsumer consumer : consumers) {
+        while (!consumer.sortedList.isEmpty()) {
+          mergedHeap.add(consumer.sortedList.remove(0));
         }
       }
-      
+
+      System.out.println(now.getTime() + " Finished merging...");
+
+      // write out
+      for (SAMRecord read : mergedHeap) {
+        merger.addAlignment(read);
+      }
+
+      System.out.println(now.getTime() + " Finished writign...");
+
+
       merger.close();
-      
-      
     } catch (CmdLineException e) {
       parser.printUsage(System.err);
       return;
@@ -137,34 +176,18 @@ public class ParallelSortSam {
 
 
   class SorterConsumer extends Thread {
-    private final BlockingQueue<SAMRecord> queue;
-    private String tmpFilename = UUID.randomUUID().toString();
-    private File tmpFile = new File(tmpFilename);
-    private BAMFileWriter writer;
-    
-    SorterConsumer(BlockingQueue<SAMRecord> q, SAMFileHeader header, int maxRecordsInRam) {
-      writer = new BAMFileWriter(tmpFile);
-      SAMFileWriterImpl.setDefaultMaxRecordsInRam(maxRecordsInRam);
-      tmpFile.deleteOnExit();
-      queue = q;
-      writer.setHeader(header);
+    private ArrayList<SAMRecord> sortedList;
+    private Comparator<SAMRecord> comparator;
+
+    SorterConsumer(Comparator<SAMRecord> comparator) {
+      this.comparator = comparator;
+      this.sortedList = new ArrayList<SAMRecord>(maxRecordsInRam / maxRecordsInRam);
     }
 
     @Override
     public void run() {
-      try {
-        SAMRecord record;
-        while ((record = queue.take()) != null) {
-          writer.addAlignment(record);
-        }
-        writer.close();
-      } catch (InterruptedException ex) {
-        System.err.println("Inttrupted when trying to deque record!");
-      }
+      Collections.sort(sortedList, comparator);
     }
 
-    public File getTmpFile() {
-      return tmpFile;
-    }
   }
 }
