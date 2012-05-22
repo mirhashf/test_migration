@@ -24,23 +24,16 @@ package bina.seqalto.utilities.bamextractor;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.PriorityQueue;
-import java.util.UUID;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
 
 import net.sf.samtools.BAMFileWriter;
 import net.sf.samtools.SAMFileHeader;
-import net.sf.samtools.SAMFileHeader.SortOrder;
 import net.sf.samtools.SAMFileReader;
-import net.sf.samtools.SAMFileWriterImpl;
 import net.sf.samtools.SAMRecord;
-import net.sf.samtools.SAMRecordComparator;
 import net.sf.samtools.SAMRecordCoordinateComparator;
 import net.sf.samtools.SAMRecordQueryNameComparator;
 
