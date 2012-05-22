@@ -29,6 +29,7 @@ import net.sf.samtools.SAMFileReader;
 import net.sf.samtools.SAMFileReader.ValidationStringency;
 import net.sf.samtools.SAMRecord;
 import net.sf.samtools.SAMRecordIterator;
+import net.sf.samtools.SAMRecordUtil;
 
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
@@ -77,7 +78,12 @@ public class ReadExtractor {
       SAMRecord r;
       while (results.hasNext()) {
         r = results.next();
-        System.out.println(r.getReadString());
+        if(!r.getReadNegativeStrandFlag()){
+          System.out.println(r.getReadString());
+        }else{
+          SAMRecordUtil.reverseComplement(r);
+          System.out.println(r.getReadString());
+        }
 
       }
 
