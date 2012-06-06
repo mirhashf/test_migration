@@ -36,7 +36,8 @@ ${SEQALTO}/aligner/build/aligner -mode index \
     -ref ${DATA}/ucsc.hg19.fasta
     -index_mode ${INDEX_MODE} \
     -kmer_size ${KMER_SIZE} \
-    -index_name ${DATA}/ucsc.hg19.fasta_${KMER_SIZE}.sidx
+    -index_name ${DATA}/ucsc.hg19.fasta_${KMER_SIZE}.sidx \
+    -logtostderr=1
 
 # Start Zookeeper
 ${ZOOKEEPER}/bin/zkServer.sh start
