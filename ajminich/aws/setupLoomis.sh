@@ -28,6 +28,8 @@ mkdir ${DATA}
 chmod a+rw ${DATA}
 cd ${DATA}
 s3cmd get s3://bina.data/hg19/ucsc.hg19.fasta
+samtools faidx ucsc.hg19.fasta
+
 s3cmd get s3://bina.data/dbSNP/dbsnp.hg19.vcf
 s3cmd get s3://bina.data/svdata/windows.tar.gz
 tar -xf windows.tar.gz
@@ -36,7 +38,7 @@ ${SEQALTO}/aligner/build/aligner -mode index \
     -ref ${DATA}/ucsc.hg19.fasta
     -index_mode ${INDEX_MODE} \
     -kmer_size ${KMER_SIZE} \
-    -index_name ${DATA}/ucsc.hg19.fasta_${KMER_SIZE}.sidx \
+    -index_name ${DATA}/ucsc.hg19.fasta_${KMER_SIZE}.midx \
     -logtostderr=1
 
 # Start Zookeeper
