@@ -43,8 +43,7 @@ import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 
 /**
- * Reads the content of a BAM file and emits reads that have a BWA style trimmed size of > min and <
- * max.
+ * Reads the content of a BAM file and emits reads in FastQ format
  * 
  * @author amir@binatechnologies.com (Amirhossein Kiani)
  */
