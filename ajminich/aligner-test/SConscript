@@ -1,0 +1,119 @@
+#! /usr/bin/python
+
+import os, subprocess
+from time import strftime
+import sys
+
+def createVersionFile(filename, env):
+    
+    versionFile = open(filename, 'w')
+    
+    versionFile.write("#ifndef VERSION_H\n")
+    versionFile.write("#define VERSION_H\n")
+    versionFile.write("\n")
+    
+    versionFile.write("#include <string>\n")
+    versionFile.write("\n")
+    
+    versionFile.write("const std::string HASH = \"" + getHashCode(env) + "\";\n")
+    versionFile.write("const std::string DATE = \"" + strftime("%Y-%m-%d %H:%M:%S") + "\";\n")
+    versionFile.write("\n")
+    
+    versionFile.write("#endif")
+
+    versionFile.close()
+
+def getHashCode(env):
+    hashAcquire = subprocess.Popen([env['GIT'], 'rev-parse', 'HEAD'], stdout=subprocess.PIPE)
+    hashcode = hashAcquire.communicate()[0]
+    hashcode = hashcode.rstrip()
+    return hashcode
+
+Import ('env')
+
+local_env = env.Clone ( )
+
+local_env.AppendUnique (LINKFLAGS = ['--static', '-pthread'])
+local_env.AppendUnique (CCFLAGS = ['-msse2','-msse4.1', '-msse4.2', '-mpopcnt', '-mtune=native', '-fno-omit-frame-pointer', '-Wall', '-Wno-write-strings', '-finline-functions', '-funroll-loops'])
+local_env.AppendUnique (CPPPATH = ['#/software/libalign/include', '#/software/libutil/include'])
+
+if local_env['MODE'] == 'aws':
+    local_env.AppendUnique (LIBPATH = ['#/build/software/libalign', '#/build/software/libutil'])
+    local_env.AppendUnique (LIBS    = ['util', 'align', 'glog', 'gflags', 'boost_thread-mt', 'z', 'rt', 'crypto'])
+else:
+    local_env.AppendUnique (LIBPATH = ['#/build/software/libalign', '#/build/software/libutil', '#/build/software/libnw_engine'])
+    local_env.AppendUnique (LIBS    = ['util', 'align', 'nw_engine', 'nalla', 'glog', 'gflags', 'boost_thread-mt', 'z', 'rt', 'crypto'])
+
+# Create version.h file in the aligner/src directory
+srcDir = '../../../software/aligner/src'
+versionName = 'version.h'
+versionFile = os.path.join(srcDir, versionName)
+createVersionFile(versionFile, local_env)
+
+local_env.Program ('aligner', Glob ('src/*.cc'))
+
+# ------------------------ Unit Tests ------------------------ #
+
+# index2.cc
+index_include_cpps = []
+index_include_cpps.append('src/general_utils.cc')
+index_include_cpps.append('src/bit_dna.cc')
+index_include_cpps.append('src/read_vcf.cc')
+index_include_cpps.append('src/genome_load.cc')
+index_include_cpps.append('src/read_genome.cc')
+index_include_cpps.append('src/load_index.cc')
+index_include_cpps.append('src/index2.cc')
+index_include_cpps.append('test/data.cc')
+
+# Wait to add index2_test until index2_test parser is working again
+#local_env.addUnitTest ('test/index2_test', ['test/index2_test.cc'] + index_include_cpps)
+
+# load_index.cc
+load_index_include_cpps = []
+load_index_include_cpps.append('src/general_utils.cc')
+load_index_include_cpps.append('src/genome_load.cc')
+load_index_include_cpps.append('src/load_index.cc')
+load_index_include_cpps.append('src/pen_tester.cc')
+load_index_include_cpps.append('test/testUtils.cc')
+
+local_env.addUnitTest ('test/load_index_test', ['test/load_index_test.cc'] + load_index_include_cpps)
+
+# compare_str.cc
+compare_str_include_cpps = []
+compare_str_include_cpps.append('src/general_utils.cc')
+compare_str_include_cpps.append('src/genome_load.cc')
+compare_str_include_cpps.append('src/load_index.cc')
+compare_str_include_cpps.append('src/compare_str.cc')
+compare_str_include_cpps.append('test/data.cc')
+
+local_env.addUnitTest ('test/compare_str_test', ['test/compare_str_test.cc'] + compare_str_include_cpps)
+
+# pairing_stage.cc
+pairing_stage_include_cpps = []
+pairing_stage_include_cpps.append('src/general_utils.cc')
+pairing_stage_include_cpps.append('#/software/libutil/src/mt_random.cc')
+pairing_stage_include_cpps.append('src/pen_tester.cc')
+pairing_stage_include_cpps.append('src/align_output_gen.cc')
+pairing_stage_include_cpps.append('test/testUtils.cc')
+
+local_env.addUnitTest ('test/pairing_stage_test', ['test/pairing_stage_test.cc'] + pairing_stage_include_cpps)
+
+# align.cc
+align_include_cpps = []
+align_include_cpps.append('src/param_reader.cc')
+align_include_cpps.append('src/timer_names.cc')
+align_include_cpps.append('src/general_utils.cc')
+align_include_cpps.append('src/fast.cc')
+align_include_cpps.append('src/compare_str.cc')
+align_include_cpps.append('src/bounds.cc')
+align_include_cpps.append('src/genome_load.cc')
+align_include_cpps.append('src/load_index.cc')
+align_include_cpps.append('src/align_output_gen.cc')
+align_include_cpps.append('src/pairing_stage.cc')
+align_include_cpps.append('src/pen_tester.cc')
+align_include_cpps.append('src/align.cc')
+align_include_cpps.append('test/data.cc')
+align_include_cpps.append('test/testUtils.cc')
+
+local_env.addUnitTest ('test/align_test', ['test/align_test.cc'] + align_include_cpps)
+
