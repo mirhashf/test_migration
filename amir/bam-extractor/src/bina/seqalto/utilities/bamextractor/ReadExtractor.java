@@ -84,10 +84,7 @@ public class ReadExtractor {
           SAMRecordUtil.reverseComplement(r);
           System.out.println(r.getReadString());
         }
-
       }
-
-
     } catch (CmdLineException e) {
       parser.printUsage(System.err);
       return;
