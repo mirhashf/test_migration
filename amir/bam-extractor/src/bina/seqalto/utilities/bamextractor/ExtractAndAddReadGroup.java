@@ -101,12 +101,12 @@ public class ExtractAndAddReadGroup {
         header.setSortOrder(SortOrder.unsorted);
       }
 
-      for(int i = 1 ;i < 9; i++){
+      for(int i = 0 ;i < 10; i++){
         SAMReadGroupRecord readGroupObject = new SAMReadGroupRecord(String.valueOf(i));
         readGroupObject.setSample(sample);
         readGroupObject.setLibrary(library);
         readGroupObject.setPlatformUnit(platformUnit);
-        header.addReadGroup(new SAMReadGroupRecord(String.valueOf(i)));
+        header.addReadGroup(readGroupObject);
       }
 
       
