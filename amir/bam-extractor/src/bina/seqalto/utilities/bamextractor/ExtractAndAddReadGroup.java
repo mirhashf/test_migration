@@ -56,7 +56,17 @@ public class ExtractAndAddReadGroup {
   @Option(name = "--reference", usage = "Export only reads from this reference", required = false)
   String reference;
 
+  @Option(name = "--sample", usage = "Sample id", required = true)
+  String sample;
+
   
+  @Option(name = "--platform-unit", usage = "platform name", required = true)
+  String platformUnit;
+
+
+  @Option(name = "--library", usage = "library name", required = true)
+  String library;
+
   public static String newline = System.getProperty("line.separator");
 
   /** main function */
@@ -86,7 +96,10 @@ public class ExtractAndAddReadGroup {
       
       SAMFileHeader header = reader.getFileHeader().clone();
       
-      header.setSortOrder(SortOrder.unsorted);
+
+      if(header.getSortOrder() == null){
+        header.setSortOrder(SortOrder.unsorted);
+      }
 
       writer.setHeader(header);
 
@@ -94,6 +107,10 @@ public class ExtractAndAddReadGroup {
         if((reference == null || r.getReferenceName().equals(reference)) && !r.getReadUnmappedFlag()){
           String flowcell = r.getReadName().split(":")[1];
           r.setAttribute("RG", flowcell);
+          r.setAttribute("PU", platformUnit);
+          r.setAttribute("SM", sample);
+          r.setAttribute("LB", library);
+          
           writer.addAlignment(r);
           readGroups.add(flowcell);
         }
@@ -102,6 +119,10 @@ public class ExtractAndAddReadGroup {
       System.out.println("Observed flowcells: " + readGroups);
       
       for(String readGroup : readGroups){
+        SAMReadGroupRecord readGroupObject = new SAMReadGroupRecord(readGroup);
+        readGroupObject.setSample(sample);
+        readGroupObject.setLibrary(library);
+        readGroupObject.setPlatformUnit(platformUnit);
         header.addReadGroup(new SAMReadGroupRecord(readGroup));
       }
       
