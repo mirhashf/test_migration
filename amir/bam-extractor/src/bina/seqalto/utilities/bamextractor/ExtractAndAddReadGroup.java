@@ -101,6 +101,15 @@ public class ExtractAndAddReadGroup {
         header.setSortOrder(SortOrder.unsorted);
       }
 
+      for(int i = 1 ;i < 9; i++){
+        SAMReadGroupRecord readGroupObject = new SAMReadGroupRecord(String.valueOf(i));
+        readGroupObject.setSample(sample);
+        readGroupObject.setLibrary(library);
+        readGroupObject.setPlatformUnit(platformUnit);
+        header.addReadGroup(new SAMReadGroupRecord(String.valueOf(i)));
+      }
+
+      
       writer.setHeader(header);
 
       for(SAMRecord r : reader){
@@ -118,13 +127,6 @@ public class ExtractAndAddReadGroup {
       
       System.out.println("Observed flowcells: " + readGroups);
       
-      for(String readGroup : readGroups){
-        SAMReadGroupRecord readGroupObject = new SAMReadGroupRecord(readGroup);
-        readGroupObject.setSample(sample);
-        readGroupObject.setLibrary(library);
-        readGroupObject.setPlatformUnit(platformUnit);
-        header.addReadGroup(new SAMReadGroupRecord(readGroup));
-      }
       
       writer.setHeader(header);
       writer.close();
