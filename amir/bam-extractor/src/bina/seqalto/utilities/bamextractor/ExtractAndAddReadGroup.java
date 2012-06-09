@@ -92,7 +92,6 @@ public class ExtractAndAddReadGroup {
 
       for(SAMRecord r : reader){
         if((reference == null || r.getReferenceName().equals(reference)) && !r.getReadUnmappedFlag()){
-          System.out.println("Trying to add " + r.getSAMString());
           String flowcell = r.getReadName().split(":")[1];
           r.setAttribute("RG", flowcell);
           writer.addAlignment(r);
