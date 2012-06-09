@@ -28,7 +28,7 @@
 		<mkdir dir="${dist}"/>
 		<jar destfile="${dist}/BamExtractor.jar" filesetmanifest="mergewithoutmain">
 			<manifest>
-				<attribute name="Main-Class" value="bina.seqalto.utilities.bamextractor.BamToFastQ"/>
+				<attribute name="Main-Class" value="bina.seqalto.utilities.bamextractor.BamExtractor"/>
 				<attribute name="Class-Path" value=".:third_party/"/>
 			</manifest>
 			<fileset dir="${build}"/>
