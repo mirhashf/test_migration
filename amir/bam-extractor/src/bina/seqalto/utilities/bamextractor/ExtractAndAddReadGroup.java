@@ -24,17 +24,16 @@ package bina.seqalto.utilities.bamextractor;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
 import net.sf.samtools.BAMFileWriter;
 import net.sf.samtools.SAMFileHeader;
+import net.sf.samtools.SAMFileHeader.SortOrder;
 import net.sf.samtools.SAMFileReader;
+import net.sf.samtools.SAMFileReader.ValidationStringency;
 import net.sf.samtools.SAMReadGroupRecord;
 import net.sf.samtools.SAMRecord;
-import net.sf.samtools.SAMFileReader.ValidationStringency;
 
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
@@ -87,7 +86,10 @@ public class ExtractAndAddReadGroup {
       
       SAMFileHeader header = reader.getFileHeader().clone();
       
-      
+      header.setSortOrder(SortOrder.unsorted);
+
+      writer.setHeader(header);
+
       for(SAMRecord r : reader){
         if((reference == null || r.getReferenceName().equals(reference)) && !r.getReadUnmappedFlag()){
           System.out.println("Trying to add " + r.getSAMString());
