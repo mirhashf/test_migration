@@ -1,6 +1,6 @@
 {
   "name"                  : "EC2 Variant Calling Pipeline Configuration - Fast",
-  "dbsnp"                 : "/mnt/data/dbsnp.hg19.vcf",
+  "dbsnp"                 : "~/data/dbSNP/dbsnp_132.hg19.vcf",
   
   "picard" : {
     
@@ -23,9 +23,7 @@
 
   "gatk" : {
     
-    "executable"          : "/home/ubuntu/programs/third_party_branch/master/software/gatk/dist/GenomeAnalysisTK.jar",
-    "fastRealigner"       : "/home/ubuntu/programs/third_party_branch/gatk_fast/software/gatk/dist/GenomeAnalysisTK.jar",
-    "combinedGenotyper"   : "/home/ubuntu/programs/third_party_branch/CombinedGenotyper/software/gatk/dist/GenomeAnalysisTK.jar",
+    "executable"          : "~/programs/seqalto/third-party/gatk/dist/GenomeAnalysisTK.jar",
     
     "runRealign"          : true,
     "runRecal"            : true,
