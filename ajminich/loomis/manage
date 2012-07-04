@@ -1,17 +1,12 @@
 #!/bin/bash
 
-NODE_PREFIX=tehran-0
+NODE_PREFIX=binatech@tehran-0
 NUM_NODES=3
 SEQALTO_DIR="/import/tehran-00/scratchR/shared/seqalto"
 
 function d() {
   echo $@
   $@ || exit $?
-}
-
-function get_kill_process_command() {
-    process_name=${1}
-    echo "kill `ps -ef | grep ${process_name} | grep -v grep | awk '{print $2}'`"
 }
 
 function send_command() {
@@ -26,15 +21,10 @@ for node_number in `seq 0 ${NUM_NODES}`
 do
     current_node="${NODE_PREFIX}${node_number}"
     
-    echo "Killing existing processes on ${current_node}."
+    echo "Killing existing Loomis on ${current_node}."
+    send_command ${current_node} "${SEQALTO_DIR}/target/bin/kill --binabox"
     
-    send_command ${current_node} $(get_kill_process_command loomis)
-    send_command ${current_node} $(get_kill_process_command samsorter)
-    send_command ${current_node} $(get_kill_process_command bwa)
-    send_command ${current_node} $(get_kill_process_command bwarunner)
-    send_command ${current_node} $(get_kill_process_command aligner)
-
     echo "Starting Loomis server on ${current_node}."
-    send_command ${current_node} ${SEQALTO_DIR}/target/bin/start
+    send_command ${current_node} "${SEQALTO_DIR}/target/bin/start"
     
 done
