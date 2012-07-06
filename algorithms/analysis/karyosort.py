@@ -35,7 +35,7 @@ def karyosort(input_file, output_file, fasta_index):
             print "Warning: contig '" + contig + "' not recognized."
             continue
         
-        if contig_file not in files_open:
+        if contig not in files_open:
             current_file = open(contig_file, 'w')
             files_open[contig] = current_file
             
