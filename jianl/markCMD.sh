@@ -1,14 +1,14 @@
 
-TMP=/mnt
-PICARD=~/programs/picard/dist
+TMP=./
+PICARD=~/downloads/picard/dist
 d=$1
 f=$2
 
-sudo java -Xms5g -Xmx5g -jar $PICARD/BuildBamIndex.jar INPUT=$d/$f.bam VALIDATION_STRINGENCY=LENIENT
+java -Xms5g -Xmx5g -jar $PICARD/BuildBamIndex.jar INPUT=$d/$f.bam VALIDATION_STRINGENCY=LENIENT
 
 echo ">>> Marking duplicates"
 
-sudo java -Xms5g -Xmx5g -jar $PICARD/MarkDuplicates.jar \
+java -Xms5g -Xmx5g -jar $PICARD/MarkDuplicates.jar \
         TMP_DIR=$TMP \
         I=$d/$f.bam\
         O=$d/$f\_marked.bam\
@@ -22,7 +22,7 @@ sudo java -Xms5g -Xmx5g -jar $PICARD/MarkDuplicates.jar \
 
 echo "*** Finished removing duplicates ***"
 
-sudo java -Xms5g -Xmx5g -jar $PICARD/BuildBamIndex.jar INPUT=$d/$f\_marked.bam VALIDATION_STRINGENCY=LENIENT
+#java -Xms5g -Xmx5g -jar $PICARD/BuildBamIndex.jar INPUT=$d/$f\_marked.bam VALIDATION_STRINGENCY=LENIENT
 
 echo "DONE"
 
