@@ -1,0 +1,30 @@
+#!/bin/bash
+
+NODE_PREFIX=binatech@tehran-0
+NUM_NODES=3
+SEQALTO_DIR="/import/tehran-00/scratchR/shared/seqalto"
+
+function d() {
+  echo $@
+  $@ || exit $?
+}
+
+function send_command() {
+
+    server=${1}
+    command=${2}
+
+    d ssh -t ${server} ${command}
+}
+
+for node_number in `seq 0 ${NUM_NODES}`
+do
+    current_node="${NODE_PREFIX}${node_number}"
+    
+    echo "Killing existing Loomis on ${current_node}."
+    send_command ${current_node} "${SEQALTO_DIR}/target/bin/kill --binabox"
+    
+    echo "Starting Loomis server on ${current_node}."
+    send_command ${current_node} "${SEQALTO_DIR}/target/bin/start"
+    
+done
