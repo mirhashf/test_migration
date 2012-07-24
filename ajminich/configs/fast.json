@@ -1,11 +1,11 @@
 {
   "name"                  : "EC2 Variant Calling Pipeline Configuration - Fast",
-  "dbsnp"                 : "~/data/dbSNP/dbsnp_132.hg19.vcf",
+  "dbsnp"                 : "/home/ajminich/data/dbSNP/dbsnp_132.hg19.vcf",
   
   "picard" : {
     
-    "runAddReplaceGroups" : true,
-    "runRemoveDuplicates" : true,
+    "runAddReplaceGroups" : false,
+    "runRemoveDuplicates" : false,
     
     "addReplaceGroups" : {
       "arguments" : [
@@ -23,7 +23,7 @@
 
   "gatk" : {
     
-    "executable"          : "~/programs/seqalto/third-party/gatk/dist/GenomeAnalysisTK.jar",
+    "gatkJar"          : "/home/ajminich/programs/seqalto/third-party/gatk/dist/GenomeAnalysisTK.jar",
     
     "runRealign"          : true,
     "runRecal"            : true,
