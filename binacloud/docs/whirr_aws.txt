@@ -1,0 +1,153 @@
+### setting up the whirr manager node (Cent OS 5 from Right-Scale, 64 bit)
+
+alias bssh="ssh -i ~/Documents/creds/bina-test.pem"
+alias bscp="scp -i ~/Documents/creds/bina-test.pem"
+
+# launch
+ec2run ami-3c994355 -n 1 --instance-type m1.small --availability-zone us-east-1a  -k bina-test 
+
+`sed -e 's/^/export /' $S3CONF/s3config.yml | sed -e 's/:/=/' `
+
+# download CDH4 (to get the Whirr release for CDH4/YARN)
+# temporarily disable gpgcheck in /etc/yum.conf
+
+bssh ubuntu@ec2-23-20-238-46.compute-1.amazonaws.com
+sudo -bash
+
+cd /tmp
+wget http://archive.cloudera.com/cdh4/one-click-install/lucid/amd64/cdh4-repository_1.0_all.deb
+sudo dpkg -i cdh4-repository_1.0_all.deb
+sudo apt-get install openjdk-7-jdk
+sudo apt-get install gcc g++ scons git tmux 
+sudo apt-get install s3cmd ant
+
+sudo apt-get install ruby
+sudo apt-get install libssl-dev libyaml-ruby 
+
+wget http://s3.amazonaws.com/ServEdge_pub/s3sync/s3sync.tar.gz
+tar -xvf ssync.tar.gz
+export PATH=$PATH:/home/ubuntu/s3sync
+
+curl -s http://archive.cloudera.com/cdh4/ubuntu/lucid/amd64/cdh/archive.key | sudo apt-key add -
+
+# install whirr
+sudo apt-get install whirr
+
+# set up s3 credentials and s3sync
+
+mkdir -p /home/ubuntu/.s3conf
+cat > /home/ubuntu/.s3conf/s3config.yml << EOF
+AWS_ACCESS_KEY_ID: AKIAIQDYHF66MJIA4X2Q
+AWS_SECRET_ACCESS_KEY: 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
+EOF
+
+cat > /home/ubuntu/.s3cfg << EOF
+[default]
+access_key = AKIAIQDYHF66MJIA4X2Q
+bucket_location = US
+cloudfront_host = cloudfront.amazonaws.com
+cloudfront_resource = /2010-07-15/distribution
+default_mime_type = binary/octet-stream
+delete_removed = False
+dry_run = False
+encoding = UTF-8
+encrypt = False
+follow_symlinks = False
+force = False
+get_continue = False
+gpg_command = /usr/bin/gpg
+gpg_decrypt = %(gpg_command)s -d --verbose --no-use-agent --batch --yes --passphrase-fd %(passphrase_fd)s -o %(output_file)s %(input_file)s
+gpg_encrypt = %(gpg_command)s -c --verbose --no-use-agent --batch --yes --passphrase-fd %(passphrase_fd)s -o %(output_file)s %(input_file)s
+gpg_passphrase = 
+guess_mime_type = True
+host_base = s3.amazonaws.com
+host_bucket = %(bucket)s.s3.amazonaws.com
+human_readable_sizes = False
+list_md5 = False
+log_target_prefix = 
+preserve_attrs = True
+progress_meter = True
+proxy_host = 
+proxy_port = 0
+recursive = False
+recv_chunk = 4096
+reduced_redundancy = False
+secret_key = Iqd75KbHCTUc0boYRQc+ZvPyPmJVIxAiS7lIsJ74
+send_chunk = 4096
+simpledb_host = sdb.amazonaws.com
+skip_existing = False
+socket_timeout = 10
+urlencoding_mode = normal
+use_https = False
+verbosity = WARNING
+EOF
+
+# generate the cluster login key
+
+ssh-keygen
+
+# prepare cluster configuration file
+
+cat > bina-test-cluster.properties << EOF
+whirr.cluster-name=wen-bina-test
+whirr.instance-templates=1 hadoop-namenode+yarn-resourcemanager+mapreduce-historyserver+hadoop-datanode+yarn-nodemanager
+whirr.provider=aws-ec2
+whirr.identity=AKIAIQDYHF66MJIA4X2Q
+whirr.credential=Iqd75KbHCTUc0boYRQc+ZvPyPmJVIxAiS7lIsJ74
+whirr.private-key-file=.ssh/id_rsa
+whirr.public-key-file=.ssh/id_rsa.pub
+whirr.env.mapreduce_version=2
+whirr.env.repo=cdh4
+whirr.hadoop.install-function=install_cdh_hadoop
+whirr.hadoop.configure-function=configure_cdh_hadoop
+whirr.mr_jobhistory.start-function=start_cdh_mr_jobhistory
+whirr.yarn.configure-function=configure_cdh_yarn
+whirr.yarn.start-function=start_cdh_yarn
+whirr.hardware-id=m1.large
+whirr.image-id=us-east-1/ami-ccb35ea5
+whirr.location-id=us-east-1
+EOF
+
+# launch the cluster
+whirr launch-cluster --config bina-test-cluster.properties
+
+# test cluster
+
+export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64
+hdfs dfs -ls /user
+
+# compile bina code
+
+git clone git@github.com:BinaTechnologies/seqalto.git
+ant setup
+ant
+
+# configure BINA
+
+export BINA_ROOT=$HOME/binabox
+export TEST_ROOT=$BINA_ROOT
+export GENOME_DIR=$HOME/genome
+export SHARED_DIR=$BINA_ROOT/shared
+export SCRATCH_DIR=$BINA_ROOT/scratch
+mkdir -p $BINA_ROOT
+mkdir -p $SHARED_DIR
+mkdir -p $SCRATCH_DIR
+
+export ZOOKEEPER_ID=1
+export NUM_BWA_CORES=8
+
+export HOSTNAME=localhost
+export MANAGER_PORT=11081
+export BINABOX_PORT=11080
+export GENOME_DIR=$GENOME_DIR
+
+export NUM_CORES=8
+export SORTER_MAX_MEMORY=10
+export ZOOKEEPER_PORT=11082
+export ZOOKEEPER_PEERS='t-rex:11083:11084'
+export ZOOKEEPER_DIR=$BINA_ROOT
+export BINA_API_KEY=password
+
+/home/ubuntu/seqalto/target/bin/configure
+
+
