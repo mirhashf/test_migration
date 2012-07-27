@@ -24,8 +24,8 @@ do
         -r ${BINA_DATA_PATH}/${sample_name}.${FIRST_END_SUFFIX} \
         -R ${BINA_DATA_PATH}/${sample_name}.${SECOND_END_SUFFIX} \
         -rg ${sample_name} -lb FMI -sm ${sample_name} \
-        -o ${BINA_RESULTS_PATH} --use_bwa \
-        --desc "FMI Sample ${sample_name}"
+        -o ${BINA_RESULTS_PATH} --use_bwa --use_broad_gatk \
+        --desc "FMI Sample ${sample_name} using Broad GATK"
 done
 
 echo "All jobs queued."
