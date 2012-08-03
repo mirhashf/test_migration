@@ -16,8 +16,8 @@ for sample in ${SAMPLES};
 do
     echo "Queueing up Locus Dev sample ${sample}."
     echo bina --hosts ${HOSTS} --key ${KEY} run \
-        -r ${BINA_DATA_PATH}/${sample_name}/${FIRST_END} \
-        -R ${BINA_DATA_PATH}/${sample_name}/${SECOND_END} \
+        -r ${BINA_DATA_PATH}/${sample}/${FIRST_END} \
+        -R ${BINA_DATA_PATH}/${sample}/${SECOND_END} \
         -rg ${sample} -lb FMI -sm ${sample} \
         -o ${BINA_RESULTS_PATH} \
         --desc "Locus Dev Sample ${sample}" \

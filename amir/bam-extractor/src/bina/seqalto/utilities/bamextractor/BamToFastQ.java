@@ -98,7 +98,7 @@ public class BamToFastQ {
       BufferedWriter writer1 = new BufferedWriter(new FileWriter(outFile1));
       BufferedWriter writer2 = new BufferedWriter(new FileWriter(outFile2));
 
-      reader.setValidationStringency(ValidationStringency.LENIENT);
+      reader.setValidationStringency(ValidationStringency.SILENT);
 
 
 
