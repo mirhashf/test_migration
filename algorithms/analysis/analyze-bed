@@ -1,0 +1,50 @@
+#!/usr/bin/python
+'''BED analysis.
+
+analyze-bed <bed_file>
+'''
+
+import sys
+
+def analyze_bed(bed_file):
+    
+    print "Analyzing BED file '" + bed_file + "'."
+    
+    # Open file for reading
+    reader = open(bed_file, 'r')
+    
+    line = reader.readline()
+    region_lengths = []
+    while line:
+        items = line.split("\t")
+        start_loc = long(items[1])
+        end_loc = long(items[2])
+        region_lengths.append(int(end_loc - start_loc))    
+        line = reader.readline()
+        
+    hist = histogram(region_lengths)
+    
+    for length in sorted(hist.keys()):
+        print str(length).ljust(10) + ": " + str(hist[length])
+    
+    reader.close()
+
+def histogram(L):
+    '''Taken from
+    http://stackoverflow.com/questions/2870466/python-histogram-one-liner
+    '''
+    d = {}
+    for x in L:
+        if x in d:
+            d[x] += 1
+        else:
+            d[x] = 1
+    return d
+
+if __name__ == '__main__':
+    
+    if len(sys.argv) < 2:
+        print __doc__
+        exit(1)
+        
+    analyze_bed(sys.argv[1])

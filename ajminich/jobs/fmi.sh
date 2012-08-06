@@ -9,7 +9,7 @@ SECOND_END_SUFFIX="read2.fq"
 BINA_DATA_PATH="bina://data/FMI"
 BINA_RESULTS_PATH="bina://jobs/FMI"
 
-HOSTS="milan-00:8080 milan-01:8080"
+HOSTS="krakow-00:8080 krakow-01:8080"
 KEY="gocardinal"
 
 # Get list of prefixes to process
@@ -24,8 +24,8 @@ do
         -r ${BINA_DATA_PATH}/${sample_name}.${FIRST_END_SUFFIX} \
         -R ${BINA_DATA_PATH}/${sample_name}.${SECOND_END_SUFFIX} \
         -rg ${sample_name} -lb FMI -sm ${sample_name} \
-        -o ${BINA_RESULTS_PATH} --use_bwa --use_broad_gatk \
-        --desc "FMI Sample ${sample_name} using Broad GATK"
+        -o ${BINA_RESULTS_PATH} --use_bwa \
+        --desc "FMI Sample ${sample_name} (Local Mode)" -l
 done
 
 echo "All jobs queued."
