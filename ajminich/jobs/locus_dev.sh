@@ -15,10 +15,10 @@ KEY="gocardinal"
 for sample in ${SAMPLES};
 do
     echo "Queueing up Locus Dev sample ${sample}."
-    bina --hosts ${HOSTS} --key ${KEY} run \
+    echo bina --hosts ${HOSTS} --key ${KEY} run \
         -r ${BINA_DATA_PATH}/${sample}/${FIRST_END} \
         -R ${BINA_DATA_PATH}/${sample}/${SECOND_END} \
-        -rg ${sample} -lb LocusDev -sm ${sample} \
+        -rg ${sample} -lb FMI -sm ${sample} \
         -o ${BINA_RESULTS_PATH} \
         -tg bina://data/LocusDev/SureSelect_038114_D_BED_20120106_merged_formatted.bed \
         --desc "Locus Dev Sample ${sample} (Local Mode)" -l
