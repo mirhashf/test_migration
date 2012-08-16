@@ -13,5 +13,5 @@ fi
 
 currentDir=`pwd -P`
 
-echo "Starting local server (t-rex:${port}) from ${currentDir}."
+echo "Starting local server ($(hostname):${port}) from ${currentDir}."
 python -m SimpleHTTPServer ${port}
