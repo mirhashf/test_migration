@@ -28,11 +28,11 @@ nodes = [
          "scg-bb-01-genstorage.sunet:8080"
          ]
 
-data_dir = "bina://data/snyder"
+data_dir = "bina://data/public/snyder"
 
 # Set up the libraries
 libraries = [
-             ("blood", "A804NLABXX", 8),
+             ("blood", "A804NLABXX", 8)
              ("saliva", "A806WMABXX", 8),
              ("saliva", "A808HKABXX", 8)
              ]
@@ -49,6 +49,11 @@ job = bina.Job()
 job.set_output_dir("bina://out")
 job.set_description("Snyder 120x run with Bina Pipeline")
 job.set_use_broad_gatk(False)
+
+# Reference
+job.reference.set_species("human")
+job.reference.set_genome_build("CEUref")
+job.reference.set_dbsnp_build("135_major")
 
 # Create alignment tasks for the Bina Aligner
 for library in libraries:
@@ -87,13 +92,11 @@ job.alignment.set_disable_concurrent_sorting(True)
 
 # Connect to Bina Box using API key and IP addresses of nodes
 binabox = bina.BinaBox()
-#binabox.connect(api_key, nodes)
+binabox.connect(api_key, nodes)
 
 # Submit the job
-# job_id = binabox.run_job(job)
-#print "Job submitted with ID " + job_id + "."
-
-print str(job)
+job_id = binabox.run_job(job)
+print "Job submitted with ID " + job_id + "."
 
 # Close the connection
 binabox.close()
