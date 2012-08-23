@@ -67,7 +67,7 @@ for library in libraries:
             readgroup = lane_prefix + ".s_" + str(lane_index),
             library = library_name,
             sample = sample)
-        aligner_job.set_trimming(30)
+        aligner_job.set_trimming(0)
         
         # Set aligner template size calculation to automatic
         aligner_job.set_option("--template_len_comp_method", 2)
