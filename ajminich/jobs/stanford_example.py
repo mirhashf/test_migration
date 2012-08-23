@@ -47,6 +47,7 @@ job = bina.Job()
 
 # Set up the job
 job.set_output_dir("bina://out")
+job.set_description("Snyder 120x run with Bina Pipeline")
 job.set_use_broad_gatk(False)
 
 # Create alignment tasks for the Bina Aligner
