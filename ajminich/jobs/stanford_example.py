@@ -28,7 +28,7 @@ nodes = [
          "scg-bb-01-genstorage.sunet:8080"
          ]
 
-data_dir = "data/reads"
+data_dir = "bina://data/snyder"
 
 # Set up the libraries
 libraries = [
@@ -61,11 +61,11 @@ for library in libraries:
     for lane_index in range(1, num_lanes+1):
         
         aligner_job = bina.BinaAlignerJob(
-            first_end="bina://" + data_dir + "/" + lane_prefix + ".s_" + str(lane_index) + "_1.fq.gz",
-            second_end="bina://" + data_dir + "/" + lane_prefix + ".s_" + str(lane_index) + "_2.fq.gz",
-            readgroup=lane_prefix + ".s_" + str(lane_index),
-            library=library_name,
-            sample=sample)
+            first_end = data_dir + "/" + lane_prefix + ".s_" + str(lane_index) + "_1.fq.gz",
+            second_end = data_dir + "/" + lane_prefix + ".s_" + str(lane_index) + "_2.fq.gz",
+            readgroup = lane_prefix + ".s_" + str(lane_index),
+            library = library_name,
+            sample = sample)
         aligner_job.set_trimming(30)
         
         # Set aligner template size calculation to automatic
