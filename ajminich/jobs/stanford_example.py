@@ -86,6 +86,38 @@ for library in libraries:
 # the amount of sorting we can perform in main memory. 
 job.alignment.set_disable_concurrent_sorting(True)
 
+# You can retain the sorted BAM files for analysis. However, this is
+# generally not recommended due to limited space available on the system.
+job.alignment.set_keep_sorted_bam(False)
+
+'''
+        REALIGNMENT
+'''
+
+# To configure the realignment:
+# job.realignment.fast_realigner.set_argument(<argument>, <boolean>)
+# job.realignment.fast_realigner.set_option(<option>, <value>)
+
+'''
+        GENOTYPING
+'''
+
+# To configure the genotyping:
+# job.genotyping.fast_genotyper.set_argument(<argument>, <boolean>)
+# job.genotyping.fast_genotyper.set_option(<option>, <value>)
+
+'''
+        STRUCTURAL VARIATION
+'''
+
+# Enable all structural variation tools
+job.structural_variation.set_disable_bina_sv(False)
+job.structural_variation.set_run_breakdancer(True)
+job.structural_variation.set_run_breakseq(True)
+job.structural_variation.set_run_cnvnator(True)
+job.structural_variation.set_run_pindel(True)
+job.structural_variation.pindel.set_use_breakdancer(True)
+
 '''
         JOB SUBMISSION
 '''
