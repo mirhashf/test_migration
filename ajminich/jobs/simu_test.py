@@ -74,8 +74,17 @@ job.alignment.set_keep_sorted_bam(False)
 # job.genotyping.fast_genotyper.set_argument(<argument>, <boolean>)
 # job.genotyping.fast_genotyper.set_option(<option>, <value>)
 
-recal_operation = bina.VariantRecalOperation({ })
+# VQSR Configuration
+recal_operation = bina.VariantRecalOperation()
 recal_operation.set_name("ds3 recal")
+recal_operation.set_variant_type("SNP")
+
+resource = bina.VariantRecalibrationResource("dbsnp", 
+             "bina://data/genome/human/chr21/dbsnp/132.vcf")
+resource.set_training(True)
+resource.set_truth(True)
+
+recal_operation.add_resource(resource)
 
 job.genotyping.add_recal_operation(recal_operation)
 
