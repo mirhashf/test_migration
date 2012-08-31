@@ -7,7 +7,7 @@ import os
 import sys
 
 # Import bina module from relative path
-module_dir = '/home/ajminich/seqalto/loomis/sdk'
+module_dir = '/Users/ajminich/programs/seqalto/loomis/sdk'
 sys.path.append(module_dir)
 
 import bina
@@ -42,8 +42,8 @@ job.reference.set_dbsnp_build("132")
 
 # Create alignment tasks for the Bina Aligner
 aligner_job = bina.BinaAlignerJob(
-            first_end = datasets_dir + "/" + dataset + "_1.fq",
-            second_end = datasets_dir + "/" + dataset + "_2.fq",
+            first_end = datasets_dir + "/" + dataset + "/" + dataset + "_1.fq",
+            second_end = datasets_dir + "/" + dataset + "/" + dataset + "_2.fq",
             readgroup = dataset,
             library = dataset)
 aligner_job.set_trimming(30)
@@ -91,16 +91,13 @@ job.structural_variation.set_run_cnvnator(True)
 job.structural_variation.set_run_pindel(True)
 job.structural_variation.pindel.set_use_breakdancer(True)
 
-print str(job)
-exit()
-
 '''
         JOB SUBMISSION
 '''
 
 # Connect to Bina Box using API key and IP addresses of nodes
 binabox = bina.BinaBox()
-binabox.connect(api_key, nodes)
+binabox.connect(api_key, servers)
 
 # Submit the job
 job_id = binabox.run_job(job)
