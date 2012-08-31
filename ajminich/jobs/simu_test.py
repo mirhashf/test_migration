@@ -7,7 +7,8 @@ import os
 import sys
 
 # Import bina module from relative path
-module_dir = '/Users/ajminich/programs/seqalto/loomis/sdk'
+#module_dir = '/Users/ajminich/programs/seqalto/loomis/sdk'
+module_dir = '/home/ajminich/seqalto/loomis/sdk'
 sys.path.append(module_dir)
 
 import bina
@@ -74,24 +75,50 @@ job.alignment.set_keep_sorted_bam(False)
 # job.genotyping.fast_genotyper.set_argument(<argument>, <boolean>)
 # job.genotyping.fast_genotyper.set_option(<option>, <value>)
 
-# VQSR Configuration
-recal_operation = bina.VariantRecalOperation()
-recal_operation.set_name("ds3 recal")
-recal_operation.set_variant_type("SNP")
+'''
+        VARIANT QUALITY SCORE RECALIBRATION
+'''
 
 resource = bina.VariantRecalibrationResource("dbsnp", 
              "bina://data/genome/human/chr21/dbsnp/132.vcf")
 resource.set_training(True)
 resource.set_truth(True)
 
+# SNP Recalibration
+recal_operation = bina.VariantRecalOperation()
+recal_operation.set_name("ds3 SNP recalibration")
+recal_operation.set_variant_type("SNP")
+
+recal_operation.variant_recalibrator.set_option("--maxGaussians", 2)
+recal_operation.variant_recalibrator.set_option("--percentBadVariants", 0.8)
+recal_operation.variant_recalibrator.set_option("--use_annotation", "QD,HaplotypeScore,MQRankSum,ReadPosRankSum,FS,MQ,DP")
+
+recal_operation.apply_recalibration.set_option("--ts_filter_level", 99.0)
+
 recal_operation.add_resource(resource)
 
+# Indel Recalibration
+recal_operation = bina.VariantRecalOperation()
+recal_operation.set_name("ds3 indel recalibration")
+recal_operation.set_variant_type("INDEL")
+
+recal_operation.variant_recalibrator.set_option("--maxGaussians", 2)
+recal_operation.variant_recalibrator.set_option("--percentBadVariants", 0.8)
+recal_operation.variant_recalibrator.set_option("--use_annotation", "QD,HaplotypeScore,ReadPosRankSum,FS")
+
+recal_operation.apply_recalibration.set_option("--ts_filter_level", 99.0)
+
+recal_operation.add_resource(resource)
+
+# Add operation
 job.genotyping.add_recal_operation(recal_operation)
+job.genotyping.set_perform_vqsr(True)
 
 '''
         STRUCTURAL VARIATION
 '''
 
+'''
 # Enable all structural variation tools
 job.structural_variation.set_disable_bina_sv(False)
 job.structural_variation.set_run_breakdancer(True)
@@ -99,6 +126,7 @@ job.structural_variation.set_run_breakseq(True)
 job.structural_variation.set_run_cnvnator(True)
 job.structural_variation.set_run_pindel(True)
 job.structural_variation.pindel.set_use_breakdancer(True)
+'''
 
 '''
         JOB SUBMISSION
