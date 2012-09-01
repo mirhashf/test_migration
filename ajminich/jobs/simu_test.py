@@ -79,6 +79,8 @@ job.alignment.set_keep_sorted_bam(False)
         VARIANT QUALITY SCORE RECALIBRATION
 '''
 
+job.genotyping.set_perform_vqsr(True)
+
 resource = bina.VariantRecalibrationResource("dbsnp", 
              "bina://data/genome/human/chr21/dbsnp/132.vcf")
 resource.set_training(True)
@@ -97,6 +99,8 @@ recal_operation.apply_recalibration.set_option("--ts_filter_level", 99.0)
 
 recal_operation.add_resource(resource)
 
+job.genotyping.add_recal_operation(recal_operation)
+
 # Indel Recalibration
 recal_operation = bina.VariantRecalOperation()
 recal_operation.set_name("ds3 indel recalibration")
@@ -104,15 +108,13 @@ recal_operation.set_variant_type("INDEL")
 
 recal_operation.variant_recalibrator.set_option("--maxGaussians", 2)
 recal_operation.variant_recalibrator.set_option("--percentBadVariants", 0.8)
-recal_operation.variant_recalibrator.set_option("--use_annotation", "QD,HaplotypeScore,ReadPosRankSum,FS")
+recal_operation.variant_recalibrator.set_option("--use_annotation", "QD,HaplotypeScore,FS")
 
 recal_operation.apply_recalibration.set_option("--ts_filter_level", 99.0)
 
 recal_operation.add_resource(resource)
 
-# Add operation
 job.genotyping.add_recal_operation(recal_operation)
-job.genotyping.set_perform_vqsr(True)
 
 '''
         STRUCTURAL VARIATION
