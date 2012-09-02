@@ -28,11 +28,24 @@
 	var View = Backbone.View.extend({
 	    initialize : function() {
 		console.log("Initializing");
-		console.log(this.options.blankOption);
 	    }
 	})
 
-	var view = new View({blankOption:"empty string"});
+	var view = new View({model: model});
+	
+	var Router = Backbone.Router.extend({
+	    routes: {
+			"foo/:bar": "func"
+	    },
+
+		func: function (p){
+		    console.log(p);
+		}
+	});
+	
+	router = new Router();
+	
+	Backbone.history.start();
 	
 	
     </script>
