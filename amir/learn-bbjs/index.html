@@ -28,10 +28,11 @@
 	var View = Backbone.View.extend({
 	    initialize : function() {
 		console.log("Initializing");
+		console.log(this.options.blankOption);
 	    }
 	})
 
-	var view = new View(blankOption:"empty string");
+	var view = new View({blankOption:"empty string"});
 	
 	
     </script>
