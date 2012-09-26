@@ -173,8 +173,8 @@ combRodFile=(["-V:"]*evalRods.size).zip(evalRods.zip(evalFiles).map {|rodFile| r
 
 #combRodFile2=(["--eval:"]*evalRods.size).zip(evalRods.zip(evalFiles).map {|rodFile| rodFile.join(" ")}).map {|evalString| evalString.join("")}
 
-#system("java -jar #{gatkPath}/GenomeAnalysisTK.jar -R #{refFasta} -T VariantsMerger  #{combRodFile.join(" ")} -priority #{evalRods.join(",")} -o #{outputPath}/combined.#{evalRods.join("_")}.#{variantClass}.vcf -setKey set")
-#system("java -jar #{gatkPath}/GenomeAnalysisTK.jar -T VariantEval -R #{refFasta} -D #{dbSNPvcf} #{selectString.join(" ")} -o #{outputPath}/combeval.#{evalRods.join("_")}.#{variantClass}.report -eval #{outputPath}/combined.#{evalRods.join("_")}.#{variantClass}.vcf --evalModule GenotypeConcordance -l INFO")
+system("java -jar #{gatkPath}/GenomeAnalysisTK.jar -R #{refFasta} -T VariantsMerger  #{combRodFile.join(" ")} -priority #{evalRods.join(",")} -o #{outputPath}/combined.#{evalRods.join("_")}.#{variantClass}.vcf -setKey set")
+system("java -jar #{gatkPath}/GenomeAnalysisTK.jar -T VariantEval -R #{refFasta} -D #{dbSNPvcf} #{selectString.join(" ")} -o #{outputPath}/combeval.#{evalRods.join("_")}.#{variantClass}.report -eval #{outputPath}/combined.#{evalRods.join("_")}.#{variantClass}.vcf --evalModule GenotypeConcordance -l INFO")
 
 #system("java -jar #{gatkPath}/GenomeAnalysisTK.jar  -T VariantEval -R /mnt/scratch0/public/genome/human/hg19.major/hg19.major.fa -D /mnt/scratch0/public/genome/human/hg19/dbsnp/dbsnp_132.vcf #{combRodFile2.join(" ")} -o weval.#{evalRods.join("_")}.#{variantClass}.report -l INFO")
 
