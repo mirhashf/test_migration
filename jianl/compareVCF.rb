@@ -158,13 +158,13 @@ rodProperty=[]
 if variantClass.downcase == "snp"
   featureVenn="nSNPs"
   evalFiles.each{|ff|
-#    system("java -jar #{gatkPath}/GenomeAnalysisTK.jar -T SelectVariants -R #{refFasta} --variant #{ff} -o #{outputPath}/#{ff.split("\/")[-1]}.snp -selectType SNP")
+    system("java -jar #{gatkPath}/GenomeAnalysisTK.jar -T SelectVariants -R #{refFasta} --variant #{ff} -o #{outputPath}/#{ff.split("\/")[-1]}.snp -selectType SNP")
   }
   evalFiles.map! {|ff| "#{outputPath}/#{ff.split("\/")[-1]}.snp"}
 elsif variantClass.downcase == "indel"
   featureVenn="nIndels"
   evalFiles.each{|ff|
-#    system("java -jar #{gatkPath}/GenomeAnalysisTK.jar -T SelectVariants -R #{refFasta} --variant #{ff} -o #{outputPath}/#{ff.split("\/")[-1]}.indel -selectType INDEL")
+    system("java -jar #{gatkPath}/GenomeAnalysisTK.jar -T SelectVariants -R #{refFasta} --variant #{ff} -o #{outputPath}/#{ff.split("\/")[-1]}.indel -selectType INDEL")
     evalFiles.map! {|ff| "#{outputPath}/#{ff.split("\/")[-1]}.indel"}
   }
 end
