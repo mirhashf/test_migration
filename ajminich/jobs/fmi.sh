@@ -20,7 +20,7 @@ do
     sample_name=`basename ${file}`
     
     echo "Queueing up FMI sample ${sample_name}."
-    /home/ajminich/sdk/bin/bina --hosts ${HOSTS} --key ${KEY} run \
+    /home/ajminich/client/bin/bina --hosts ${HOSTS} --key ${KEY} run \
         -r ${BINA_DATA_PATH}/${sample_name}.${FIRST_END_SUFFIX} \
         -R ${BINA_DATA_PATH}/${sample_name}.${SECOND_END_SUFFIX} \
         -rg ${sample_name} -lb FMI -sm ${sample_name} \
