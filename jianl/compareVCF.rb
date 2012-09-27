@@ -105,6 +105,9 @@ def parseGATKtable(ifid,tableName,colName,rods,rodProperty)
         flag=1
       end
     else
+      if ll[evalRodInd] == "none"
+        next
+      end
       if flag == 1
         break
       end
@@ -165,8 +168,8 @@ elsif variantClass.downcase == "indel"
   featureVenn="nIndels"
   evalFiles.each{|ff|
     system("java -jar #{gatkPath}/GenomeAnalysisTK.jar -T SelectVariants -R #{refFasta} --variant #{ff} -o #{outputPath}/#{ff.split("\/")[-1]}.indel -selectType INDEL")
-    evalFiles.map! {|ff| "#{outputPath}/#{ff.split("\/")[-1]}.indel"}
   }
+  evalFiles.map! {|ff| "#{outputPath}/#{ff.split("\/")[-1]}.indel"}
 end
 
 combRodFile=(["-V:"]*evalRods.size).zip(evalRods.zip(evalFiles).map {|rodFile| rodFile.join(" ")}).map {|evalString| evalString.join("")}
@@ -206,6 +209,9 @@ while line=ifid.gets
       flag=1
     end
   else
+    if ll[evalRodInd] == "none"
+      next
+    end
     if flag == 1
       break
     end
@@ -271,7 +277,7 @@ compRods.each{|comp|
   weights[comp].each{|w| weightByNovelty.push((w.to_f/scale).round(digitNo))}
 
   for ii in 1...combArr.size
-    weightByNoveltyString+="\""+combArr[ii].join("")+"\" = "+"#{weightByNovelty[ii-1]}"
+    weightByNoveltyString+="\""+combArr[ii].join("")+"\" = "+"#{Math.sqrt(weightByNovelty[ii-1])}"
     
     if ii < combArr.size/2
       weightAll.push(weightByNovelty[ii-1]+weightByNovelty[ii-1+combArr.size/2])
@@ -293,12 +299,12 @@ compRods.each{|comp|
     
   if combArr.size/2 < 10
     $stderr.puts("weightAll:#{weightAll.join(",")}")
-    rInstance.eval_R("plot(Venn(SetNames = c(\"#{evalRods.join("\",\"")}\"),#{weightAllString}),doWeights=TRUE,type=\"circles\",show=list(FaceText=\"weight\",SetLabels=TRUE))")
+    rInstance.eval_R("plot(Venn(SetNames = c(\"#{evalRods.join("\",\"")}\"),#{weightAllString}),doWeights=TRUE,type=\"circles\",show=list(FaceText=\"weight\",SetLabels=TRUE))") #FaceText=\"weight\"
   end
   
   
   if combArr.size < 10
-    rInstance.eval_R("plot(Venn(SetNames = c(\"#{comp}\",\"#{evalRods.join("\",\"")}\"),#{weightByNoveltyString}),doWeights=TRUE,type=\"circles\",show=list(SetLabels=TRUE))")
+    rInstance.eval_R("plot(Venn(SetNames = c(\"#{comp}\",\"#{evalRods.join("\",\"")}\"),#{weightByNoveltyString}),doWeights=TRUE,type=\"circles\",show=list(FaceText=\"\",SetLabels=TRUE))")
   else
     rInstance.eval_R("plot(Venn(SetNames = c(\"#{comp}\",\"#{evalRods.join("\",\"")}\"),#{weightByNoveltyString}),doWeights=FALSE,type=\"ellipses\")")
   end
