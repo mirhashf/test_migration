@@ -63,6 +63,7 @@ PROGRAM DESCRIPTION:
     --variantClass   | -c    => specify whether the comparison should be performed for SNPs(\"snp\") or indels(\"indel\") (optional, default is snp)
     --outputDir      | -o    => output directory (optional, default is the current dir)
     --plotVenn       | -p    => plot the Venn daigrams or not (optional, default is false) 
+    --sqrt           | -s    => apply sqrt on the weight to generate the Venn diagrams (only use it if the plotting fails, defaul is false)
 
   USAGE:                                                                                                         
   ruby compareVCF.rb -r ref.fa -g pathTogatk/dist -d dbSNP_132.hg19.vcf -i input1.vcf,input2.vcf -n I1,I2 -c snp -o outputPath/ 
@@ -138,7 +139,7 @@ dbSNPvcf=optsHash['--dbSNP'].strip
 outputPath=(!optsHash.key?('--outputDir')) ? "." : optsHash['--outputDir'].strip
 variantClass=(!optsHash.key?('--variantClass')) ? "snp" : optsHash['--variantClass'].strip
 plotVennFlag=(!optsHash.key?('--plotVenn')) ? FALSE : optsHash['--plotVenn'].strip
-
+sqrtFlag=(!optsHash.key?('--sqrt')) ? FALSE : optsHash['--sqrt'].strip
 
 evalCombs=[]
 for ii in 1...evalRods.size
@@ -281,11 +282,19 @@ if plotVennFlag
     weights[comp].each{|w| weightByNovelty.push((w.to_f/scale).round(digitNo))}
 
     for ii in 1...combArr.size
-      weightByNoveltyString+="\""+combArr[ii].join("")+"\" = "+"#{Math.sqrt(weightByNovelty[ii-1])}"
-      
+      if sqrtFlag
+        weightByNoveltyString+="\""+combArr[ii].join("")+"\" = "+"#{Math.sqrt(weightByNovelty[ii-1])}"
+      else
+        weightByNoveltyString+="\""+combArr[ii].join("")+"\" = "+"#{weightByNovelty[ii-1]}"
+      end
       if ii < combArr.size/2
         weightAll.push(weightByNovelty[ii-1]+weightByNovelty[ii-1+combArr.size/2])
-        weightAllString+="\""+combArr[ii][1..-1].join("")+"\" = "+"#{weightByNovelty[ii-1]+weightByNovelty[ii-1+combArr.size/2]}"  ##"#{Math.sqrt(weightByNovelty[ii-1]+weightByNovelty[ii-1+combArr.size/2])}"
+        if sqrtFlag
+          weightAllString+="\""+combArr[ii][1..-1].join("")+"\" = "+"#{Math.sqrt(weightByNovelty[ii-1]+weightByNovelty[ii-1+combArr.size/2])}"
+        else
+          weightAllString+="\""+combArr[ii][1..-1].join("")+"\" = "+"#{weightByNovelty[ii-1]+weightByNovelty[ii-1+combArr.size/2]}"
+        end
+
         if ii != combArr.size/2-1
           weightAllString+=","
         else
