@@ -69,7 +69,7 @@ PROGRAM DESCRIPTION:
 
   EXAMPLE:
 
-  ruby compareVCF.rb -r /mnt/scratch0/public/genome/human/hg19.major/hg19.major.fa -g /home/jianl/work/gatk_jun12/seqalto/third-party/gatk/dist -d /mnt/scratch0/public/genome/human/hg19/dbsnp/dbsnp_132.vcf -i /mnt/scratch1/jianl/stanford/cuiping/bina/genotyped.reordered.vcf,/mnt/scratch1/jianl/stanford/cuiping/gatk/TEST-blood-CEU-gatk.reordered.vcf -n BINA,GATK -c snp -o /home/jianl/work/test/ -p true
+  ruby compareVCF.rb -r /mnt/scratch0/public/genome/human/hg19.major/hg19.major.fa -g /home/jianl/work/gatk_jun12/seqalto/third-party/gatk/dist -d /mnt/scratch0/public/genome/human/hg19/dbsnp/dbsnp_132.vcf -i /mnt/scratch1/jianl/stanford/cuiping/bina/genotyped.reordered.vcf,/mnt/scratch1/jianl/stanford/cuiping/gatk/TEST-blood-CEU-gatk.reordered.vcf -n BINA,GATK -c snp -o /home/jianl/work/test/
 
 "
 
