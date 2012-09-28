@@ -31,6 +31,7 @@ def processArguments()
                 ['--variantClass', '-c', GetoptLong::OPTIONAL_ARGUMENT],
                 ['--outputDir', '-o', GetoptLong::OPTIONAL_ARGUMENT],
                 ['--plotVenn', '-p', GetoptLong::OPTIONAL_ARGUMENT],
+                ['--sqrt', '-s', GetoptLong::OPTIONAL_ARGUMENT],
                 ['--help', '-h', GetoptLong::NO_ARGUMENT]
               ]
   progOpts = GetoptLong.new(*optsArray)
@@ -152,8 +153,8 @@ evalCombs.push(["Intersection"])
 selectString=((((["-select 'set==\""]*evalCombs.size).zip(evalCombs.map{|ee| ee.join("-")})).map{|p1| p1.join}.zip((["\"' -selectName "]*evalCombs.size)).map{|p2| p2.join}).zip(evalCombs.map{|ee| ee.join("-")})).map{|p3| p3.join}
 
 novelty=["novel","known"]
-rInstance=RSRuby.instance
-rInstance.eval_R("suppressMessages(library(\"Vennerable\"))")
+#rInstance=RSRuby.instance
+#rInstance.eval_R("suppressMessages(library(\"Vennerable\"))")
 
 rods=Hash.new
 compRods=[]
