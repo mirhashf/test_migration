@@ -30,6 +30,7 @@ def processArguments()
                 ['--vcfName', '-n', GetoptLong::REQUIRED_ARGUMENT],
                 ['--variantClass', '-c', GetoptLong::OPTIONAL_ARGUMENT],
                 ['--outputDir', '-o', GetoptLong::OPTIONAL_ARGUMENT],
+                ['--plotVenn', '-p', GetoptLong::OPTIONAL_ARGUMENT],
                 ['--help', '-h', GetoptLong::NO_ARGUMENT]
               ]
   progOpts = GetoptLong.new(*optsArray)
@@ -61,13 +62,14 @@ PROGRAM DESCRIPTION:
     --vcfName        | -n    => names for the input vcf files, separated by comma and should be ordered according to the files
     --variantClass   | -c    => specify whether the comparison should be performed for SNPs(\"snp\") or indels(\"indel\") (optional, default is snp)
     --outputDir      | -o    => output directory (optional, default is the current dir)
+    --plotVenn       | -p    => plot the Venn daigrams or not (optional, default is false) 
 
   USAGE:                                                                                                         
   ruby compareVCF.rb -r ref.fa -g pathTogatk/dist -d dbSNP_132.hg19.vcf -i input1.vcf,input2.vcf -n I1,I2 -c snp -o outputPath/ 
 
   EXAMPLE:
 
-  ruby compareVCF.rb -r /mnt/scratch0/public/genome/human/hg19.major/hg19.major.fa -g /home/jianl/work/gatk_jun12/seqalto/third-party/gatk/dist -d /mnt/scratch0/public/genome/human/hg19/dbsnp/dbsnp_132.vcf -i /mnt/scratch1/jianl/stanford/cuiping/bina/genotyped.reordered.vcf,/mnt/scratch1/jianl/stanford/cuiping/gatk/TEST-blood-CEU-gatk.reordered.vcf -n BINA,GATK -c snp -o /home/jianl/work/test/
+  ruby compareVCF.rb -r /mnt/scratch0/public/genome/human/hg19.major/hg19.major.fa -g /home/jianl/work/gatk_jun12/seqalto/third-party/gatk/dist -d /mnt/scratch0/public/genome/human/hg19/dbsnp/dbsnp_132.vcf -i /mnt/scratch1/jianl/stanford/cuiping/bina/genotyped.reordered.vcf,/mnt/scratch1/jianl/stanford/cuiping/gatk/TEST-blood-CEU-gatk.reordered.vcf -n BINA,GATK -c snp -o /home/jianl/work/test/ -p true
 
 "
 
@@ -124,7 +126,6 @@ end
 $stderr.puts "#{Time.now} BEGIN (Mem: #{mem_usage()})"
 optsHash = processArguments()
 
-variantClass=optsHash['--variantClass'].strip
 
 scale=1#1000000
 digitNo=10
@@ -134,8 +135,9 @@ evalFiles=optsHash['--vcfFile'].strip.split(",")
 gatkPath=optsHash['--gatkPath'].strip
 refFasta=optsHash['--refFasta'].strip
 dbSNPvcf=optsHash['--dbSNP'].strip
-outputPath=optsHash['--outputDir'].strip
-
+outputPath=(!optsHash.key?('--outputDir')) ? "." : optsHash['--outputDir'].strip
+variantClass=(!optsHash.key?('--variantClass')) ? "snp" : optsHash['--variantClass'].strip
+plotVennFlag=(!optsHash.key?('--plotVenn')) ? FALSE : optsHash['--plotVenn'].strip
 
 
 evalCombs=[]
@@ -155,17 +157,19 @@ rInstance.eval_R("suppressMessages(library(\"Vennerable\"))")
 rods=Hash.new
 compRods=[]
 compRodSize=Hash.new
-compRodSize["dbsnp"]= 28833350
+
 rodProperty=[]
 
 if variantClass.downcase == "snp"
   featureVenn="nSNPs"
+  compRodSize["dbsnp"]= (`grep -c VC=SN #{dbSNPvcf}`).strip.to_i #28833350 
   evalFiles.each{|ff|
     system("java -jar #{gatkPath}/GenomeAnalysisTK.jar -T SelectVariants -R #{refFasta} --variant #{ff} -o #{outputPath}/#{ff.split("\/")[-1]}.snp -selectType SNP")
   }
   evalFiles.map! {|ff| "#{outputPath}/#{ff.split("\/")[-1]}.snp"}
 elsif variantClass.downcase == "indel"
   featureVenn="nIndels"
+  compRodSize["dbsnp"]= (`grep -c VC=INDEL #{dbSNPvcf}`).strip.to_i #28833350 
   evalFiles.each{|ff|
     system("java -jar #{gatkPath}/GenomeAnalysisTK.jar -T SelectVariants -R #{refFasta} --variant #{ff} -o #{outputPath}/#{ff.split("\/")[-1]}.indel -selectType INDEL")
   }
@@ -231,87 +235,88 @@ rods.each{|kk,vv|
 parseGATKtable(ifid,"TiTvVariantEvaluator",["tiTvRatio"],rods,rodProperty)
 
 
-vennCount=Hash.new
 
-
-combArr=([0,1]*(evalRods.size+1)).combination(evalRods.size+1).to_a.uniq.sort
-
-weights=Hash.new
-
-compRods.each{|comp|
-  if weights[comp] == nil
-    weights[comp] = []
-  end
+if plotVennFlag
+  vennCount=Hash.new
+  combArr=([0,1]*(evalRods.size+1)).combination(evalRods.size+1).to_a.uniq.sort
   
-  knownVector=[]
+  weights=Hash.new
+  
+  compRods.each{|comp|
+    if weights[comp] == nil
+      weights[comp] = []
+    end
+  
+    knownVector=[]
+    
+    
+    weightByNoveltyString="Weight=c("
+    weightAllString="Weight=c("
 
-
-  weightByNoveltyString="Weight=c("
-  weightAllString="Weight=c("
-
-  for ii in 1...combArr.size
-    if ii != combArr.size-1
-      if combArr.size > 4 && ii == combArr.size/2-1
-        weights[comp].push(rods[[comp,"Intersection"]][novelty[combArr[ii][0]]][rodProperty.index(featureVenn)].to_i) 
-      elsif ii == combArr.size/2
-        weights[comp].push(compRodSize[comp])
+    for ii in 1...combArr.size
+      if ii != combArr.size-1
+        if combArr.size > 4 && ii == combArr.size/2-1
+          weights[comp].push(rods[[comp,"Intersection"]][novelty[combArr[ii][0]]][rodProperty.index(featureVenn)].to_i) 
+        elsif ii == combArr.size/2
+          weights[comp].push(compRodSize[comp])
+        else
+          evalComb=evalRods.values_at(* combArr[ii][1..-1].each_index.select {|jj| combArr[ii][1..-1][jj] ==1})
+          weights[comp].push(rods[[comp,evalComb.join("-")]][novelty[combArr[ii][0]]][rodProperty.index(featureVenn)].to_i)
+          if ii > combArr.size/2
+            knownVector.push(rods[[comp,evalComb.join("-")]]["known"][rodProperty.index(featureVenn)].to_i)
+          end
+        end
       else
-        evalComb=evalRods.values_at(* combArr[ii][1..-1].each_index.select {|jj| combArr[ii][1..-1][jj] ==1})
-        weights[comp].push(rods[[comp,evalComb.join("-")]][novelty[combArr[ii][0]]][rodProperty.index(featureVenn)].to_i)
-        if ii > combArr.size/2
-          knownVector.push(rods[[comp,evalComb.join("-")]]["known"][rodProperty.index(featureVenn)].to_i)
+        weights[comp].push(rods[[comp,"Intersection"]][novelty[combArr[ii][0]]][rodProperty.index(featureVenn)].to_i)
+        knownVector.push(rods[[comp,"Intersection"]][novelty[combArr[ii][0]]][rodProperty.index(featureVenn)].to_i)
+      end
+      
+    end
+    
+    weights[comp][combArr.size/2-1] -= sum(knownVector)
+
+    weightByNovelty=[]
+    weightAll=[]
+    
+    weights[comp].each{|w| weightByNovelty.push((w.to_f/scale).round(digitNo))}
+
+    for ii in 1...combArr.size
+      weightByNoveltyString+="\""+combArr[ii].join("")+"\" = "+"#{Math.sqrt(weightByNovelty[ii-1])}"
+      
+      if ii < combArr.size/2
+        weightAll.push(weightByNovelty[ii-1]+weightByNovelty[ii-1+combArr.size/2])
+        weightAllString+="\""+combArr[ii][1..-1].join("")+"\" = "+"#{weightByNovelty[ii-1]+weightByNovelty[ii-1+combArr.size/2]}"  ##"#{Math.sqrt(weightByNovelty[ii-1]+weightByNovelty[ii-1+combArr.size/2])}"
+        if ii != combArr.size/2-1
+          weightAllString+=","
+        else
+          weightAllString+= "\)"
         end
       end
-    else
-      weights[comp].push(rods[[comp,"Intersection"]][novelty[combArr[ii][0]]][rodProperty.index(featureVenn)].to_i)
-      knownVector.push(rods[[comp,"Intersection"]][novelty[combArr[ii][0]]][rodProperty.index(featureVenn)].to_i)
-    end
-    
-  end
-  
-  weights[comp][combArr.size/2-1] -= sum(knownVector)
-
-  weightByNovelty=[]
-  weightAll=[]
-
-  weights[comp].each{|w| weightByNovelty.push((w.to_f/scale).round(digitNo))}
-
-  for ii in 1...combArr.size
-    weightByNoveltyString+="\""+combArr[ii].join("")+"\" = "+"#{Math.sqrt(weightByNovelty[ii-1])}"
-    
-    if ii < combArr.size/2
-      weightAll.push(weightByNovelty[ii-1]+weightByNovelty[ii-1+combArr.size/2])
-      weightAllString+="\""+combArr[ii][1..-1].join("")+"\" = "+"#{weightByNovelty[ii-1]+weightByNovelty[ii-1+combArr.size/2]}"  ##"#{Math.sqrt(weightByNovelty[ii-1]+weightByNovelty[ii-1+combArr.size/2])}"
-      if ii != combArr.size/2-1
-        weightAllString+=","
+      
+      if ii != combArr.size-1
+        weightByNoveltyString+=","
       else
-        weightAllString+= "\)"
+        weightByNoveltyString += "\)"
       end
-    end
-
-    if ii != combArr.size-1
-      weightByNoveltyString+=","
-    else
-      weightByNoveltyString += "\)"
-    end
-  end  
-  rInstance.pdf("#{outputPath}/#{comp}_#{evalRods.join("_")}.#{variantClass}.pdf")
+    end  
+    rInstance.pdf("#{outputPath}/#{comp}_#{evalRods.join("_")}.#{variantClass}.pdf")
     
-  if combArr.size/2 < 10
-    $stderr.puts("weightAll:#{weightAll.join(",")}")
-    rInstance.eval_R("plot(Venn(SetNames = c(\"#{evalRods.join("\",\"")}\"),#{weightAllString}),doWeights=TRUE,type=\"circles\",show=list(FaceText=\"weight\",SetLabels=TRUE))") #FaceText=\"weight\"
-  end
-  
-  
-  if combArr.size < 10
-    rInstance.eval_R("plot(Venn(SetNames = c(\"#{comp}\",\"#{evalRods.join("\",\"")}\"),#{weightByNoveltyString}),doWeights=TRUE,type=\"circles\",show=list(FaceText=\"\",SetLabels=TRUE))")
-  else
-    rInstance.eval_R("plot(Venn(SetNames = c(\"#{comp}\",\"#{evalRods.join("\",\"")}\"),#{weightByNoveltyString}),doWeights=FALSE,type=\"ellipses\")")
-  end
-
-  rInstance.eval_R("dev.off()")
-
-}
+    if combArr.size/2 < 10
+      $stderr.puts("weightAll:#{weightAll.join(",")}")
+      rInstance.eval_R("plot(Venn(SetNames = c(\"#{evalRods.join("\",\"")}\"),#{weightAllString}),doWeights=TRUE,type=\"circles\",show=list(FaceText=\"weight\",SetLabels=TRUE))") #FaceText=\"weight\"
+    end
+    
+    
+    if combArr.size < 10
+      rInstance.eval_R("plot(Venn(SetNames = c(\"#{comp}\",\"#{evalRods.join("\",\"")}\"),#{weightByNoveltyString}),doWeights=TRUE,type=\"circles\",show=list(FaceText=\"\",SetLabels=TRUE))")
+    else
+      rInstance.eval_R("plot(Venn(SetNames = c(\"#{comp}\",\"#{evalRods.join("\",\"")}\"),#{weightByNoveltyString}),doWeights=FALSE,type=\"ellipses\")")
+    end
+    
+    rInstance.eval_R("dev.off()")
+    
+  }
+end
 
 ind=0
 rodProperty.each{|prop|
