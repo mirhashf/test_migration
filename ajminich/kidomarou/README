@@ -14,10 +14,6 @@ Bina Box.
 To Do
 - determine whether there are Python enums
 - create file groups for the following types:
-	-> FASTQ
-	-> unsorted/coordinate-sorted/queryname-sorted BAM
-	-> unsorted/coordinate-sorted/queryname-sorted SAM
-	-> realigned BAM
 	-> recalibrated BAM
 	-> normal/recalibrated VCF
 	-> GFF

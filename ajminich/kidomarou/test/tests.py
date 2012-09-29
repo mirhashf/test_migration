@@ -36,12 +36,36 @@ class TestFastqGroup(unittest.TestCase):
         self._fastq_group = kidomarou.FastqGroup(IS_MULTIPLE_FILES)
     
     def testFileType(self):
-        self.assertEqual(kidomarou.FastqGroup.FILE_TYPE, self._fastq_group.get_file_type())
+        self.assertEqual(kidomarou.FileGroup.FASTQ, self._fastq_group.get_file_type())
         
     def testIsMultipleFiles(self):
         self.assertEqual(IS_MULTIPLE_FILES, self._fastq_group.get_is_multiple_files())
         
+    def testGetName(self):
+        self.assertEqual(kidomarou.FileGroup.FASTQ + "_multi", 
+                         self._fastq_group.get_name())
+        
+class TestAlignedReadsGroup(unittest.TestCase):
     
+    IS_BAM = True
+    DIVISION = "by_lane"
+    SORT_ORDER = "none"
+    
+    def setUp(self):
+        self._aligned_group = kidomarou.AlignedReadsGroup(
+          self.IS_BAM, IS_MULTIPLE_FILES, self.DIVISION, self.SORT_ORDER)
+
+    def testFileType(self):
+        self.assertEqual(kidomarou.FileGroup.BAM, 
+                         self._aligned_group.get_file_type())
+        
+    def testIsMultipleFiles(self):
+        self.assertEqual(IS_MULTIPLE_FILES, 
+                         self._aligned_group.get_is_multiple_files())
+        
+    def testGetName(self):
+        self.assertEqual(kidomarou.FileGroup.BAM + "_" + self.DIVISION + 
+                         "_" + self.SORT_ORDER, self._aligned_group.get_name())
 
 if __name__ == '__main__':
     
