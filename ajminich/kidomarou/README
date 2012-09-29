@@ -13,6 +13,9 @@ Bina Box.
 
 To Do
 - determine whether there are Python enums
+  -> FileDivision (None, Coordinate, Lane)
+  -> FileType (FASTA, SAM, BAM, VCF, GFF)
+  -> SortOrder (None, Coordinate, Queryname)
 - create file groups for the following types:
 	-> recalibrated BAM
 	-> normal/recalibrated VCF
