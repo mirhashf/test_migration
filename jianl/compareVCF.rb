@@ -10,7 +10,7 @@ $VERBOSE = nil
 # REQUIRED LIBRARIES                                                                                           
 # ##############################################################################                               
 require 'getoptlong'
-require 'rsruby'
+#require 'rsruby'
 require '/home/jianl/work/script/findoverlap.rd.rb'
 
 # ##############################################################################                               
