@@ -13,6 +13,17 @@ this work will become a new implementation of the
 whole-genome sequencing pipeline currently used in the 
 Bina Box.
 
+This project is named after Kidomarou, one of the members
+of Orochimaru's Sound Four (or Five) in the Naruto anime
+series. Kidomarou had spider-like jutsu that allowed him 
+to summon lesser spiders, build webs, and see his 
+opponents with multiple eyes. His combat strategy involved 
+studying his enemies carefully before choosing the optimal 
+course of action. The connection here, of course, is that 
+this system will navigate through a web of possible 
+operations to simplify and optimize the processing of 
+genomics data.  
+
 h2. Interface
 
 A user chooses two items:
