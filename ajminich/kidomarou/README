@@ -1,0 +1,23 @@
+Project Kidomarou
+by AJ Minich
+September-October 2012
+
+This project seeks to properly encapsulate the ways by 
+which one set of genomics files can be processed or 
+converted into another set. The goal of the project is 
+to simply the way in which processing pipelines are 
+understood, configured, and documented. Ultimately, 
+this work will become a new implementation of the 
+whole-genome sequencing pipeline currently used in the 
+Bina Box.
+
+To Do
+- determine whether there are Python enums
+- create file groups for the following types:
+	-> FASTQ
+	-> unsorted/coordinate-sorted/queryname-sorted BAM
+	-> unsorted/coordinate-sorted/queryname-sorted SAM
+	-> realigned BAM
+	-> recalibrated BAM
+	-> normal/recalibrated VCF
+	-> GFF
