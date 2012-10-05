@@ -10,8 +10,7 @@ $VERBOSE = nil
 # REQUIRED LIBRARIES                                                                                           
 # ##############################################################################                               
 require 'getoptlong'
-#require 'rsruby'
-require '/home/jianl/work/script/findoverlap.rd.rb'
+require 'rsruby'
 
 # ##############################################################################                               
 # CONSTANTS                                                                                                    
@@ -130,7 +129,7 @@ optsHash = processArguments()
 
 
 scale=1#1000000
-digitNo=10
+digitNo=1#10
 
 evalRods=optsHash['--vcfName'].strip.split(",")
 evalFiles=optsHash['--vcfFile'].strip.split(",")
@@ -153,8 +152,8 @@ evalCombs.push(["Intersection"])
 selectString=((((["-select 'set==\""]*evalCombs.size).zip(evalCombs.map{|ee| ee.join("-")})).map{|p1| p1.join}.zip((["\"' -selectName "]*evalCombs.size)).map{|p2| p2.join}).zip(evalCombs.map{|ee| ee.join("-")})).map{|p3| p3.join}
 
 novelty=["novel","known"]
-#rInstance=RSRuby.instance
-#rInstance.eval_R("suppressMessages(library(\"Vennerable\"))")
+rInstance=RSRuby.instance
+rInstance.eval_R("suppressMessages(library(\"Vennerable\"))")
 
 rods=Hash.new
 compRods=[]
@@ -180,12 +179,12 @@ end
 
 combRodFile=(["-V:"]*evalRods.size).zip(evalRods.zip(evalFiles).map {|rodFile| rodFile.join(" ")}).map {|evalString| evalString.join("")}
 
-#combRodFile2=(["--eval:"]*evalRods.size).zip(evalRods.zip(evalFiles).map {|rodFile| rodFile.join(" ")}).map {|evalString| evalString.join("")}
+combRodFile2=(["--eval:"]*evalRods.size).zip(evalRods.zip(evalFiles).map {|rodFile| rodFile.join(" ")}).map {|evalString| evalString.join("")}
 
 system("java -jar #{gatkPath}/GenomeAnalysisTK.jar -R #{refFasta} -T VariantsMerger  #{combRodFile.join(" ")} -priority #{evalRods.join(",")} -o #{outputPath}/combined.#{evalRods.join("_")}.#{variantClass}.vcf -setKey set")
 system("java -jar #{gatkPath}/GenomeAnalysisTK.jar -T VariantEval -R #{refFasta} -D #{dbSNPvcf} #{selectString.join(" ")} -o #{outputPath}/combeval.#{evalRods.join("_")}.#{variantClass}.report -eval #{outputPath}/combined.#{evalRods.join("_")}.#{variantClass}.vcf --evalModule GenotypeConcordance -l INFO")
 
-#system("java -jar #{gatkPath}/GenomeAnalysisTK.jar  -T VariantEval -R /mnt/scratch0/public/genome/human/hg19.major/hg19.major.fa -D /mnt/scratch0/public/genome/human/hg19/dbsnp/dbsnp_132.vcf #{combRodFile2.join(" ")} -o weval.#{evalRods.join("_")}.#{variantClass}.report -l INFO")
+#system("java -jar #{gatkPath}/GenomeAnalysisTK.jar  -T VariantEval -R #{refFasta} -D #{dbSNPvcf} #{combRodFile2.join(" ")} -o weval.#{evalRods.join("_")}.#{variantClass}.report -l INFO")
 
 ifid=File.open("#{outputPath}/combeval.#{evalRods.join("_")}.#{variantClass}.report","r")
 
@@ -284,14 +283,14 @@ if plotVennFlag
 
     for ii in 1...combArr.size
       if sqrtFlag
-        weightByNoveltyString+="\""+combArr[ii].join("")+"\" = "+"#{Math.sqrt(weightByNovelty[ii-1])}"
+        weightByNoveltyString+="\""+combArr[ii].join("")+"\" = "+"#{(Math.sqrt(weightByNovelty[ii-1])/scale).round(digitNo)}"
       else
         weightByNoveltyString+="\""+combArr[ii].join("")+"\" = "+"#{weightByNovelty[ii-1]}"
       end
       if ii < combArr.size/2
         weightAll.push(weightByNovelty[ii-1]+weightByNovelty[ii-1+combArr.size/2])
         if sqrtFlag
-          weightAllString+="\""+combArr[ii][1..-1].join("")+"\" = "+"#{Math.sqrt(weightByNovelty[ii-1]+weightByNovelty[ii-1+combArr.size/2])}"
+          weightAllString+="\""+combArr[ii][1..-1].join("")+"\" = "+"#{(Math.sqrt(weightByNovelty[ii-1]+weightByNovelty[ii-1+combArr.size/2])/scale).round(digitNo)}"
         else
           weightAllString+="\""+combArr[ii][1..-1].join("")+"\" = "+"#{weightByNovelty[ii-1]+weightByNovelty[ii-1+combArr.size/2]}"
         end
@@ -313,7 +312,7 @@ if plotVennFlag
     
     if combArr.size/2 < 10
       $stderr.puts("weightAll:#{weightAll.join(",")}")
-      rInstance.eval_R("plot(Venn(SetNames = c(\"#{evalRods.join("\",\"")}\"),#{weightAllString}),doWeights=TRUE,type=\"circles\",show=list(FaceText=\"weight\",SetLabels=TRUE))") #FaceText=\"weight\"
+      rInstance.eval_R("plot(Venn(SetNames = c(\"#{evalRods.join("\",\"")}\"),#{weightAllString}),doWeights=TRUE,type=\"circles\",show=list(FaceText=\"\",SetLabels=TRUE))") #FaceText=\"weight\"
     end
     
     
