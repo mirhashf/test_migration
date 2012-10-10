@@ -10,7 +10,6 @@ $VERBOSE = nil
 # REQUIRED LIBRARIES                                                                                           
 # ##############################################################################                               
 require 'getoptlong'
-require 'rsruby'
 
 # ##############################################################################                               
 # CONSTANTS                                                                                                    
@@ -31,6 +30,7 @@ def processArguments()
                 ['--outputDir', '-o', GetoptLong::OPTIONAL_ARGUMENT],
                 ['--plotVenn', '-p', GetoptLong::OPTIONAL_ARGUMENT],
                 ['--sqrt', '-s', GetoptLong::OPTIONAL_ARGUMENT],
+                ['--trueVariantCounts', '-t', GetoptLong::OPTIONAL_ARGUMENT],
                 ['--help', '-h', GetoptLong::NO_ARGUMENT]
               ]
   progOpts = GetoptLong.new(*optsArray)
@@ -64,6 +64,7 @@ PROGRAM DESCRIPTION:
     --outputDir      | -o    => output directory (optional, default is the current dir)
     --plotVenn       | -p    => plot the Venn daigrams or not (optional, default is false) 
     --sqrt           | -s    => apply sqrt on the weight to generate the Venn diagrams (only use it if the plotting fails, defaul is false)
+    --trueVariantCounts           |-t     => number of true snp or indels in dbSNP (should correspond to --variantClass input, optional)
 
   USAGE:                                                                                                         
   ruby compareVCF.rb -r ref.fa -g pathTogatk/dist -d dbSNP_132.hg19.vcf -i input1.vcf,input2.vcf -n I1,I2 -c snp -o outputPath/ 
@@ -152,8 +153,6 @@ evalCombs.push(["Intersection"])
 selectString=((((["-select 'set==\""]*evalCombs.size).zip(evalCombs.map{|ee| ee.join("-")})).map{|p1| p1.join}.zip((["\"' -selectName "]*evalCombs.size)).map{|p2| p2.join}).zip(evalCombs.map{|ee| ee.join("-")})).map{|p3| p3.join}
 
 novelty=["novel","known"]
-rInstance=RSRuby.instance
-rInstance.eval_R("suppressMessages(library(\"Vennerable\"))")
 
 rods=Hash.new
 compRods=[]
@@ -163,14 +162,24 @@ rodProperty=[]
 
 if variantClass.downcase == "snp"
   featureVenn="nSNPs"
-  compRodSize["dbsnp"]= (`grep -c VC=SN #{dbSNPvcf}`).strip.to_i #28833350 
+  if !optsHash.key?('--trueVariantCounts')
+    compRodSize["dbsnp"]= (`grep -c VC=SN #{dbSNPvcf}`).strip.to_i #28833350 
+    $stderr.puts("number of #{variantClass} in #{dbSNPvcf}:\t#{compRodSize["dbsnp"]}")
+  else
+    compRodSize["dbsnp"]=optsHash['--trueVariantCounts'].strip
+  end
   evalFiles.each{|ff|
     system("java -jar #{gatkPath}/GenomeAnalysisTK.jar -T SelectVariants -R #{refFasta} --variant #{ff} -o #{outputPath}/#{ff.split("\/")[-1]}.snp -selectType SNP")
   }
   evalFiles.map! {|ff| "#{outputPath}/#{ff.split("\/")[-1]}.snp"}
 elsif variantClass.downcase == "indel"
   featureVenn="nIndels"
-  compRodSize["dbsnp"]= (`grep -c VC=INDEL #{dbSNPvcf}`).strip.to_i #28833350 
+  if !optsHash.key?('--trueVariantCounts')
+    compRodSize["dbsnp"]= (`grep -c VC=INDEL #{dbSNPvcf}`).strip.to_i #28833350 
+    $stderr.puts("number of #{variantClass} in #{dbSNPvcf}:\t#{compRodSize["dbsnp"]}")
+  else
+    compRodSize["dbsnp"]=optsHash['--trueVariantCounts'].strip
+  end
   evalFiles.each{|ff|
     system("java -jar #{gatkPath}/GenomeAnalysisTK.jar -T SelectVariants -R #{refFasta} --variant #{ff} -o #{outputPath}/#{ff.split("\/")[-1]}.indel -selectType INDEL")
   }
@@ -238,6 +247,10 @@ parseGATKtable(ifid,"TiTvVariantEvaluator",["tiTvRatio"],rods,rodProperty)
 
 
 if plotVennFlag
+  require 'rsruby'
+  rInstance=RSRuby.instance
+  rInstance.eval_R("suppressMessages(library(\"Vennerable\"))")
+
   vennCount=Hash.new
   combArr=([0,1]*(evalRods.size+1)).combination(evalRods.size+1).to_a.uniq.sort
   
