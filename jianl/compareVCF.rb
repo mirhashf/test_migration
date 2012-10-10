@@ -164,6 +164,7 @@ if variantClass.downcase == "snp"
   featureVenn="nSNPs"
   if !optsHash.key?('--trueVariantCounts')
     compRodSize["dbsnp"]= (`grep -c VC=SN #{dbSNPvcf}`).strip.to_i #28833350 
+    $stderr.puts("number of #{variantClass} in #{dbSNPvcf}:\t#{compRodSize["dbsnp"]}")
   else
     compRodSize["dbsnp"]=optsHash['--trueVariantCounts'].strip
   end
@@ -175,6 +176,7 @@ elsif variantClass.downcase == "indel"
   featureVenn="nIndels"
   if !optsHash.key?('--trueVariantCounts')
     compRodSize["dbsnp"]= (`grep -c VC=INDEL #{dbSNPvcf}`).strip.to_i #28833350 
+    $stderr.puts("number of #{variantClass} in #{dbSNPvcf}:\t#{compRodSize["dbsnp"]}")
   else
     compRodSize["dbsnp"]=optsHash['--trueVariantCounts'].strip
   end
