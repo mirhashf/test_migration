@@ -10,7 +10,6 @@ $VERBOSE = nil
 # REQUIRED LIBRARIES                                                                                           
 # ##############################################################################                               
 require 'getoptlong'
-require 'rsruby'
 
 # ##############################################################################                               
 # CONSTANTS                                                                                                    
@@ -152,8 +151,6 @@ evalCombs.push(["Intersection"])
 selectString=((((["-select 'set==\""]*evalCombs.size).zip(evalCombs.map{|ee| ee.join("-")})).map{|p1| p1.join}.zip((["\"' -selectName "]*evalCombs.size)).map{|p2| p2.join}).zip(evalCombs.map{|ee| ee.join("-")})).map{|p3| p3.join}
 
 novelty=["novel","known"]
-rInstance=RSRuby.instance
-rInstance.eval_R("suppressMessages(library(\"Vennerable\"))")
 
 rods=Hash.new
 compRods=[]
@@ -238,6 +235,10 @@ parseGATKtable(ifid,"TiTvVariantEvaluator",["tiTvRatio"],rods,rodProperty)
 
 
 if plotVennFlag
+  require 'rsruby'
+  rInstance=RSRuby.instance
+  rInstance.eval_R("suppressMessages(library(\"Vennerable\"))")
+
   vennCount=Hash.new
   combArr=([0,1]*(evalRods.size+1)).combination(evalRods.size+1).to_a.uniq.sort
   
