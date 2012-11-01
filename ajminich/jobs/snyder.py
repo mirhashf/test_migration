@@ -33,23 +33,23 @@ data_dir = "bina://data/snyder"
 # Set up the libraries
 libraries = [ ("blood", "A804NLABXX", 8) ]
 sample = "snyder"
-   
+
 '''
         JOB SETUP
 '''
-   
+
 # Create a new job
 job = bina.Job()
 
 # Set up the job
 job.set_output_dir("bina://output/snyder")
-job.set_description("Snyder Blood with Bina Pipeline and VQSR")
+job.set_description("Snyder Blood with Reference Calls")
 job.set_use_broad_gatk(False)
 
 # Reference
 job.reference.set_species("human")
-job.reference.set_genome_build("hg19")
-job.reference.set_dbsnp_build("132")
+job.reference.set_genome_build("CEUref")
+job.reference.set_dbsnp_build("135_major")
 
 # Create alignment tasks for the Bina Aligner
 for library in libraries:
@@ -62,30 +62,39 @@ for library in libraries:
     
     for lane_index in range(1, num_lanes+1):
         
-        aligner_job = bina.BwaAlignerJob(
+        aligner_job = bina.BinaAlignerJob(
             first_end = data_dir + "/" + lane_prefix + ".s_" + str(lane_index) + "_1.fq.gz",
             second_end = data_dir + "/" + lane_prefix + ".s_" + str(lane_index) + "_2.fq.gz",
-            readgroup = lane_prefix + ".s_" + str(lane_index),
+            readgroup = "lane" + str(lane_index),
             library = library_name,
             sample = sample)
         aligner_job.set_trimming(0)
         
+        # Snyder reads setting
+        aligner_job.set_option("-m", 330)
+
         # Set aligner template size calculation to automatic
         #aligner_job.set_option("--template_len_comp_method", 2)
         
         # Use batched template size calculation to emulate BWA
         #aligner_job.set_argument("--enable_batch_pairing", True)
-    
+   
+        aligner_job.set_option("-h", -1)
+        aligner_job.set_argument("--nw_disable_match_at_ends", True)
+ 
         job.alignment.add_aligner_job(aligner_job)
 
-job.alignment.set_disable_concurrent_sorting(True)
+job.alignment.set_disable_concurrent_sorting(False)
 job.alignment.set_keep_sorted_bam(False)
+job.set_keep_scratch_files(False)
+
+job.genotyping.fast_genotyper.set_option("--output_mode", "EMIT_ALL_CONFIDENT_SITES")
 
 '''
         VARIANT QUALITY SCORE RECALIBRATION
 '''
 
-job.genotyping.set_perform_vqsr(True)
+job.genotyping.set_perform_vqsr(False)
 
 hapmap_resource = bina.VariantRecalibrationResource("hapmap",
     "bina://data/variants/sites/hapmap_3.3.hg19.vcf")
@@ -143,12 +152,12 @@ job.genotyping.add_recal_operation(recal_operation)
 '''
 
 # Enable all structural variation tools
-job.structural_variation.set_disable_bina_sv(True)
-job.structural_variation.set_run_breakdancer(False)
-job.structural_variation.set_run_breakseq(False)
-job.structural_variation.set_run_cnvnator(False)
-job.structural_variation.set_run_pindel(False)
-job.structural_variation.pindel.set_use_breakdancer(False)
+job.structural_variation.set_disable_bina_sv(False)
+job.structural_variation.set_run_breakdancer(True)
+job.structural_variation.set_run_breakseq(True)
+job.structural_variation.set_run_cnvnator(True)
+job.structural_variation.set_run_pindel(True)
+job.structural_variation.pindel.set_use_breakdancer(True)
 
 '''
         JOB SUBMISSION
@@ -160,7 +169,7 @@ binabox.connect(api_key, nodes)
 
 # Submit the job
 job_id = binabox.run_job(job)
-print "Job submitted with ID " + job_id + "."
+print "Job submitted with ID: " + job_id
 
 # Close the connection
 binabox.close()

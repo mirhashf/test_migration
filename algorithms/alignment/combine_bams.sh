@@ -4,7 +4,10 @@ port1=1367
 port2=1368
 machine_name="tehran"
 machine_nums="00 01 02 03 06"
-picard_folder="/home/ajminich/programs/picard/dist"
+num_threads=24
+gatk="/home/ajminich/seqalto/third-party/gatk/dist/GenomeAnalysisTK.jar"
+ref="/home/ajminich/genome/human/CEUref/CEUref.fasta"
+bed_file="/export/tehran/data/snyder/pcr/cell_6126_mmc1.bed"
 
 if [[ $# -lt 1 ]]; then
     echo "Bina Box BAM Combiner"
@@ -21,16 +24,16 @@ bam_files=""
 for machine_num in ${machine_nums}
 do
     folder="${machine_name}-${machine_num}-${port1}-${port2}"
-    for file in $(find ${folder}/*.bam)
+    for thread_num in $(seq 0 `expr ${num_threads} - 1`)
     do
-        echo "Discovered file ${file}."
-        bam_files="${bam_files} I=${file}"
+        bam_files="${bam_files} -I ${folder}/${thread_num}.bam"
     done
 done
 
 echo "Initiating merge."
-java -Xms15g -Xmx15g -jar ${picard_folder}/MergeSamFiles.jar ${bam_files} \
-    OUTPUT=${final_file} \
-    SORT_ORDER=coordinate \
-    VALIDATION_STRINGENCY=LENIENT \
-    USE_THREADING=T MSD=true
+java -Xms15g -Xmx15g -jar ${gatk} -T PrintReads \
+    ${bam_files} \
+    --out ${final_file} \
+    -R ${ref} \
+    --validation_strictness LENIENT \
+    -L ${bed_file}
