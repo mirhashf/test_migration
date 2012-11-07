@@ -20,11 +20,14 @@ do
     sample_name=`basename ${file}`
 
     echo "Queueing up FMI sample ${sample_name}."
-    /mnt/scratch0/henryic/git/seqalto/loomis/client/bin/bina --hosts ${HOSTS} --key ${KEY} run \
+    bina --hosts ${HOSTS} --key ${KEY} run \
         -r ${BINA_DATA_PATH}/${sample_name}.${FIRST_END_SUFFIX} \
         -R ${BINA_DATA_PATH}/${sample_name}.${SECOND_END_SUFFIX} \
         -rg ${sample_name} -lb FMI -sm ${sample_name} \
         -o ${BINA_RESULTS_PATH} --use_bwa \
+        --no_genotyper \
+        --debug \
+        --address support@binatechnologies.com --sender_id binabox \
         --desc "FMI Sample ${sample_name} (Local Mode)" -l
 done
 
