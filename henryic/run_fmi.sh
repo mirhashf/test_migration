@@ -13,7 +13,7 @@ HOSTS="krakow-00:8080 krakow-01:8080"
 KEY="gocardinal"
 
 # Get list of prefixes to process
-files=`ls ${FMI_DATA_FOLDER}/*.fastq | cut -f1-3 -d'.' | uniq`
+files=`bina ls bina:///data/FMI/P0085/reads | grep \.fastq | cut -d'/' -f8 | cut -d'.' -f1-3 | uniq`
 
 for file in ${files};
 do
@@ -27,7 +27,7 @@ do
         -o ${BINA_RESULTS_PATH} --use_bwa \
         --no_genotyper \
         --debug \
-        --address support@binatechnologies.com --sender_id binabox \
+        --address napa@binatechnologies.com --sender_id binabox \
         --desc "FMI Sample ${sample_name} (Local Mode)" -l
 done
 
