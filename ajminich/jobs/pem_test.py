@@ -20,8 +20,8 @@ api_key = "gocardinal"
 servers = [ "t-rex:1380" ]
 managers = [ "t-rex:1381" ]
 
-dataset = "ds3"
-datasets_dir = "bina://data/datasets"
+dataset = "dsTest"
+datasets_dir = "bina://data"
 
 '''
         JOB SETUP
@@ -32,13 +32,16 @@ job = bina.Job()
 
 # Set up the job
 job.set_output_dir("bina://jobs/" + dataset)
-job.set_description("Broad Pipeline on " + dataset + " with confident sites")
-job.set_use_broad_gatk(True)
+job.set_description("Loomis PEM test on " + dataset)
+job.set_use_broad_gatk(False)
 
 # Reference
 job.reference.set_species("human")
-job.reference.set_genome_build("chr21")
-job.reference.set_dbsnp_build("132")
+job.reference.set_genome_build("chr19_22")
+job.reference.set_dbsnp_build("CEU-1409.15_21.chr")
+#job.set_enable_local_run(True)
+
+#job.structural_variation.bina_sv.set_perform_pem(False)
 
 # Create alignment tasks for the Bina Aligner
 aligner_job = bina.BinaAlignerJob(
@@ -47,7 +50,7 @@ aligner_job = bina.BinaAlignerJob(
             readgroup = dataset,
             library = dataset)
 aligner_job.set_trimming(30)
-        
+
 job.alignment.add_aligner_job(aligner_job)
 
 # For extremely high coverage, we disable concurrent sorting to increase 
@@ -71,9 +74,11 @@ job.alignment.set_disable_concurrent_sorting(False)
         GENOTYPING
 '''
 
+job.genotyping.set_disabled(True)
+
 # To configure the genotyping:
 # job.genotyping.fast_genotyper.set_argument(<argument>, <boolean>)
-job.genotyping.unified_genotyper.set_option("--output_mode", "EMIT_ALL_CONFIDENT_SITES")
+#job.genotyping.unified_genotyper.set_option("--output_mode", "EMIT_ALL_CONFIDENT_SITES")
 
 '''
         VARIANT QUALITY SCORE RECALIBRATION
@@ -140,9 +145,10 @@ job.genotyping.add_recal_operation(recal_operation)
         STRUCTURAL VARIATION
 '''
 
-'''
 # Enable all structural variation tools
 job.structural_variation.set_disable_bina_sv(False)
+
+'''
 job.structural_variation.set_run_breakdancer(True)
 job.structural_variation.set_run_breakseq(True)
 job.structural_variation.set_run_cnvnator(True)

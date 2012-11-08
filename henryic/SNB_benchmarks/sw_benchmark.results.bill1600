@@ -1,0 +1,270 @@
+1 threads, reflen 256 readlen 128
+alignments/sec = 292221
+alignments/sec = 289995
+alignments/sec = 289345
+alignments/sec = 289498
+1 threads, reflen 256 readlen 256
+alignments/sec = 150787
+alignments/sec = 151978
+alignments/sec = 151583
+alignments/sec = 151383
+1 threads, reflen 512 readlen 128
+alignments/sec = 147999
+alignments/sec = 148518
+alignments/sec = 148600
+alignments/sec = 148836
+1 threads, reflen 512 readlen 256
+alignments/sec = 76528.1
+alignments/sec = 76319.9
+alignments/sec = 76336.2
+alignments/sec = 76436.8
+1 threads, reflen 1024 readlen 128
+alignments/sec = 74298.8
+alignments/sec = 75016.7
+alignments/sec = 74684.5
+alignments/sec = 74461.5
+1 threads, reflen 1024 readlen 256
+alignments/sec = 38111.5
+alignments/sec = 38219.5
+alignments/sec = 37497.8
+alignments/sec = 38498.2
+2 threads, reflen 256 readlen 128
+alignments/sec = 582606
+alignments/sec = 557289
+alignments/sec = 555112
+alignments/sec = 581193
+2 threads, reflen 256 readlen 256
+alignments/sec = 300924
+alignments/sec = 301258
+alignments/sec = 302116
+alignments/sec = 300505
+2 threads, reflen 512 readlen 128
+alignments/sec = 287258
+alignments/sec = 279018
+alignments/sec = 295097
+alignments/sec = 287029
+2 threads, reflen 512 readlen 256
+alignments/sec = 149055
+alignments/sec = 146510
+alignments/sec = 152642
+alignments/sec = 152311
+2 threads, reflen 1024 readlen 128
+alignments/sec = 147691
+alignments/sec = 149034
+alignments/sec = 148469
+alignments/sec = 145941
+2 threads, reflen 1024 readlen 256
+alignments/sec = 75893.6
+alignments/sec = 75863.9
+alignments/sec = 76162.1
+alignments/sec = 75686.4
+4 threads, reflen 256 readlen 128
+alignments/sec = 1.11203e+06
+alignments/sec = 1.11052e+06
+alignments/sec = 1.10355e+06
+alignments/sec = 1.11522e+06
+4 threads, reflen 256 readlen 256
+alignments/sec = 577602
+alignments/sec = 579029
+alignments/sec = 570510
+alignments/sec = 550105
+4 threads, reflen 512 readlen 128
+alignments/sec = 564133
+alignments/sec = 551270
+alignments/sec = 566553
+alignments/sec = 563580
+4 threads, reflen 512 readlen 256
+alignments/sec = 291532
+alignments/sec = 289857
+alignments/sec = 290843
+alignments/sec = 290812
+4 threads, reflen 1024 readlen 128
+alignments/sec = 283046
+alignments/sec = 282823
+alignments/sec = 282177
+alignments/sec = 282666
+4 threads, reflen 1024 readlen 256
+alignments/sec = 143719
+alignments/sec = 144796
+alignments/sec = 144080
+alignments/sec = 144636
+6 threads, reflen 256 readlen 128
+alignments/sec = 1.66615e+06
+alignments/sec = 1.66829e+06
+alignments/sec = 1.65742e+06
+alignments/sec = 1.64662e+06
+6 threads, reflen 256 readlen 256
+alignments/sec = 865117
+alignments/sec = 817064
+alignments/sec = 859353
+alignments/sec = 826009
+6 threads, reflen 512 readlen 128
+alignments/sec = 807688
+alignments/sec = 845852
+alignments/sec = 836077
+alignments/sec = 832558
+6 threads, reflen 512 readlen 256
+alignments/sec = 428466
+alignments/sec = 432699
+alignments/sec = 433757
+alignments/sec = 434520
+6 threads, reflen 1024 readlen 128
+alignments/sec = 415517
+alignments/sec = 424180
+alignments/sec = 419187
+alignments/sec = 420584
+6 threads, reflen 1024 readlen 256
+alignments/sec = 213263
+alignments/sec = 216123
+alignments/sec = 213956
+alignments/sec = 216029
+8 threads, reflen 256 readlen 128
+alignments/sec = 2.04938e+06
+alignments/sec = 2.09016e+06
+alignments/sec = 2.11751e+06
+alignments/sec = 2.10329e+06
+8 threads, reflen 256 readlen 256
+alignments/sec = 1.0885e+06
+alignments/sec = 1.08469e+06
+alignments/sec = 1.03824e+06
+alignments/sec = 1.09194e+06
+8 threads, reflen 512 readlen 128
+alignments/sec = 1.06902e+06
+alignments/sec = 1.06704e+06
+alignments/sec = 1.06866e+06
+alignments/sec = 1.068e+06
+8 threads, reflen 512 readlen 256
+alignments/sec = 549795
+alignments/sec = 549330
+alignments/sec = 550644
+alignments/sec = 549542
+8 threads, reflen 1024 readlen 128
+alignments/sec = 532956
+alignments/sec = 530658
+alignments/sec = 532750
+alignments/sec = 533976
+8 threads, reflen 1024 readlen 256
+alignments/sec = 271536
+alignments/sec = 272871
+alignments/sec = 272868
+alignments/sec = 270735
+10 threads, reflen 256 readlen 128
+alignments/sec = 2.63084e+06
+alignments/sec = 2.62359e+06
+alignments/sec = 2.61943e+06
+alignments/sec = 2.54234e+06
+10 threads, reflen 256 readlen 256
+alignments/sec = 1.36233e+06
+alignments/sec = 1.33417e+06
+alignments/sec = 1.35494e+06
+alignments/sec = 1.36034e+06
+10 threads, reflen 512 readlen 128
+alignments/sec = 1.333e+06
+alignments/sec = 1.31954e+06
+alignments/sec = 1.33131e+06
+alignments/sec = 1.3113e+06
+10 threads, reflen 512 readlen 256
+alignments/sec = 686409
+alignments/sec = 682449
+alignments/sec = 665152
+alignments/sec = 685887
+10 threads, reflen 1024 readlen 128
+alignments/sec = 662410
+alignments/sec = 656254
+alignments/sec = 660431
+alignments/sec = 659595
+10 threads, reflen 1024 readlen 256
+alignments/sec = 333680
+alignments/sec = 338309
+alignments/sec = 337434
+alignments/sec = 341514
+12 threads, reflen 256 readlen 128
+alignments/sec = 3.07032e+06
+alignments/sec = 3.08048e+06
+alignments/sec = 3.05688e+06
+alignments/sec = 2.93228e+06
+12 threads, reflen 256 readlen 256
+alignments/sec = 1.529e+06
+alignments/sec = 1.58513e+06
+alignments/sec = 1.58849e+06
+alignments/sec = 1.58901e+06
+12 threads, reflen 512 readlen 128
+alignments/sec = 1.55802e+06
+alignments/sec = 1.54841e+06
+alignments/sec = 1.52462e+06
+alignments/sec = 1.55913e+06
+12 threads, reflen 512 readlen 256
+alignments/sec = 798993
+alignments/sec = 797472
+alignments/sec = 801127
+alignments/sec = 794111
+12 threads, reflen 1024 readlen 128
+alignments/sec = 776390
+alignments/sec = 766911
+alignments/sec = 774585
+alignments/sec = 776685
+12 threads, reflen 1024 readlen 256
+alignments/sec = 397114
+alignments/sec = 396525
+alignments/sec = 398937
+alignments/sec = 394719
+14 threads, reflen 256 readlen 128
+alignments/sec = 3.57155e+06
+alignments/sec = 3.5667e+06
+alignments/sec = 3.38225e+06
+alignments/sec = 3.56119e+06
+14 threads, reflen 256 readlen 256
+alignments/sec = 1.85173e+06
+alignments/sec = 1.8536e+06
+alignments/sec = 1.8574e+06
+alignments/sec = 1.48111e+06
+14 threads, reflen 512 readlen 128
+alignments/sec = 1.77383e+06
+alignments/sec = 1.81991e+06
+alignments/sec = 1.81641e+06
+alignments/sec = 1.79561e+06
+14 threads, reflen 512 readlen 256
+alignments/sec = 909045
+alignments/sec = 914542
+alignments/sec = 919341
+alignments/sec = 933970
+14 threads, reflen 1024 readlen 128
+alignments/sec = 907797
+alignments/sec = 902590
+alignments/sec = 891369
+alignments/sec = 900849
+14 threads, reflen 1024 readlen 256
+alignments/sec = 457204
+alignments/sec = 459007
+alignments/sec = 463274
+alignments/sec = 459106
+16 threads, reflen 256 readlen 128
+alignments/sec = 4.03846e+06
+alignments/sec = 3.38859e+06
+alignments/sec = 3.62291e+06
+alignments/sec = 2.85037e+06
+16 threads, reflen 256 readlen 256
+alignments/sec = 2.11842e+06
+alignments/sec = 1.66009e+06
+alignments/sec = 2.08334e+06
+alignments/sec = 1.75261e+06
+16 threads, reflen 512 readlen 128
+alignments/sec = 1.87462e+06
+alignments/sec = 2.05307e+06
+alignments/sec = 1.60499e+06
+alignments/sec = 2.07633e+06
+16 threads, reflen 512 readlen 256
+alignments/sec = 1.03758e+06
+alignments/sec = 1.02959e+06
+alignments/sec = 889657
+alignments/sec = 868895
+16 threads, reflen 1024 readlen 128
+alignments/sec = 867553
+alignments/sec = 994186
+alignments/sec = 994424
+alignments/sec = 978579
+16 threads, reflen 1024 readlen 256
+alignments/sec = 477903
+alignments/sec = 470485
+alignments/sec = 486357
+alignments/sec = 461344
