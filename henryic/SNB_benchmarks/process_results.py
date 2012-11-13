@@ -2,6 +2,7 @@
 
 import sys, os
 import re
+import numpy
 
 class TestPoint:
     num_threads = 0
@@ -12,6 +13,10 @@ class TestPoint:
     max_result  = 0
     min_result  = 0
     avg_result  = 0
+    pruned_list = [float]*0
+    pruned_max  = 0
+    pruned_min  = 0
+    pruned_avg  = 0
 
     def __init__(self, num_threads, ref_len, read_len):
         self.num_threads = num_threads
@@ -22,6 +27,10 @@ class TestPoint:
         self.max_result  = 0
         self.min_result  = 0
         self.avg_result  = 0
+        self.pruned_list = [float]*0
+        self.pruned_max  = 0
+        self.pruned_min  = 0
+        self.pruned_avg  = 0
 
     def add_result(self, result):
         self.result_list.append(result)
@@ -34,6 +43,23 @@ class TestPoint:
 
     def get_gcups(self):
         return [r * self.ref_len * self.read_len / 1e+09 for r in [self.avg_result, self.min_result, self.max_result]]
+
+    def prune_results(self):
+        std_dev = numpy.std(self.result_list)
+
+        for r in self.result_list:
+            if (abs(r - self.avg_result) < std_dev):
+                self.pruned_list.append(r)
+
+        self.pruned_max = max(self.pruned_list)
+        self.pruned_min = min(self.pruned_list)
+        self.pruned_avg = sum(self.pruned_list)/float(len(self.pruned_list))
+
+    def get_pruned_results(self):
+        return [self.pruned_avg, self.pruned_min, self.pruned_max]
+
+    def get_pruned_gcups(self):
+        return [r * self.ref_len * self.read_len / 1e+09 for r in [self.pruned_avg, self.pruned_min, self.pruned_max]]
 
 def main():
     if len(sys.argv) == 1:
@@ -68,9 +94,10 @@ def main():
             redata = re_result.search(line).groups()
             results_list[last_result].add_result(float(redata[0]))
 
-    print 'threads,ref_len,read_len,gcups'
+    print 'threads,ref_len,read_len,gcups,gcups_no-outliers'
     for r in results_list:
-        print str(r.num_threads) + ',' + str(r.ref_len) + ',' + str(r.read_len) + ',' + str(r.get_gcups()[0])
+        r.prune_results()
+        print str(r.num_threads) + ',' + str(r.ref_len) + ',' + str(r.read_len) + ',' + str(r.get_gcups()[0]) + ',' + str(r.get_pruned_gcups()[0])
 
     results_file.close()
 
