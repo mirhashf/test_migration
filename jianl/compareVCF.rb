@@ -27,10 +27,13 @@ def processArguments()
                 ['--vcfFile', '-i', GetoptLong::REQUIRED_ARGUMENT],
                 ['--vcfName', '-n', GetoptLong::REQUIRED_ARGUMENT],
                 ['--variantClass', '-c', GetoptLong::OPTIONAL_ARGUMENT],
+                ['--leftAlign', '-l', GetoptLong::OPTIONAL_ARGUMENT],
                 ['--outputDir', '-o', GetoptLong::OPTIONAL_ARGUMENT],
                 ['--plotVenn', '-p', GetoptLong::OPTIONAL_ARGUMENT],
                 ['--sqrt', '-s', GetoptLong::OPTIONAL_ARGUMENT],
+                ['--forceGenFile', '-f', GetoptLong::OPTIONAL_ARGUMENT],
                 ['--trueVariantCounts', '-t', GetoptLong::OPTIONAL_ARGUMENT],
+                ['--lenient','-u',GetoptLong::OPTIONAL_ARGUMENT],
                 ['--help', '-h', GetoptLong::NO_ARGUMENT]
               ]
   progOpts = GetoptLong.new(*optsArray)
@@ -61,17 +64,19 @@ PROGRAM DESCRIPTION:
     --vcfFile        | -i    => input vcf files for comparison, separated by comma
     --vcfName        | -n    => names for the input vcf files, separated by comma and should be ordered according to the files
     --variantClass   | -c    => specify whether the comparison should be performed for SNPs(\"snp\") or indels(\"indel\") (optional, default is snp)
+    --leftAlign      | -l    => if comparing indels, force to apply left alignment (default is true)
     --outputDir      | -o    => output directory (optional, default is the current dir)
     --plotVenn       | -p    => plot the Venn daigrams or not (optional, default is false) 
     --sqrt           | -s    => apply sqrt on the weight to generate the Venn diagrams (only use it if the plotting fails, defaul is false)
     --trueVariantCounts           |-t     => number of true snp or indels in dbSNP (should correspond to --variantClass input, optional)
-
+    --lenient        | -u    => apply LENIENT_VCF_PROCESSING for checking on vcf
+    --forceGenFile   | -f    => force to re-generate the snp or indel vcf file for the input, even if the file is existing.
   USAGE:                                                                                                         
   ruby compareVCF.rb -r ref.fa -g pathTogatk/dist -d dbSNP_132.hg19.vcf -i input1.vcf,input2.vcf -n I1,I2 -c snp -o outputPath/ 
 
   EXAMPLE:
 
-  ruby compareVCF.rb -r /mnt/scratch0/public/genome/human/hg19.major/hg19.major.fa -g /home/jianl/work/gatk_jun12/seqalto/third-party/gatk/dist -d /mnt/scratch0/public/genome/human/hg19/dbsnp/dbsnp_132.vcf -i /mnt/scratch1/jianl/stanford/cuiping/bina/genotyped.reordered.vcf,/mnt/scratch1/jianl/stanford/cuiping/gatk/TEST-blood-CEU-gatk.reordered.vcf -n BINA,GATK -c snp -o /home/jianl/work/test/
+  ruby compareVCF.rb -r /mnt/scratch0/public/genome/human/hg19.major/hg19.major.fa -g /home/jianl/work/seqalto/third-party/gatk/dist -d /mnt/scratch0/public/genome/human/hg19/dbsnp/dbsnp_132.vcf -i /mnt/scratch1/jianl/stanford/cuiping/bina/genotyped.reordered.vcf,/mnt/scratch1/jianl/stanford/cuiping/gatk/TEST-blood-CEU-gatk.reordered.vcf -n BINA,GATK -c snp -o /home/jianl/work/test/
 
 "
 
@@ -141,6 +146,9 @@ outputPath=(!optsHash.key?('--outputDir')) ? "." : optsHash['--outputDir'].strip
 variantClass=(!optsHash.key?('--variantClass')) ? "snp" : optsHash['--variantClass'].strip
 plotVennFlag=(!optsHash.key?('--plotVenn')) ? FALSE : optsHash['--plotVenn'].strip
 sqrtFlag=(!optsHash.key?('--sqrt')) ? FALSE : optsHash['--sqrt'].strip
+genFileFlag=(!optsHash.key?('--forceGenFile')) ? FALSE : optsHash['--forceGenFile'].strip
+lenientFlag=(!optsHash.key?('--lenient')) ? FALSE : optsHash['--lenient'].strip
+leftAlignFlag=(!optsHash.key?('--leftAlign')) ? TRUE : optsHash['--lenient'].strip
 
 evalCombs=[]
 for ii in 1...evalRods.size
@@ -160,40 +168,69 @@ compRodSize=Hash.new
 
 rodProperty=[]
 
+evalSelectedFiles=[]
+gatkCMD_u=""
+if (lenientFlag)
+  gatkCMD_u=" -U LENIENT_VCF_PROCESSING"
+end
+
 if variantClass.downcase == "snp"
   featureVenn="nSNPs"
   if !optsHash.key?('--trueVariantCounts')
     compRodSize["dbsnp"]= (`grep -c VC=SN #{dbSNPvcf}`).strip.to_i #28833350 
     $stderr.puts("number of #{variantClass} in #{dbSNPvcf}:\t#{compRodSize["dbsnp"]}")
   else
-    compRodSize["dbsnp"]=optsHash['--trueVariantCounts'].strip
+    compRodSize["dbsnp"]=optsHash['--trueVariantCounts'].strip.to_i
   end
+  ii=0
   evalFiles.each{|ff|
-    system("java -jar #{gatkPath}/GenomeAnalysisTK.jar -T SelectVariants -R #{refFasta} --variant #{ff} -o #{outputPath}/#{ff.split("\/")[-1]}.snp -selectType SNP")
+    snpFile="#{outputPath}/#{evalRods[ii]}.#{ff.split("\/")[-1]}.snp"
+    if File.exists?(snpFile) && !genFileFlag
+      $stderr.puts("#{snpFile} exists ... not regenerating")
+    else
+      system("java -jar #{gatkPath}/GenomeAnalysisTK.jar -T SelectVariants -R #{refFasta} --variant #{ff} -o #{snpFile} -selectType SNP#{gatkCMD_u}")
+    end
+      evalSelectedFiles.push(snpFile)
+    ii+=1
   }
-  evalFiles.map! {|ff| "#{outputPath}/#{ff.split("\/")[-1]}.snp"}
+
 elsif variantClass.downcase == "indel"
   featureVenn="nIndels"
   if !optsHash.key?('--trueVariantCounts')
-    compRodSize["dbsnp"]= (`grep -c VC=INDEL #{dbSNPvcf}`).strip.to_i #28833350 
+    compRodSize["dbsnp"]= [(`grep -c VC=INDEL #{dbSNPvcf}`).strip.to_i,(`grep -c VC=DIV #{dbSNPvcf}`).strip.to_i].max
     $stderr.puts("number of #{variantClass} in #{dbSNPvcf}:\t#{compRodSize["dbsnp"]}")
   else
-    compRodSize["dbsnp"]=optsHash['--trueVariantCounts'].strip
+    compRodSize["dbsnp"]=optsHash['--trueVariantCounts'].strip.to_i
   end
+  
+  ii=0
   evalFiles.each{|ff|
-    system("java -jar #{gatkPath}/GenomeAnalysisTK.jar -T SelectVariants -R #{refFasta} --variant #{ff} -o #{outputPath}/#{ff.split("\/")[-1]}.indel -selectType INDEL")
+    indelFile="#{outputPath}/#{evalRods[ii]}.#{ff.split("\/")[-1]}.indel"
+    indelFile_left="#{outputPath}/#{evalRods[ii]}.#{ff.split("\/")[-1]}.indel.leftAligned"
+    if File.exists?(indelFile) && !genFileFlag
+      $stderr.puts("#{indelFile} exists ... not regenerating")
+    else
+      system("java -jar #{gatkPath}/GenomeAnalysisTK.jar -T SelectVariants -R #{refFasta} --variant #{ff} -o #{indelFile} -selectType INDEL#{gatkCMD_u}")
+    end
+    if(leftAlignFlag)
+      system("java -jar #{gatkPath}/GenomeAnalysisTK.jar -T LeftAlignVariants -R #{refFasta} --variant #{indelFile} -o #{indelFile_left}#{gatkCMD_u}")
+      indelFile=indelFile_left
+    end
+  
+    evalSelectedFiles.push(indelFile)
+    ii+=1
   }
-  evalFiles.map! {|ff| "#{outputPath}/#{ff.split("\/")[-1]}.indel"}
+#  evalFiles.map! {|ff| "#{outputPath}/#{ff.split("\/")[-1]}.indel"}
 end
 
-combRodFile=(["-V:"]*evalRods.size).zip(evalRods.zip(evalFiles).map {|rodFile| rodFile.join(" ")}).map {|evalString| evalString.join("")}
+combRodFile=(["-V:"]*evalRods.size).zip(evalRods.zip(evalSelectedFiles).map {|rodFile| rodFile.join(" ")}).map {|evalString| evalString.join("")}
 
-combRodFile2=(["--eval:"]*evalRods.size).zip(evalRods.zip(evalFiles).map {|rodFile| rodFile.join(" ")}).map {|evalString| evalString.join("")}
+combRodFile2=(["--eval:"]*evalRods.size).zip(evalRods.zip(evalSelectedFiles).map {|rodFile| rodFile.join(" ")}).map {|evalString| evalString.join("")}
 
-system("java -jar #{gatkPath}/GenomeAnalysisTK.jar -R #{refFasta} -T VariantsMerger  #{combRodFile.join(" ")} -priority #{evalRods.join(",")} -o #{outputPath}/combined.#{evalRods.join("_")}.#{variantClass}.vcf -setKey set")
+system("java -jar #{gatkPath}/GenomeAnalysisTK.jar -R #{refFasta} -T CombineVariants  #{combRodFile.join(" ")} -priority #{evalRods.join(",")} -o #{outputPath}/combined.#{evalRods.join("_")}.#{variantClass}.vcf -setKey set#{gatkCMD_u}")
 system("java -jar #{gatkPath}/GenomeAnalysisTK.jar -T VariantEval -R #{refFasta} -D #{dbSNPvcf} #{selectString.join(" ")} -o #{outputPath}/combeval.#{evalRods.join("_")}.#{variantClass}.report -eval #{outputPath}/combined.#{evalRods.join("_")}.#{variantClass}.vcf --evalModule GenotypeConcordance -l INFO")
 
-#system("java -jar #{gatkPath}/GenomeAnalysisTK.jar  -T VariantEval -R #{refFasta} -D #{dbSNPvcf} #{combRodFile2.join(" ")} -o weval.#{evalRods.join("_")}.#{variantClass}.report -l INFO")
+##system("java -jar #{gatkPath}/GenomeAnalysisTK.jar  -T VariantEval -R #{refFasta} -D #{dbSNPvcf} #{combRodFile2.join(" ")} -o weval.#{evalRods.join("_")}.#{variantClass}.report -l INFO")
 
 ifid=File.open("#{outputPath}/combeval.#{evalRods.join("_")}.#{variantClass}.report","r")
 
@@ -287,7 +324,7 @@ if plotVennFlag
       
     end
     
-    weights[comp][combArr.size/2-1] -= sum(knownVector)
+    weights[comp][combArr.size/2-1] -= rInstance.sum(knownVector)
 
     weightByNovelty=[]
     weightAll=[]
