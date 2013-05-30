@@ -1,0 +1,4 @@
+Sleeping Barber
+==============
+Write a program that simulates the following in a fair and deadlock-free way:
+There is a barber shop with 1 barber and N chairs. When the shop is open, multiple customers can arrive at the shop at the same time. When a customer arrives, if there are empty chairs, s/he takes a seat, otherwise s/he leaves. The barber cuts the hair of customers in the order that they arrive. If there is no customer waiting in line, the barber goes to sleep. After a certain amount of time, shop closes and the barber stops working. 

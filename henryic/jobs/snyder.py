@@ -23,7 +23,7 @@ api_key = "gocardinal"
 nodes = [
     "tehran-00:8080",
     "tehran-01:8080",
-    "tehran-02:8080", 
+    "tehran-02:8080",
     "tehran-03:8080",
     "tehran-06:8080"
 ]
@@ -53,15 +53,15 @@ job.reference.set_dbsnp_build("135_major")
 
 # Create alignment tasks for the Bina Aligner
 for library in libraries:
-    
+
     library_name = library[0]
     lane_prefix = library[1]
     num_lanes = library[2]
-    
-    print "Now queueing library '" + library_name + "' with " + str(num_lanes) + " and prefix '" + lane_prefix + "'." 
-    
+
+    print "Now queueing library '" + library_name + "' with " + str(num_lanes) + " and prefix '" + lane_prefix + "'."
+
     for lane_index in range(1, num_lanes+1):
-        
+
         aligner_job = bina.BinaAlignerJob(
             first_end = data_dir + "/" + lane_prefix + ".s_" + str(lane_index) + "_1.fq.gz",
             second_end = data_dir + "/" + lane_prefix + ".s_" + str(lane_index) + "_2.fq.gz",
@@ -69,19 +69,19 @@ for library in libraries:
             library = library_name,
             sample = sample)
         aligner_job.set_trimming(0)
-        
+
         # Snyder reads setting
         aligner_job.set_option("-m", 330)
 
         # Set aligner template size calculation to automatic
         #aligner_job.set_option("--template_len_comp_method", 2)
-        
+
         # Use batched template size calculation to emulate BWA
         #aligner_job.set_argument("--enable_batch_pairing", True)
-   
+
         aligner_job.set_option("-h", -1)
         aligner_job.set_argument("--nw_disable_match_at_ends", True)
- 
+
         job.alignment.add_aligner_job(aligner_job)
 
 job.alignment.set_disable_concurrent_sorting(False)

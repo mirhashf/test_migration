@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Learning backbone.js</title>
+</head>
+<body>
+
+	<!-- Importing things -->
+	<script type="text/javascript"
+		src="http://code.jquery.com/jquery-1.8.0.js"></script>
+	<script type="text/javascript"
+		src="http://underscorejs.org/underscore.js"></script>
+	<script type="text/javascript" src="http://backbonejs.org/backbone.js"></script>
+
+	<!-- Learning things -->
+	<script type="text/javascript">
+	model = new Backbone.Model({
+	    data : [ {
+		text : "Bina",
+		href : "http://binacloud.com"
+	    }, {
+		text : "Illumina",
+		href : "http://Illumina.com"
+	    } ]
+	});
+
+	var View = Backbone.View.extend({
+	    initialize : function() {
+		console.log("Initializing");
+	    }
+	})
+
+	var view = new View({model: model});
+	
+	var Router = Backbone.Router.extend({
+	    routes: {
+			"foo/:bar": "func"
+	    },
+
+		func: function (p){
+		    console.log(p);
+		}
+	});
+	
+	router = new Router();
+	
+	Backbone.history.start();
+	
+	
+    </script>
+
+</body>
+</html>
