@@ -76,7 +76,7 @@ PROGRAM DESCRIPTION:
 
   EXAMPLE:
 
-  ruby compareVCF.rb -r /mnt/scratch0/public/genome/human/hg19.major/hg19.major.fa -g /home/jianl/work/seqalto/third-party/gatk/dist -d /mnt/scratch0/public/genome/human/hg19/dbsnp/dbsnp_132.vcf -i /mnt/scratch1/jianl/stanford/cuiping/bina/genotyped.reordered.vcf,/mnt/scratch1/jianl/stanford/cuiping/gatk/TEST-blood-CEU-gatk.reordered.vcf -n BINA,GATK -c snp -o /home/jianl/work/test/
+  ruby compareVCF.rb -r /mnt/scratch0/public/genome/human/hg19.major/hg19.major.fa -g /home/jianl/work/seqalto/third-party/gatk/dist -d /mnt/scratch0/public/genome/human/hg19/dbsnp/dbsnp_132.vcf -i /mnt/scratch1/jianl/stanford/cuiping/bina/genotyped.reordered.vcf,/mnt/scratch1/jianl/stanford/cuiping/gatk/TEST-blood-CEU-gatk.reordered.vcf -n BINA,HugeSeq -c snp -o /home/jianl/work/test/
 
 "
 
@@ -233,7 +233,7 @@ system("java -jar #{gatkPath}/GenomeAnalysisTK.jar -T VariantEval -R #{refFasta}
 ##system("java -jar #{gatkPath}/GenomeAnalysisTK.jar  -T VariantEval -R #{refFasta} -D #{dbSNPvcf} #{combRodFile2.join(" ")} -o weval.#{evalRods.join("_")}.#{variantClass}.report -l INFO")
 
 ifid=File.open("#{outputPath}/combeval.#{evalRods.join("_")}.#{variantClass}.report","r")
-
+statsFid=File.open("#{outputPath}/stats.#{evalRods.join("_")}.#{variantClass}.txt","w")
 
 while line=ifid.gets
   if line =~ /\#\:GATK/ && line =~ /CompOverlap/
@@ -280,7 +280,7 @@ rods.each{|kk,vv|
 }
 
 parseGATKtable(ifid,"TiTvVariantEvaluator",["tiTvRatio"],rods,rodProperty)
-
+ifid.close
 
 
 if plotVennFlag
@@ -380,15 +380,20 @@ end
 ind=0
 rodProperty.each{|prop|
   $stderr.puts("Method\t#{prop}")
+  statsFid.puts("Method\t#{prop}")
   $stderr.puts("\tall\tknown\tnovel")
+  statsFid.puts("\tall\tknown\tnovel")
   rods.each{|kk,vv|
     if kk[0] == "dbsnp"
       $stderr.puts("#{kk[1]}\t#{vv["all"][ind]}\t#{vv["known"][ind]}\t#{vv["novel"][ind]}")
+      statsFid.puts("#{kk[1]}\t#{vv["all"][ind]}\t#{vv["known"][ind]}\t#{vv["novel"][ind]}")
     end
   }
   ind+=1
   $stderr.puts("")
+  statsFid.puts("")
 }
+statsFid.close
 
 $stderr.puts "#{Time.now} DONE"
 exit(0)
