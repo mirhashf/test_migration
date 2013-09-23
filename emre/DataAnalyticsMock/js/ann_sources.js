@@ -145,6 +145,8 @@ var ann_source_accordion =
 								'<h3 class="panel-title"><label> <input type="checkbox" checked> RefSeq Genes</label></h3>' +
 							'</div>' +
 							'<div class="panel-body ann-source-box">' +
+							    '<label> <input type="checkbox" checked> name</label> <br/>' +
+							    '<label> <input type="checkbox" checked> name2</label> <br/>' +
 								'<label> <input type="checkbox" checked> chrom</label> <br/>' +
 								'<label> <input type="checkbox" checked> chromStart</label><br/>' +
 								'<label> <input type="checkbox" checked> chromEnd</label><br/>' +
@@ -163,6 +165,8 @@ var ann_source_accordion =
 								'<h3 class="panel-title"><label> <input type="checkbox" checked> Ensembl Genes</label></h3>' +
 							'</div>' +
 							'<div class="panel-body ann-source-box">' +
+							    '<label> <input type="checkbox" checked> name</label> <br/>' +
+							    '<label> <input type="checkbox" checked> name2</label> <br/>' +
 								'<label> <input type="checkbox" checked> chrom</label> <br/>' +
 								'<label> <input type="checkbox" checked> chromStart</label><br/>' +
 								'<label> <input type="checkbox" checked> chromEnd</label><br/>' +

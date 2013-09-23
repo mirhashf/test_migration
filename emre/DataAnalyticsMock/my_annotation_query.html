@@ -40,22 +40,71 @@
 				</div>
 				<div class="panel-body">
 					<div class="row">
-						<div class="col-md-3"><label> <input type="checkbox" checked> dbSNP (135)</label></div>
-						<div class="col-md-3"><label> <input type="checkbox"> RefSeq genes </label></div>
-						<div class="col-md-3"><label> <input type="checkbox" checked> Ensembl genes </label></div>
-						<div class="col-md-3"><label> <input type="checkbox"> OMIM </label></div>
-					</div>
-					<div class="row">			
-						<div class="col-md-3"><label> <input type="checkbox"> DGV </label></div>
-						<div class="col-md-3"><label> <input type="checkbox"> Repeat Masker </label></div>
-						<div class="col-md-3"><label> <input type="checkbox"> Seg Dups </label></div>
-						<div class="col-md-3"><label> <input type="checkbox" checked> dbNSFP</label></div>
-						
-					</div>
-					<div class="row">
-						<div class="col-md-3"><label> <input type="checkbox"> Cosmic </label></div>
-						<div class="col-md-3"><label> <input type="checkbox"> Hapmap SNPs</label></div>
-						<div class="col-md-3"><label> <input type="checkbox" checked> SnpEff annotations</label></div>
+						<div class="col-md-3">
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<h3 class="panel-title"><label>dbSNP (135)</label></h3>
+								</div>
+								<div class="panel-body ann-source-box">
+									<label> <input type="checkbox"> chrom</label> <br/>
+									<label> <input type="checkbox"> chromStart</label><br/>
+									<label> <input type="checkbox"> chromEnd</label><br/>
+									<label> <input type="checkbox" checked> name</label> <br/>
+									<label> <input type="checkbox" checked> func</label><br/>
+									<label> <input type="checkbox" checked> class</label>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<h3 class="panel-title"><label>RefSeq genes</label></h3>
+								</div>
+								<div class="panel-body ann-source-box">
+									<label> <input type="checkbox" checked> name</label> <br/>
+									<label> <input type="checkbox" checked> name2</label><br/>
+									<label> <input type="checkbox" checked> strand</label><br/>
+									<label> <input type="checkbox"> cdStart</label><br/>
+									<label> <input type="checkbox"> cdsEnd</label><br/>
+									<label> <input type="checkbox" checked> exonCount</label>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<h3 class="panel-title"><label>SnpEff annotations</label></h3>
+								</div>
+								<div class="panel-body ann-source-box">
+									<label> <input type="checkbox" checked> effect</label> <br/>
+									<label> <input type="checkbox" checked> impact</label><br/>
+									<label> <input type="checkbox" checked> funcClass</label><br/>
+									<label> <input type="checkbox"> codonChange</label><br/>
+									<label> <input type="checkbox" checked> aminoAcidChanges</label><br/>
+									<label> <input type="checkbox" checked> transcriptBioType</label>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<h3 class="panel-title"><label>dbNSFP</label></h3>
+								</div>
+								<div class="panel-body ann-source-box">
+									<label> <input type="checkbox" checked> siftScore</label> <br/>
+									<label> <input type="checkbox" checked> siftPred</label> <br/>
+									<label> <input type="checkbox" checked> polyphenScore</label><br/>
+									<label> <input type="checkbox" checked> polyphenPred</label><br/>
+									<label> <input type="checkbox" checked> mutationTasterScore</label><br/>
+									<label> <input type="checkbox" checked> lrtScore</label><br/>
+									<label> <input type="checkbox"> lrtPred</label><br/>
+									<label> <input type="checkbox"> phylopScore</label><br/>
+									<label> <input type="checkbox"> fathmmScore</label><br/>
+									<label> <input type="checkbox"> gerpNr</label><br/>
+									<label> <input type="checkbox"> gerpRs</label>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -65,15 +114,15 @@
 				</div>
 				<div class="panel-body">
 					<div class="row">
-						<div class="col-md-2"><strong>Read Depth:</strong> </div>
-						<div class="col-md-1"> = </div>
-						<div class="col-md-9"><input type="text" value="50"></div>
+						<div class="col-md-2"><strong>Read Depth</strong> </div>
+						<div class="col-md-1"> >= </div>
+						<div class="col-md-9"><input type="number" value="50"></div>
 					</div>
 					<br/>
 					<div class="row">
 						<div class="col-md-2"><strong>Quality</strong> </div>
-						<div class="col-md-1"> > </div>
-						<div class="col-md-9"><input type="text" value="30"></div>
+						<div class="col-md-1"> >= </div>
+						<div class="col-md-9"><input type="number" value="30"></div>
 					</div>
 					<br/>
 					<div class="row">
@@ -90,9 +139,21 @@
 					</div>
 					<br/>
 					<div class="row">
-						<div class="col-md-2"><strong>Gene names</strong> </div>
+						<div class="col-md-2"><strong>Ensembl (name)</strong> </div>
 						<div class="col-md-1"> IN </div>
-						<div class="col-md-9"><input type="text" size="80" placeholder="Comma separated e.g. ENSG000123, ENSG000890"></div>
+						<div class="col-md-9"><input type="text" size="80" value="ENSG000123, ENSG000890"></div>
+					</div>
+					<br/>
+					<div class="row">
+						<div class="col-md-2"><strong>dbNSFP (Sift score)</strong> </div>
+						<div class="col-md-1"> < </div>
+						<div class="col-md-9"><input type="number" value="0.05"></div>
+					</div>
+					<br/>
+					<div class="row">
+						<div class="col-md-2"><strong>dbNSFP (Polyphen score)</strong> </div>
+						<div class="col-md-1"> > </div>
+						<div class="col-md-9"><input type="number" value="0.909"></div>
 					</div>
 				</div>
 			</div>

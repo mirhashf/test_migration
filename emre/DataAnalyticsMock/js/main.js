@@ -18,8 +18,17 @@ $(document).ready(function() {
 						'<li class="disabled"><a href="case_control_study.html">Case/Control study</a></li>' +
 					'</ul></li>' +
 				'<li id="saved_queries_tab"><a href="saved_queries.html"><span class="glyphicon glyphicon-pushpin"></span> Saved Queries</a></li>' +
-				'<li id="ann_sources_tab"><a href="annotation_sources.html"><span class="glyphicon glyphicon-folder-open"></span> Annotation Sources</a></li>' +
+				'<li id="ann_sources_tab"><a href="annotation_sources.html"><span class="glyphicon glyphicon-folder-open"></span> Ann. sources</a></li>' +
 			'</ul>' +
+			'<form class="navbar-form navbar-right" role="login" style="padding: 0px"> ' +
+		      '<div class="form-group"> ' +
+		        '<input type="text" class="form-control" placeholder="Username"> ' +
+		      '</div> ' +
+		      '<div class="form-group">' +
+		        '<input type="password" class="form-control" placeholder="Password"> ' +
+		      '</div> ' +
+		      '<button type="submit" class="btn btn-danger">Login</button>' +
+		    '</form>' +
 		'</div>' +
 	'</div>' +
 	'</div>');
