@@ -82,55 +82,53 @@
 					<h3 class="panel-title">Define trio and select disease model</h3>
 				</div>
 				<div class="panel-body">
-					<div class="row">
-						<div class="col-md-3">
-							<label>Data set: </label>
-							<select id="trio_drop_down">
-						    	<option id="1">Autism Trio 1</option>
-						    	<option id="2">Autism Trio 2</option>
-						    </select>
-						</div>
-						<div class="col-md-3">
-							<div class="row">
-								<div class="col-md-3">
-									<label>Mother: </label>
-								</div>
-								<div class="col-md-9">
-									<select id="mother_drop_down">
-										<option id="0">---</option>
-								    </select>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-md-3">
-									<label>Father: </label>
-								</div>
-								<div class="col-md-9">
-									<select id="father_drop_down">
-										<option id="0">---</option>
-								    </select>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-md-3">
-									<label>Child: </label>
-								</div>
-								<div class="col-md-9">
-									<select id="child_drop_down">
-										<option id="0">---</option>
-								    </select>
-								</div>
-							</div>
-						</div>
-						<div class="col-md-6">
-							<label>Disease model: </label>
-							<select>
-						    	<option>De novo mutation analysis</option>
-						    	<option>Recessive inheritance analysis</option>
-						    	<option>Compound heterozygote analysis</option>
-						    </select>
-						</div>
-					</div>
+					<table cellpadding="10">
+						<tr valign="top">
+							<td>
+								<label>Data set: </label>
+								<select id="trio_drop_down">
+							    	<option id="1">Autism Trio 1</option>
+							    	<option id="2">Autism Trio 2</option>
+							    </select>
+							</td>
+							<td>
+								<table>
+									<tr>
+										<td><label>Mother: </label></td>
+										<td>
+											<select id="mother_drop_down">
+												<option id="0">---</option>
+							    			</select>	
+							    		</td>
+									</tr>
+									<tr>
+										<td><label>Father: </label></td>
+										<td>
+											<select id="father_drop_down">
+												<option id="0">---</option>
+										    </select>
+										</td>
+									</tr>
+									<tr>
+										<td><label>Child: </label></td>
+										<td>
+											<select id="child_drop_down">
+												<option id="0">---</option>
+										    </select>
+										</td>
+									</tr>
+								</table>			
+							</td>
+							<td>
+								<label>Disease model: </label>
+								<select>
+							    	<option>De novo mutation analysis</option>
+							    	<option>Recessive inheritance analysis</option>
+							    	<option>Compound heterozygote analysis</option>
+							    </select>
+							</td>
+						</tr>
+					</table>
 				</div>
 				<div class="panel-footer">
 					<div class="row text-center">
