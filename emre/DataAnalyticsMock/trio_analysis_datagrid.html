@@ -1,0 +1,158 @@
+<title>Bina Tertiary Analysis Platform</title>
+
+<link href="js/libs/w2ui-1.2/w2ui-1.2.css" rel="stylesheet">
+<link href="js/libs/bootstrap-3.0.0/css/bootstrap.min.css"
+	rel="stylesheet">
+<link href="css/custom.css" rel="stylesheet">
+
+<script src="js/libs/jquery-2.0.3/jquery-2.0.3.min.js"></script>
+<script src="js/libs/w2ui-1.2/w2ui-1.2.js"></script>
+<script src="js/libs/bootstrap-3.0.0/js/bootstrap.min.js"></script>
+<script src="js/main.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("#analyses_tab").attr("class", "active");
+		
+		$('#grid').w2grid({
+			name: 'grid', 
+			show: { 
+				toolbar: true,
+				footer: true
+			},
+			recordsPerPage: 10,
+			searches: [				
+				{ field: 'chr', caption: 'Chromosome', type: 'text' },
+				{ field: 'pos', caption: 'Position', type: 'int' },
+				{ field: 'dp', caption: 'Read depth', type: 'int' },
+			],
+			sortData: [ { field: 'recid', direction: 'asc' } ],
+			columns: [				
+				{ field: 'recid', caption: 'ID', size: '30px', resizable: true, sortable: true },
+				{ field: 'chr', caption: 'Chromosome', size: '20%', resizable: true, sortable: true },
+				{ field: 'pos', caption: 'Position', size: '20%', resizable: true, sortable: true },
+				{ field: 'dbsnp_id', caption: 'dbSNP id', size: '20%', resizable: true },
+				{ field: 'ref', caption: 'Ref', size: '10%', resizable: true },
+				{ field: 'alts', caption: 'Alts', size: '10%', resizable: true },
+				{ field: 'quality', caption: 'Qual', size: '10%', resizable: true, sortable: true },
+				{ field: 'dp', caption: 'DP', size: '10%', resizable: true, sortable: true },
+				{ field: 'genotype', caption: 'GT', size: '10%', resizable: true },
+				{ field: 'quality_mom', caption: 'Qual/Mother', size: '20%', resizable: true, sortable: true },
+				{ field: 'dp_mom', caption: 'DP/Mother', size: '20%', resizable: true, sortable: true },
+				{ field: 'genotype_mom', caption: 'GT/Mother', size: '20%', resizable: true },
+				{ field: 'quality_dad', caption: 'Qual/Father', size: '20%', resizable: true, sortable: true },
+				{ field: 'dp_dad', caption: 'DP/Father', size: '20%', resizable: true, sortable: true },
+				{ field: 'genotype_dad', caption: 'GT/Father', size: '20%', resizable: true },
+				{ field: 'sift_scr', caption: 'Sift score', size: '20%', resizable: true, sortable: true },
+				{ field: 'polyphen_scr', caption: 'Polyphen score', size: '20%', resizable: true, sortable: true },
+				{ field: 'other1', caption: '', size: '10%', resizable: true },
+				{ field: 'other2', caption: '', size: '200px', resizable: true },
+			],
+			records: [
+				{ recid: 1, chr: 'chr1', pos: 1000, dbsnp_id: 'rs123456', ref: 'A', alts: 'T', quality: 102.54, dp: 40, genotype: '0/1', 
+					quality_mom: 234.12, dp_mom: 32, genotype_mom: '0/1', quality_dad: 123.45, dp_dad: 35, genotype_dad: '1/1', 
+					sift_scr: 0.12, polyphen_scr: 0.234, other1: '<a href="variant_details.html">More</a>', other2: '<a href="#">View in IGV</a>' },
+				{ recid: 2, chr: 'chr1', pos: 1012, dbsnp_id: 'rs123457', ref: 'C', alts: 'A', quality: 253.45, dp: 20, genotype: '0/1', 
+					quality_mom: 123.54, dp_mom: 35, genotype_mom: '1/1', quality_dad: 485.36, dp_dad: 35, genotype_dad: '0/1',
+					sift_scr: 0.02, polyphen_scr: 0.878, other1: '<a href="variant_details.html">More</a>', other2: '<a href="#">View in IGV</a>' },
+				{ recid: 3, chr: 'chr1', pos: 1035, dbsnp_id: 'rs123458', ref: 'C', alts: 'G', quality: 345.08, dp: 5, genotype: '1/1', 
+					quality_mom: 35.12, dp_mom: 10, genotype_mom: './.', quality_dad: 366.88, dp_dad: 35, genotype_dad: '0/1',
+					sift_scr: 0.01, polyphen_scr: 0.656, other1: '<a href="variant_details.html">More</a>', other2: '<a href="#">View in IGV</a>' },
+				{ recid: 4, chr: 'chr2', pos: 1011, dbsnp_id: 'rs123459', ref: 'T', alts: 'A', quality: 456.12, dp: 15, genotype: '0/1', 
+					quality_mom: 111.14, dp_mom: 25, genotype_mom: '1/1', quality_dad: 25.34, dp_dad: 15, genotype_dad: './.',
+					sift_scr: 0.05, polyphen_scr: 0.345, other1: '<a href="variant_details.html">More</a>', other2: '<a href="#">View in IGV</a>' },
+				{ recid: 5, chr: 'chr2', pos: 1099, dbsnp_id: 'rs123460', ref: 'A', alts: 'T', quality: 112.98, dp: 25, genotype: '1/1', 
+					quality_mom: 234.12, dp_mom: 32, genotype_mom: '0/1', quality_dad: 123.45, dp_dad: 35, genotype_dad: '1/1',	
+					sift_scr: 0.23, polyphen_scr: 0.656, other1: '<a href="variant_details.html">More</a>', other2: '<a href="#">View in IGV</a>' },
+				{ recid: 6, chr: 'chr3', pos: 2120, dbsnp_id: 'rs123461', ref: 'A', alts: 'T', quality: 565.33, dp: 25, genotype: '1|1', 
+					quality_mom: 589.38, dp_mom: 40, genotype_mom: '0/1', quality_dad: 655.36, dp_dad: 40, genotype_dad: '1/1',	
+					sift_scr: 0.56, polyphen_scr: 0.134, other1: '<a href="variant_details.html">More</a>', other2: '<a href="#">View in IGV</a>' },
+				{ recid: 7, chr: 'chr3', pos: 2345, dbsnp_id: 'rs123462', ref: 'G', alts: 'T', quality: 653.12, dp: 30, genotype: '0|1', 
+					quality_mom: 355.14, dp_mom: 30, genotype_mom: '0/0', quality_dad: 128.88, dp_dad: 35, genotype_dad: '0/0',
+					sift_scr: 0.03, polyphen_scr: 0.909, other1: '<a href="variant_details.html">More</a>', other2: '<a href="#">View in IGV</a>' },
+				{ recid: 8, chr: 'chr3', pos: 5663, dbsnp_id: '.', ref: 'G', alts: 'C', quality: 102.54, dp: 35, genotype: '0/1', 
+					quality_mom: 78.12, dp_mom: 15, genotype_mom: '0/0', quality_dad: 144.44, dp_dad: 35, genotype_dad: '1/1',	
+					sift_scr: 0.12, polyphen_scr: 0.878, other1: '<a href="variant_details.html">More</a>', other2: '<a href="#">View in IGV</a>' },
+				{ recid: 9, chr: 'chr3', pos: 6568, dbsnp_id: 'rs123489', ref: 'G', alts: 'T', quality: 78.12, dp: 35, genotype: '0/1', 
+					quality_mom: 388.53, dp_mom: 40, genotype_mom: './.', quality_dad: 100.44, dp_dad: 35, genotype_dad: '0/1',	
+					sift_scr: 0.02, polyphen_scr: 0.912, other1: '<a href="variant_details.html">More</a>', other2: '<a href="#">View in IGV</a>' },
+				{ recid: 10, chr: 'chr4', pos: 2898, dbsnp_id: 'rs123491', ref: 'T', alts: 'A', quality: 102.54, dp: 50, genotype: '0/1', 
+					quality_mom: 99.12, dp_mom: 30, genotype_mom: '1/1', quality_dad: 563.33, dp_dad: 35, genotype_dad: '1/1',
+					sift_scr: 0.01, polyphen_scr: 0.897, other1: '<a href="variant_details.html">More</a>', other2: '<a href="#">View in IGV</a>' },
+				{ recid: 11, chr: 'chr5', pos: 4234, dbsnp_id: '.', ref: 'A', alts: 'G', quality: 234.54, dp: 50, genotype: '0/1', 
+					quality_mom: 234.12, dp_mom: 32, genotype_mom: '0/1', quality_dad: 123.45, dp_dad: 35, genotype_dad: '1/1',
+					sift_scr: 0.12, polyphen_scr: 0.878, other1: '<a href="variant_details.html">More</a>', other2: '<a href="#">View in IGV</a>' },
+				{ recid: 12, chr: 'chr6', pos: 2155, dbsnp_id: 'rs123492', ref: 'C', alts: 'T', quality: 102.54, dp: 45, genotype: '0/1', 
+					quality_mom: 234.12, dp_mom: 32, genotype_mom: '0/1', quality_dad: 123.45, dp_dad: 35, genotype_dad: '1/1',
+					sift_scr: 0.01, polyphen_scr: 0.545, other1: '<a href="variant_details.html">More</a>', other2: '<a href="#">View in IGV</a>' },
+				{ recid: 13, chr: 'chr6', pos: 3456, dbsnp_id: 'rs123493', ref: 'C', alts: 'G', quality: 199.54, dp: 15, genotype: '1/1', 
+					quality_mom: 234.12, dp_mom: 32, genotype_mom: '0/1', quality_dad: 123.45, dp_dad: 35, genotype_dad: '1/1',
+					sift_scr: 0.12, polyphen_scr: 0.333, other1: '<a href="variant_details.html">More</a>', other2: '<a href="#">View in IGV</a>' },
+				{ recid: 14, chr: 'chrX', pos: 9001, dbsnp_id: '.', ref: 'A', alts: 'G', quality: 54.54, dp: 15, genotype: '0/1', 
+					quality_mom: 234.12, dp_mom: 32, genotype_mom: '0/1', quality_dad: 123.45, dp_dad: 35, genotype_dad: '1/1',
+					sift_scr: 0.12, polyphen_scr: 0.999, other1: '<a href="variant_details.html">More</a>', other2: '<a href="#">View in IGV</a>' },
+				{ recid: 15, chr: 'chrY', pos: 2312, dbsnp_id: 'rs1234599', ref: 'A', alts: 'C', quality: 366.54, dp: 20, genotype: '1/1', 
+					quality_mom: 234.12, dp_mom: 32, genotype_mom: '0/1', quality_dad: 123.45, dp_dad: 35, genotype_dad: '1/1',
+					sift_scr: 0.78, polyphen_scr: 0.123, other1: '<a href="variant_details.html">More</a>', other2: '<a href="#">View in IGV</a>' }
+			]
+		});
+	});
+</script>
+</head>
+
+<body>
+	<!-- Wrap all page content here -->
+	<div id="wrap">
+		<div id="header"></div>
+
+		<div class="container">
+			<div class="page-header">
+				<h3>Trio Analysis</h3>
+			</div>
+			<ol class="breadcrumb">
+				<li><a href="trio_analysis_select_trio.html">Select
+						trio</a></li>
+				<li><a href="trio_analysis_select_ann_sources.html">Annotation
+						sources</a></li>
+				<li><a href="trio_analysis_select_filters.html">Filters</a></li>
+				<li><a href="trio_analysis_metrics.html">Metrics</a></li>
+				<li class="active">Results</li>
+			</ol>
+			<div id="grid" style="width: 100%; height: 350px;"></div>
+			<br/>
+			<div class="well">
+				<div class="row">
+					<div class="col-md-1">
+						<a href="annotation_analysis_metrics.html" class="btn btn-primary">Back</a>
+					</div>
+					<div class="col-md-5">
+						<div class="panel panel-default">
+						  <div class="panel-heading">
+						    <h3 class="panel-title">Export</h3>
+						  </div>
+						  <div class="panel-body">
+						    <strong>File type: </strong>
+						    <select><option>VCF</option><option>XML</option><option>JSON</option><option>CSV</option></select>
+						    <button class="btn btn-primary">Export</button> 
+						  </div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="panel panel-default">
+						  <div class="panel-heading">
+						    <h3 class="panel-title">Save query</h3>
+						  </div>
+						  <div class="panel-body">
+						    <strong>Name: </strong>
+						    <input type="text" placeholder="Query name"> <button class="btn btn-primary">Save</button>
+						  </div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<div id="footer"></div>
+
+</body>
+</html>

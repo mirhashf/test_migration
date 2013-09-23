@@ -1,0 +1,155 @@
+<title>Bina Tertiary Analysis Platform</title>
+
+<link href="js/libs/w2ui-1.2/w2ui-1.2.css" rel="stylesheet">
+<link href="js/libs/bootstrap-3.0.0/css/bootstrap.min.css"
+	rel="stylesheet">
+<link href="css/custom.css" rel="stylesheet">
+
+<script src="js/libs/jquery-2.0.3/jquery-2.0.3.min.js"></script>
+<script src="js/libs/w2ui-1.2/w2ui-1.2.js"></script>
+<script src="js/libs/bootstrap-3.0.0/js/bootstrap.min.js"></script>
+<script src="js/main.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("#analyses_tab").attr("class", "active");
+		
+		var autismTrio1 = ['NA12877', 'NA12878', 'NA12882'];
+		var autismTrio2 = ['NA12912', 'NA12913', 'NA12914'];
+		
+		function removeSamplesFromDropDown(dd_id) {
+			$('#' + dd_id + ' option').each(function() {
+				var val = $(this).text();
+			    if (val.substring(0, 2) === 'NA' ) {
+			        $(this).remove();
+			    }
+			});
+		}
+		
+		function changeTrio(trio) {
+			removeSamplesFromDropDown('mother_drop_down');
+			removeSamplesFromDropDown('father_drop_down');
+			removeSamplesFromDropDown('child_drop_down');
+			
+			$.each(trio, function(key, value) {   
+			     $('#mother_drop_down')
+			         .append($("<option></option>")
+			         .attr("value",key)
+			         .text(value));
+			     $('#father_drop_down')
+			         .append($("<option></option>")
+			         .attr("value",key)
+			         .text(value));
+			     $('#child_drop_down')
+			         .append($("<option></option>")
+			         .attr("value",key)
+			         .text(value));
+			});
+		}
+		
+		function changeTrioBasedOnDropDown() {
+			var id = $("#trio_drop_down").children(":selected").attr("id");
+			if (id == '1') { 
+				changeTrio(autismTrio1); 
+			} else if (id == '2') {
+				changeTrio(autismTrio2); 
+			}
+			$("#mother_drop_down option[id='0']").prop('selected', true);
+			$("#father_drop_down option[id='0']").prop('selected', true);
+			$("#child_drop_down option[id='0']").prop('selected', true);
+		}
+		
+		$("#trio_drop_down").change(changeTrioBasedOnDropDown);
+		
+		changeTrioBasedOnDropDown();
+	});
+</script>
+</head>
+
+<body>
+	<!-- Wrap all page content here -->
+	<div id="wrap">
+		<div id="header"></div>
+
+		<div class="container">
+			<div class="page-header">
+				<h3>Trio Analysis</h3>
+			</div>
+			<ol class="breadcrumb">
+  				<li class="active">Select trio</li>
+			</ol>
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">Define trio and select disease model</h3>
+				</div>
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-md-3">
+							<label>Data set: </label>
+							<select id="trio_drop_down">
+						    	<option id="1">Autism Trio 1</option>
+						    	<option id="2">Autism Trio 2</option>
+						    </select>
+						</div>
+						<div class="col-md-3">
+							<div class="row">
+								<div class="col-md-3">
+									<label>Mother: </label>
+								</div>
+								<div class="col-md-9">
+									<select id="mother_drop_down">
+										<option id="0">---</option>
+								    </select>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-3">
+									<label>Father: </label>
+								</div>
+								<div class="col-md-9">
+									<select id="father_drop_down">
+										<option id="0">---</option>
+								    </select>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-3">
+									<label>Child: </label>
+								</div>
+								<div class="col-md-9">
+									<select id="child_drop_down">
+										<option id="0">---</option>
+								    </select>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<label>Disease model: </label>
+							<select>
+						    	<option>De novo mutation analysis</option>
+						    	<option>Recessive inheritance analysis</option>
+						    	<option>Compound heterozygote analysis</option>
+						    </select>
+						</div>
+					</div>
+				</div>
+				<div class="panel-footer">
+					<div class="row text-center">
+						<a href="trio_analysis_select_ann_sources.html" class="btn btn-primary">Next</a>
+						<strong>OR</strong>
+						<select>
+					    	<option>My annotation query</option>
+					    	<option>High impact query</option>
+					    	<option>Cancer genes query</option>
+					    </select>
+					  
+					  <a href="trio_analysis_metrics.html" class="btn btn-primary">Run query</a>
+				  </div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<div id="footer"></div>
+
+</body>
+</html>

@@ -1,0 +1,129 @@
+<title>Bina Tertiary Analysis Platform</title>
+
+<link href="js/libs/w2ui-1.2/w2ui-1.2.css" rel="stylesheet">
+<link href="js/libs/bootstrap-3.0.0/css/bootstrap.min.css"
+	rel="stylesheet">
+<link href="css/custom.css" rel="stylesheet">
+
+<script src="js/libs/jquery-2.0.3/jquery-2.0.3.min.js"></script>
+<script src="js/libs/w2ui-1.2/w2ui-1.2.js"></script>
+<script src="js/libs/bootstrap-3.0.0/js/bootstrap.min.js"></script>
+<script src="js/main.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("#ann_sources_tab").attr("class", "active");
+		
+		$("#variant_level_example_link").popover({
+			placement: 'bottom', html: true, title: 'Example (<small>Available data types: text, number, enum</small>)', 
+			content: 'chr, text<br/>pos, number<br/>ref, text<br/>alt, text<br/>sift_score, number'});
+		
+		$("#gene_level_example_link").popover({
+			placement: 'bottom', html: true, title: 'Example (<small>Available data types: text, number, enum</small>)', 
+			content: 'transcriptId, text<br/>geneId, text<br/>tolerance, number'});
+		
+		$("#protein_level_example_link").popover({
+			placement: 'bottom', html: true, title: 'Example (<small>Available data types: text, number, enum</small>)', 
+			content: 'protein, text<br/>disease, text'});
+	});
+</script>
+</head>
+
+<body>
+	<!-- Wrap all page content here -->
+	<div id="wrap">
+		<div id="header"></div>
+
+		<div class="container">
+			<div class="page-header">
+				<h3>Add your own annotation source</h3>
+			</div>
+			
+			<div class="panel-group" id="accordion">
+			  <div class="panel panel-default">
+			    <div class="panel-heading">
+			      <h4 class="panel-title">
+			        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+			          Variant Level
+			        </a>
+			      </h4>
+			    </div>
+			    <div id="collapseOne" class="panel-collapse collapse in">
+			      <div class="panel-body">
+			      	<form role="form">
+					  <div class="form-group">
+					    <label for="variant_level_metadata">Meta data</label>
+					    <textarea id="variant_level_metadata" rows="10" cols="50"></textarea>
+					    <a href="#" class="btn btn-default" id="variant_level_example_link">See example</a>
+					  </div>
+					  <div class="form-group">
+					    <label for="variant_level_ann_file">File input</label>
+					    <input type="file" id="variant_level_ann_file">
+					  </div>
+					  <button type="submit" class="btn btn-primary">Submit</button>
+					</form>
+			      </div>
+			    </div>
+			  </div>
+			  <div class="panel panel-default">
+			    <div class="panel-heading">
+			      <h4 class="panel-title">
+			        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+			          Gene level
+			        </a>
+			      </h4>
+			    </div>
+			    <div id="collapseTwo" class="panel-collapse collapse">
+			      <div class="panel-body">
+			      	<form role="form">
+					  <div class="form-group">
+					    <label for="gene_level_metadata">Meta data</label>
+					    <textarea id="gene_level_metadata" rows="10" cols="50"></textarea>
+					    <a href="#" class="btn btn-default" id="gene_level_example_link">See example</a>
+					  </div>
+					  <div class="form-group">
+					    <label for="gene_level_ann_file">File input</label>
+					    <input type="file" id="gene_level_ann_file">
+					  </div>
+					  <button type="submit" class="btn btn-primary">Submit</button>
+					</form>
+			      </div>
+			    </div>
+			  </div>
+			  <div class="panel panel-default">
+			    <div class="panel-heading">
+			      <h4 class="panel-title">
+			        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+			          Protein level
+			        </a>
+			      </h4>
+			    </div>
+			    <div id="collapseThree" class="panel-collapse collapse">
+			      <div class="panel-body">
+			      	<form role="form">
+					  <div class="form-group">
+					    <label for="protein_level_metadata">Meta data</label>
+					    <textarea id="protein_level_metadata" rows="10" cols="50"></textarea>
+					    <a href="#" class="btn btn-default" id="protein_level_example_link">See example</a>
+					  </div>
+					  <div class="form-group">
+					    <label for="protein_level_ann_file">File input</label>
+					    <input type="file" id="protein_level_ann_file">
+					  </div>
+					  <button type="submit" class="btn btn-primary">Submit</button>
+					</form>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+			<br/>
+			<div class="row">
+				<div class="col-md-9"></div>
+				<div class="col-md-3 text-right"><a href="annotation_sources.html" class="btn btn-primary">Back to annotation sources</a></div>
+			</div>
+		</div>
+		
+	</div>
+	<div id="footer"></div>
+
+</body>
+</html>

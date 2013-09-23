@@ -1,0 +1,132 @@
+<title>Bina Tertiary Analysis Platform</title>
+
+<link href="js/libs/w2ui-1.2/w2ui-1.2.css" rel="stylesheet">
+<link href="js/libs/bootstrap-3.0.0/css/bootstrap.min.css"
+	rel="stylesheet">
+<link href="css/custom.css" rel="stylesheet">
+
+<script src="js/libs/jquery-2.0.3/jquery-2.0.3.min.js"></script>
+<script src="js/libs/w2ui-1.2/w2ui-1.2.js"></script>
+<script src="js/libs/bootstrap-3.0.0/js/bootstrap.min.js"></script>
+<script src="js/main.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("#analyses_tab").attr("class", "active");
+	});
+</script>
+</head>
+
+<body>
+	<!-- Wrap all page content here -->
+	<div id="wrap">
+		<div id="header"></div>
+
+		<div class="container">
+			<div class="page-header">
+				<h3>Variant Details</h3>
+			</div>
+
+			<table class="table table-bordered">
+				<tr>
+					<th width="20%">Column</th>
+					<th width="80%">Value</th>
+				</tr>
+				<tr>
+					<td>Chromosome</td>
+					<td>chr21</td>
+				</tr>
+				<tr>
+					<td>Position</td>
+					<td>10123331</td>
+				</tr>
+				<tr>
+					<td>dbSNP id</td>
+					<td>rs123456</td>
+				</tr>
+				<tr>
+					<td>Reference allele</td>
+					<td>T</td>
+				</tr>
+				<tr>
+					<td>Alternate alleles</td>
+					<td>C</td>
+				</tr>
+				<tr>
+					<td>Filter</td>
+					<td>PASS</td>
+				</tr>
+				<tr>
+					<td>Quality</td>
+					<td>35</td>
+				</tr>
+				<tr>
+					<td>Genotype</td>
+					<td>0/1</td>
+				</tr>
+				<tr>
+					<td>Read depth</td>
+					<td>40</td>
+				</tr>
+				<tr>
+					<td>Sift score</td>
+					<td>0.02</td>
+				</tr>
+				<tr>
+					<td>Sift prediction</td>
+					<td>DAMAGING</td>
+				</tr>
+				<tr>
+					<td>Polyphen2 Hdiv score</td>
+					<td>0.897</td>
+				</tr>
+				<tr>
+					<td>Polyphen2 Hdiv prediction</td>
+					<td>POSSIBLY DAMAGING</td>
+				</tr>
+				<tr>
+					<td>Polyphen2 Hvar score</td>
+					<td>0.912</td>
+				</tr>
+				<tr>
+					<td>Polyphen2 Hvar prediction</td>
+					<td>PROBABLY DAMAGING</td>
+				</tr>
+				<tr>
+					<td>SnpEff Data</td>
+					<td>
+						<table class="table table-bordered">
+							<tr>
+								<th>Effect</th>
+								<th>Impact</th>
+								<th>Func. class</th>
+								<th>Transcript id</th>
+								<th>Gene name</th>
+							</tr>
+							<tr>
+								<td>FRAMESHIFT</td>
+								<td>HIGH</td>
+								<td>MISSENSE</td>
+								<td>ENST000001234</td>
+								<td>ENSG000003456</td>
+							</tr>
+							<tr>
+								<td>STOP GAINED</td>
+								<td>HIGH</td>
+								<td>NONSENSE</td>
+								<td>ENST00000987</td>
+								<td>ENSG000003499</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+			<div class="pull-right">
+				<a href="annotation_analysis_datagrid.html">Back to variants</a>
+			</div>
+		</div>
+
+	</div>
+	<div id="footer"></div>
+
+</body>
+</html>

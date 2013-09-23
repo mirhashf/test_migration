@@ -1,0 +1,136 @@
+<title>Bina Tertiary Analysis Platform</title>
+
+<link href="js/libs/w2ui-1.2/w2ui-1.2.css" rel="stylesheet">
+<link href="js/libs/bootstrap-3.0.0/css/bootstrap.min.css"
+	rel="stylesheet">
+<link href="css/custom.css" rel="stylesheet">
+
+<script src="js/libs/jquery-2.0.3/jquery-2.0.3.min.js"></script>
+<script src="js/libs/w2ui-1.2/w2ui-1.2.js"></script>
+<script src="js/libs/bootstrap-3.0.0/js/bootstrap.min.js"></script>
+<script src="js/main.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("#analyses_tab").attr("class", "active");
+		
+		$('#grid').w2grid({
+			name: 'grid', 
+			show: { 
+				toolbar: true,
+				footer: true
+			},
+			recordsPerPage: 10,
+			searches: [				
+				{ field: 'chr', caption: 'Chromosome', type: 'text' },
+				{ field: 'pos', caption: 'Position', type: 'int' },
+				{ field: 'dp', caption: 'Read depth', type: 'int' },
+			],
+			sortData: [ { field: 'chr', direction: 'asc' } ],
+			columns: [				
+				{ field: 'recid', caption: 'ID', size: '50px', sortable: true },
+				{ field: 'chr', caption: 'Chromosome', size: '20%', sortable: true },
+				{ field: 'pos', caption: 'Position', size: '20%', sortable: true },
+				{ field: 'dbsnp_id', caption: 'dbSNP id', size: '20%' },
+				{ field: 'ref', caption: 'Ref', size: '10%' },
+				{ field: 'alts', caption: 'Alts', size: '10%' },
+				{ field: 'dp', caption: 'Read depth', size: '10%' },
+				{ field: 'genotype', caption: 'Genotype', size: '10%' },
+				{ field: 'sift_scr', caption: 'Sift score', size: '20%' },
+				{ field: 'polyphen_scr', caption: 'Polyphen score', size: '20%' },
+				{ field: 'other1', caption: '', size: '10%' },
+				{ field: 'other2', caption: '', size: '140px' },
+			],
+			records: [
+				{ recid: 1, chr: 'chr1', pos: 1000, dbsnp_id: 'rs123456', ref: 'A', alts: 'T', dp: 40, genotype: '0/1', sift_scr: 0.12, polyphen_scr: 0.234, 
+					other1: '<a href="variant_details.html">More</a>', other2: '<a href="#">View in IGV</a>' },
+				{ recid: 2, chr: 'chr1', pos: 1012, dbsnp_id: 'rs123457', ref: 'C', alts: 'A', dp: 20, genotype: '0/1', sift_scr: 0.02, polyphen_scr: 0.878, 
+					other1: '<a href="variant_details.html">More</a>', other2: '<a href="#">View in IGV</a>' },
+				{ recid: 3, chr: 'chr1', pos: 1035, dbsnp_id: 'rs123458', ref: 'C', alts: 'G', dp: 5, genotype: '1/1', sift_scr: 0.01, polyphen_scr: 0.656, 
+					other1: '<a href="variant_details.html">More</a>', other2: '<a href="#">View in IGV</a>' },
+				{ recid: 4, chr: 'chr2', pos: 1011, dbsnp_id: 'rs123459', ref: 'T', alts: 'A', dp: 15, genotype: '0/1', sift_scr: 0.05, polyphen_scr: 0.345, 
+					other1: '<a href="variant_details.html">More</a>', other2: '<a href="#">View in IGV</a>' },
+				{ recid: 5, chr: 'chr2', pos: 1099, dbsnp_id: 'rs123460', ref: 'A', alts: 'T', dp: 25, genotype: '1/1', sift_scr: 0.23, polyphen_scr: 0.656, 
+					other1: '<a href="variant_details.html">More</a>', other2: '<a href="#">View in IGV</a>' },
+				{ recid: 6, chr: 'chr3', pos: 2120, dbsnp_id: 'rs123461', ref: 'A', alts: 'T', dp: 25, genotype: '1|1', sift_scr: 0.56, polyphen_scr: 0.134, 
+					other1: '<a href="variant_details.html">More</a>', other2: '<a href="#">View in IGV</a>' },
+				{ recid: 7, chr: 'chr3', pos: 2345, dbsnp_id: 'rs123462', ref: 'G', alts: 'T', dp: 30, genotype: '0|1', sift_scr: 0.03, polyphen_scr: 0.909, 
+					other1: '<a href="variant_details.html">More</a>', other2: '<a href="#">View in IGV</a>' },
+				{ recid: 8, chr: 'chr3', pos: 5663, dbsnp_id: '.', ref: 'G', alts: 'C', dp: 35, genotype: '0/1', sift_scr: 0.12, polyphen_scr: 0.878, 
+					other1: '<a href="variant_details.html">More</a>', other2: '<a href="#">View in IGV</a>' },
+				{ recid: 9, chr: 'chr3', pos: 6568, dbsnp_id: 'rs123489', ref: 'G', alts: 'T', dp: 35, genotype: '0/1', sift_scr: 0.02, polyphen_scr: 0.912, 
+					other1: '<a href="variant_details.html">More</a>', other2: '<a href="#">View in IGV</a>' },
+				{ recid: 10, chr: 'chr4', pos: 2898, dbsnp_id: 'rs123491', ref: 'T', alts: 'A', dp: 50, genotype: '0/1', sift_scr: 0.01, polyphen_scr: 0.897, 
+					other1: '<a href="variant_details.html">More</a>', other2: '<a href="#">View in IGV</a>' },
+				{ recid: 11, chr: 'chr5', pos: 4234, dbsnp_id: '.', ref: 'A', alts: 'G', dp: 50, genotype: '0/1', sift_scr: 0.12, polyphen_scr: 0.878, 
+					other1: '<a href="variant_details.html">More</a>', other2: '<a href="#">View in IGV</a>' },
+				{ recid: 12, chr: 'chr6', pos: 2155, dbsnp_id: 'rs123492', ref: 'C', alts: 'T', dp: 45, genotype: '0/1', sift_scr: 0.01, polyphen_scr: 0.545, 
+					other1: '<a href="variant_details.html">More</a>', other2: '<a href="#">View in IGV</a>' },
+				{ recid: 13, chr: 'chr6', pos: 3456, dbsnp_id: 'rs123493', ref: 'C', alts: 'G', dp: 15, genotype: '1/1', sift_scr: 0.12, polyphen_scr: 0.333, 
+					other1: '<a href="variant_details.html">More</a>', other2: '<a href="#">View in IGV</a>' },
+				{ recid: 14, chr: 'chrX', pos: 9001, dbsnp_id: '.', ref: 'A', alts: 'G', dp: 15, genotype: '0/1', sift_scr: 0.12, polyphen_scr: 0.999, 
+					other1: '<a href="variant_details.html">More</a>', other2: '<a href="#">View in IGV</a>' },
+				{ recid: 15, chr: 'chrY', pos: 2312, dbsnp_id: 'rs1234599', ref: 'A', alts: 'C', dp: 20, genotype: '1/1', sift_scr: 0.78, polyphen_scr: 0.123, 
+					other1: '<a href="variant_details.html">More</a>', other2: '<a href="#">View in IGV</a>' }
+			]
+		});
+	});
+</script>
+</head>
+
+<body>
+	<!-- Wrap all page content here -->
+	<div id="wrap">
+		<div id="header"></div>
+
+		<div class="container">
+			<div class="page-header">
+				<h3>Annotation Analysis</h3>
+			</div>
+			<ol class="breadcrumb">
+				<li><a href="annotation_analysis_select_sample.html">Select
+						sample</a></li>
+				<li><a href="annotation_analysis_select_ann_sources.html">Annotation
+						sources</a></li>
+				<li><a href="annotation_analysis_select_filters.html">Filters</a></li>
+				<li><a href="annotation_analysis_metrics.html">Metrics</a></li>
+				<li class="active">Results</li>
+			</ol>
+			<div id="grid" style="width: 100%; height: 350px;"></div>
+			<br/>
+			<div class="well">
+				<div class="row">
+					<div class="col-md-1">
+						<a href="annotation_analysis_metrics.html" class="btn btn-primary">Back</a>
+					</div>
+					<div class="col-md-5">
+						<div class="panel panel-default">
+						  <div class="panel-heading">
+						    <h3 class="panel-title">Export</h3>
+						  </div>
+						  <div class="panel-body">
+						    <strong>File type: </strong>
+						    <select><option>VCF</option><option>XML</option><option>JSON</option><option>CSV</option></select>
+						    <button class="btn btn-primary">Export</button> 
+						  </div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="panel panel-default">
+						  <div class="panel-heading">
+						    <h3 class="panel-title">Save query</h3>
+						  </div>
+						  <div class="panel-body">
+						    <strong>Name: </strong>
+						    <input type="text" placeholder="Query name"> <button class="btn btn-primary">Save</button>
+						  </div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<div id="footer"></div>
+
+</body>
+</html>

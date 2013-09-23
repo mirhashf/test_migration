@@ -1,0 +1,59 @@
+<title>Bina Tertiary Analysis Platform</title>
+
+<link href="js/libs/w2ui-1.2/w2ui-1.2.css" rel="stylesheet">
+<link href="js/libs/bootstrap-3.0.0/css/bootstrap.min.css"
+	rel="stylesheet">
+<link href="css/custom.css" rel="stylesheet">
+
+<script src="js/libs/jquery-2.0.3/jquery-2.0.3.min.js"></script>
+<script src="js/libs/w2ui-1.2/w2ui-1.2.js"></script>
+<script src="js/libs/bootstrap-3.0.0/js/bootstrap.min.js"></script>
+<script src="js/main.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("#analyses_tab").attr("class", "active");
+	});
+</script>
+</head>
+
+<body>
+	<!-- Wrap all page content here -->
+	<div id="wrap">
+		<div id="header"></div>
+
+		<div class="container">
+			<div class="page-header">
+				<h3>Annotation Analysis</h3>
+			</div>
+			<ol class="breadcrumb">
+  				<li class="active">Select sample</li>
+			</ol>
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">Samples</h3>
+				</div>
+				<div class="panel-body">		
+				    <select>
+				    	<option>NA12877_r1</option>
+				    	<option>NA12878_r1</option>
+				    	<option>NA12878_r2</option>
+				    	<option>NA12882_r1</option>
+				    </select>		 
+					<a href="annotation_analysis_select_ann_sources.html" class="btn btn-primary">Next</a>
+					<strong>OR</strong>
+					<select>
+						<option>--- Saved queries ---</option>
+				    	<option>My annotation query</option>
+				    	<option>High impact query</option>
+				    	<option>Cancer genes query</option>
+				    </select>
+				    <a href="annotation_analysis_metrics.html" class="btn btn-primary">Run query</a>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<div id="footer"></div>
+
+</body>
+</html>

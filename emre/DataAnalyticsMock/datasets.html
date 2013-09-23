@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Bina Tertiary Portal">
+<meta name="author" content="Bina Technologies">
+
+<title>Bina Tertiary Analysis Platform</title>
+
+<link href="js/libs/w2ui-1.2/w2ui-1.2.css" rel="stylesheet">
+<link href="js/libs/bootstrap-3.0.0/css/bootstrap.min.css"
+	rel="stylesheet">
+<link href="css/custom.css" rel="stylesheet">
+
+<script src="js/libs/jquery-2.0.3/jquery-2.0.3.min.js"></script>
+<script src="js/libs/w2ui-1.2/w2ui-1.2.js"></script>
+<script src="js/libs/bootstrap-3.0.0/js/bootstrap.min.js"></script>
+<script src="js/main.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("#datasets_tab").attr("class", "active");
+	});
+</script>
+</head>
+
+<body>
+	<!-- Wrap all page content here -->
+	<div id="wrap">
+		<div id="header"></div>
+
+		<div class="container">
+			<div class="page-header">
+				<h3>My Data Sets</h3>
+			</div>
+			<div class="panel-group" id="accordion">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h4 class="panel-title">
+							<a class="accordion-toggle" data-toggle="collapse"
+								data-parent="#accordion" href="#collapseOne"> Austism Trio 1
+							</a>
+						</h4>
+					</div>
+					<div id="collapseOne" class="panel-collapse collapse in">
+						<div class="panel-body">
+							NA12877 <input type="text" value="pedigree=trio,id=father,affected=no" size="50"> 
+							<button class="btn btn-default">Save</button> 
+							<a href="#"><span class="glyphicon glyphicon-trash"></span></a><br/>
+							NA12878 <input type="text" value="pedigree=trio,id=mother,affected=no" size="50"> 
+							<button class="btn btn-default">Save</button>
+							<a href="#"><span class="glyphicon glyphicon-trash"></span></a><br/>
+							NA12882 <input type="text" value="pedigree=trio,id=child,affected=yes" size="50"> 
+							<button class="btn btn-default">Save</button>
+							<a href="#"><span class="glyphicon glyphicon-trash"></span></a><br/>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h4 class="panel-title">
+							<a class="accordion-toggle" data-toggle="collapse"
+								data-parent="#accordion" href="#collapseTwo"> Austism Trio 2
+							</a>
+						</h4>
+					</div>
+					<div id="collapseTwo" class="panel-collapse collapse">
+						<div class="panel-body">
+							NA12912 <input type="text" value="pedigree=trio,id=father,affected=no" size="50"> 
+							<button class="btn btn-default">Save</button>
+							<a href="#"><span class="glyphicon glyphicon-trash"></span></a><br/>
+							NA12913 <input type="text" size="50"> 
+							<button class="btn btn-default">Save</button>
+							<a href="#"><span class="glyphicon glyphicon-trash"></span></a><br/>
+							NA12914 <input type="text" size="50"> 
+							<button class="btn btn-default">Save</button>
+							<a href="#"><span class="glyphicon glyphicon-trash"></span></a><br/>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h4 class="panel-title">
+							<a class="accordion-toggle" data-toggle="collapse"
+								data-parent="#accordion" href="#collapseThree"> Johnson Family </a>
+						</h4>
+					</div>
+					<div id="collapseThree" class="panel-collapse collapse">
+						<div class="panel-body">
+							NA12912 <input type="text" value="pedigree=family,id=father,affected=no" size="50"> 
+							<button class="btn btn-default">Save</button>
+							<a href="#"><span class="glyphicon glyphicon-trash"></span></a><br/>
+							NA12913 <input type="text" value="pedigree=family,id=mother,affected=no" size="50"> 
+							<button class="btn btn-default">Save</button>
+							<a href="#"><span class="glyphicon glyphicon-trash"></span></a><br/>
+							NA12914 <input type="text" value="pedigree=family,id=child1,affected=no" size="50"> 
+							<button class="btn btn-default">Save</button>
+							<a href="#"><span class="glyphicon glyphicon-trash"></span></a><br/>
+							NA12915 <input type="text" value="pedigree=family,id=child2,affected=no" size="50"> 
+							<button class="btn btn-default">Save</button>
+							<a href="#"><span class="glyphicon glyphicon-trash"></span></a><br/>
+							NA12916 <input type="text" value="pedigree=family,id=child3,affected=no" size="50"> 
+							<button class="btn btn-default">Save</button>
+							<a href="#"><span class="glyphicon glyphicon-trash"></span></a><br/>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="footer"></div>
+
+</body>
+</html>

@@ -1,0 +1,139 @@
+<title>Bina Tertiary Analysis Platform</title>
+
+<link href="js/libs/w2ui-1.2/w2ui-1.2.css" rel="stylesheet">
+<link href="js/libs/bootstrap-3.0.0/css/bootstrap.min.css"
+	rel="stylesheet">
+<link href="css/custom.css" rel="stylesheet">
+
+<script src="js/libs/jquery-2.0.3/jquery-2.0.3.min.js"></script>
+<script src="js/libs/w2ui-1.2/w2ui-1.2.js"></script>
+<script src="js/libs/bootstrap-3.0.0/js/bootstrap.min.js"></script>
+<script src="js/main.js"></script>
+<script src="js/filters.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("#analyses_tab").attr("class", "active");
+		
+		$("#read_depth_select").change(function () {
+			  var id = $("#read_depth_select").children(":selected").attr("id");
+			  if (id == '2') {
+				  $("#second_input_read_depth").show();
+			  } else {
+				  $("#second_input_read_depth").hide();
+			  }
+		});
+		
+		$("#quality_select").change(function () {
+			  var id = $("#quality_select").children(":selected").attr("id");
+			  if (id == '2') {
+				  $("#second_input_quality").show();
+			  } else {
+				  $("#second_input_quality").hide();
+			  }
+		});
+		
+		var panel = $("#ext-data-source-filters-panel");
+		// add the first row
+		addNewRow(panel, true);
+		$("#add-new-filter").click(function () {
+			addNewRow(panel, false);
+		});
+	});
+</script>
+</head>
+
+<body>
+	<!-- Wrap all page content here -->
+	<div id="wrap">
+		<div id="header"></div>
+
+		<div class="container">
+			<div class="page-header">
+				<h3>Annotation Analysis</h3>
+			</div>
+			<ol class="breadcrumb">
+				<li><a href="annotation_analysis_select_sample.html">Select
+						sample</a></li>
+				<li><a href="annotation_analysis_select_ann_sources.html">Annotation
+						sources</a></li>
+				<li class="active">Filters</li>
+			</ol>
+			
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">Variant Filters</h3>
+				</div>
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-md-2"><strong>Chromosomes</strong></div>
+						<div class="col-md-8">
+							<input type="text" size="80" placeholder="Comma separated e.g. chr1,chr2,chr7">
+						</div>
+					</div>
+					<br/>	
+					<div class="row">
+						<div class="col-md-2"><strong>Read Depth</strong></div>
+						<div class="col-md-8">
+							<select id="read_depth_select">
+								<option id="-1">---</option>
+								<option id="0">Greater than</option>
+								<option id="1">Less than</option>
+								<option id="2">Between</option>
+							</select>
+							<input type="text" size="5"> <span id="second_input_read_depth" style="display: none">- <input type="text" size="5"></span>
+						</div>
+					</div>
+					<br/>
+					<div class="row">
+						<div class="col-md-2"><strong>Quality</strong></div>
+						<div class="col-md-8">
+							<select id="quality_select">
+								<option id="-1">---</option>
+								<option id="0">Greater than</option>
+								<option id="1">Less than</option>
+								<option id="2">Between</option>
+							</select>
+							<input type="text" size="5"> <span id="second_input_quality" style="display: none">- <input type="text" size="5"></span>
+						</div>
+					</div>
+					<br/>
+					<div class="row">
+						<div class="col-md-2"><strong>Filter</strong></div>
+						<div class="col-md-8">
+							<select>
+								<option>---</option>
+								<option>PASS</option>
+								<option>FAIL</option>
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">External Data Source Filters</h3>
+				</div>
+				<div class="panel-body" id="ext-data-source-filters-panel">
+				<!-- This will be populated by external data source filters -->
+				</div>
+			</div>
+			<div class="well">
+				<div class="row">
+					<div class="col-md-6  text-left">
+						<a href="annotation_analysis_select_ann_sources.html"
+							class="btn btn-primary">Back</a>
+					</div>
+					<div class="col-md-6  text-right">
+						<a href="annotation_analysis_metrics.html"
+							class="btn btn-primary">Next</a>
+					</div>
+				</div>
+				</div>
+			</div>
+		</div>		
+
+	<div id="footer"></div>
+
+</body>
+</html>

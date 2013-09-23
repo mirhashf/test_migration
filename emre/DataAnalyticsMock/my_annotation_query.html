@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Bina Tertiary Portal">
+<meta name="author" content="Bina Technologies">
+
+<title>Bina Tertiary Analysis Platform</title>
+
+<link href="js/libs/w2ui-1.2/w2ui-1.2.css" rel="stylesheet">
+<link href="js/libs/bootstrap-3.0.0/css/bootstrap.min.css"
+	rel="stylesheet">
+<link href="css/custom.css" rel="stylesheet">
+
+<script src="js/libs/jquery-2.0.3/jquery-2.0.3.min.js"></script>
+<script src="js/libs/w2ui-1.2/w2ui-1.2.js"></script>
+<script src="js/libs/bootstrap-3.0.0/js/bootstrap.min.js"></script>
+<script src="js/main.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("#saved_queries_tab").attr("class", "active");
+	});
+</script>
+</head>
+
+<body>
+	<!-- Wrap all page content here -->
+	<div id="wrap">
+		<div id="header"></div>
+
+		<div class="container">
+			<div class="page-header">
+				<h3>My Annotation Query</h3>
+			</div>
+			
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">Annotation sources</h3>
+				</div>
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-md-3"><label> <input type="checkbox" checked> dbSNP (135)</label></div>
+						<div class="col-md-3"><label> <input type="checkbox"> RefSeq genes </label></div>
+						<div class="col-md-3"><label> <input type="checkbox" checked> Ensembl genes </label></div>
+						<div class="col-md-3"><label> <input type="checkbox"> OMIM </label></div>
+					</div>
+					<div class="row">			
+						<div class="col-md-3"><label> <input type="checkbox"> DGV </label></div>
+						<div class="col-md-3"><label> <input type="checkbox"> Repeat Masker </label></div>
+						<div class="col-md-3"><label> <input type="checkbox"> Seg Dups </label></div>
+						<div class="col-md-3"><label> <input type="checkbox" checked> dbNSFP</label></div>
+						
+					</div>
+					<div class="row">
+						<div class="col-md-3"><label> <input type="checkbox"> Cosmic </label></div>
+						<div class="col-md-3"><label> <input type="checkbox"> Hapmap SNPs</label></div>
+						<div class="col-md-3"><label> <input type="checkbox" checked> SnpEff annotations</label></div>
+					</div>
+				</div>
+			</div>
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">Filters</h3>
+				</div>
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-md-2"><strong>Read Depth:</strong> </div>
+						<div class="col-md-1"> = </div>
+						<div class="col-md-9"><input type="text" value="50"></div>
+					</div>
+					<br/>
+					<div class="row">
+						<div class="col-md-2"><strong>Quality</strong> </div>
+						<div class="col-md-1"> > </div>
+						<div class="col-md-9"><input type="text" value="30"></div>
+					</div>
+					<br/>
+					<div class="row">
+						<div class="col-md-2"><strong>Impact</strong> </div>
+						<div class="col-md-1"> = </div>
+						<div class="col-md-9">
+							<select>
+								<option>HIGH</option>
+								<option>MODERATE</option>
+								<option>LOW</option>
+								<option>MODIFIER</option>
+							</select>
+						</div>
+					</div>
+					<br/>
+					<div class="row">
+						<div class="col-md-2"><strong>Gene names</strong> </div>
+						<div class="col-md-1"> IN </div>
+						<div class="col-md-9"><input type="text" size="80" placeholder="Comma separated e.g. ENSG000123, ENSG000890"></div>
+					</div>
+				</div>
+			</div>
+			<div class="well text-center"><button class="btn btn-primary">Save</button></div>
+		</div>
+			
+	</div>
+	<div id="footer"></div>
+
+</body>
+</html>

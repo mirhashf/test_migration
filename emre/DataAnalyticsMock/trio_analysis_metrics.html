@@ -1,0 +1,101 @@
+<title>Bina Tertiary Analysis Platform</title>
+
+<link href="js/libs/w2ui-1.2/w2ui-1.2.css" rel="stylesheet">
+<link href="js/libs/bootstrap-3.0.0/css/bootstrap.min.css"
+	rel="stylesheet">
+<link href="css/custom.css" rel="stylesheet">
+
+<script src="js/libs/jquery-2.0.3/jquery-2.0.3.min.js"></script>
+<script src="js/libs/w2ui-1.2/w2ui-1.2.js"></script>
+<script src="js/libs/bootstrap-3.0.0/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script src="js/main.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("#analyses_tab").attr("class", "active");
+	});
+	
+	  google.load("visualization", "1", {packages:["corechart"]});
+	  google.setOnLoadCallback(drawEffectBreakdownChart);
+	  google.setOnLoadCallback(drawVariantTypeBreakdownChart);
+	  google.setOnLoadCallback(drawPrecedenceBreakdownChart);
+	  google.setOnLoadCallback(drawProteinImpactBreakdownChart);
+	  
+	  function drawChart(dataTable, title, elemId) {
+		  var data = google.visualization.arrayToDataTable(dataTable);                     	
+    	  var options = { title: title};
+          var chart = new google.visualization.PieChart(document.getElementById(elemId));
+          chart.draw(data, options);
+	  }
+	  function drawEffectBreakdownChart() {
+		drawChart([['Effect', 'Count'], ['Frame shift', 45],  ['Start lost', 35], ['Stop gained', 20], ['Stop lost', 15], ['Exon deleted', 2]], 
+				'Breakdown by effect', 'effect_breakdown_chart');
+	  }
+	  function drawVariantTypeBreakdownChart() {
+		drawChart([['Variant type', 'Count'], ['SNP', 90],  ['Insertion', 20], ['Deletion', 7]], 
+				'Breakdown by variant type', 'variant_type_breakdown_chart');
+	  }
+	  function drawPrecedenceBreakdownChart() {
+		drawChart([['Precedence', 'Count'], ['Known', 95],  ['Novel', 22]], 
+				'Breakdown by precedence', 'precedence_breakdown_chart');
+	  }
+	  function drawProteinImpactBreakdownChart() {
+		drawChart([['Protein impact', 'Count'], ['Synonymous', 55],  ['Missense', 30], ['Nonsense', 32]], 
+				'Breakdown by protein impact', 'protein_impact_breakdown_chart');
+	  }
+</script>
+</head>
+
+<body>
+	<!-- Wrap all page content here -->
+	<div id="wrap">
+		<div id="header"></div>
+
+		<div class="container">
+			<div class="page-header">
+				<h3>Trio Analysis</h3>
+			</div>
+			<ol class="breadcrumb">
+  				<li><a href="trio_analysis_select_trio.html">Select trio</a></li>
+				<li><a href="trio_analysis_select_ann_sources.html">Annotation sources</a></li>
+				<li><a href="trio_analysis_select_filters.html">Filters</a></li>
+				<li class="active">Metrics</li>
+			</ol>
+			<div class="well">
+				<div class="alert alert-success">
+					117 variants found. Click <a href="trio_analysis_datagrid.html">here</a> to see them or 
+					keep <a href="trio_analysis_select_filters.html">filtering</a>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<div id="effect_breakdown_chart"></div>
+					</div>
+					<div class="col-md-6">
+						<div id="variant_type_breakdown_chart"></div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<div id="precedence_breakdown_chart"></div>
+					</div>
+					<div class="col-md-6">
+						<div id="protein_impact_breakdown_chart"></div>
+					</div>
+				</div>
+				<br/>
+				<div class="row">
+					<div class="col-md-6 text-left">
+						<a href="trio_analysis_select_filters.html" class="btn btn-primary">Back</a>
+					</div>
+					<div class="col-md-6 text-right">
+						<a href="trio_analysis_datagrid.html" class="btn btn-primary">Next</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<div id="footer"></div>
+
+</body>
+</html>
