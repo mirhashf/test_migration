@@ -4,6 +4,9 @@
 <link href="js/libs/bootstrap-3.0.0/css/bootstrap.min.css"
 	rel="stylesheet">
 <link href="css/custom.css" rel="stylesheet">
+<style type="text/css">
+	.popover { width: 300px; height: 300px; }
+</style>
 
 <script src="js/libs/jquery-2.0.3/jquery-2.0.3.min.js"></script>
 <script src="js/libs/w2ui-1.2/w2ui-1.2.js"></script>
@@ -38,6 +41,8 @@
 		$("#add-new-filter").click(function () {
 			addNewRow(panel, false);
 		});
+		
+		$("#see-json-query-button").popover(queryPopover);
 	});
 </script>
 </head>
@@ -123,7 +128,8 @@
 						<a href="trio_analysis_select_ann_sources.html"
 							class="btn btn-primary">Back</a>
 					</div>
-					<div class="col-md-6  text-right">
+					<div class="col-md-1"><a href="#" id="see-json-query-button" class="btn btn-danger">See query</a></div>
+					<div class="col-md-5  text-right">
 						<a href="trio_analysis_metrics.html"
 							class="btn btn-primary">Next</a>
 					</div>

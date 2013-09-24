@@ -19,7 +19,7 @@
 		
 		$("#gene_level_example_link").popover({
 			placement: 'bottom', html: true, title: 'Example (<small>Available data types: text, number, enum</small>)', 
-			content: 'transcriptId, text<br/>geneId, text<br/>tolerance, number'});
+			content: 'transcript_id, text<br/>gene_name, text<br/>tolerance, number'});
 		
 		$("#protein_level_example_link").popover({
 			placement: 'bottom', html: true, title: 'Example (<small>Available data types: text, number, enum</small>)', 
@@ -43,7 +43,7 @@
 			    <div class="panel-heading">
 			      <h4 class="panel-title">
 			        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
-			          Variant Level
+			          Variant Level <small>(<strong>Required columns:</strong> chr, pos, ref, alt)</small>
 			        </a>
 			      </h4>
 			    </div>
@@ -68,7 +68,7 @@
 			    <div class="panel-heading">
 			      <h4 class="panel-title">
 			        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
-			          Gene level
+			          Gene level <small>(<strong>Required columns:</strong> transcript_id, gene_name)</small>
 			        </a>
 			      </h4>
 			    </div>
@@ -93,7 +93,7 @@
 			    <div class="panel-heading">
 			      <h4 class="panel-title">
 			        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
-			          Protein level
+			          Protein level <small>(<strong>Required columns:</strong> protein_name)</small>
 			        </a>
 			      </h4>
 			    </div>

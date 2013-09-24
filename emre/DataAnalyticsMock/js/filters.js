@@ -90,3 +90,10 @@ function addNewRow(panel, isFirst) {
 		return false;
 	});
 }
+
+var queryPopover = {placement: 'top', html: true, 
+                    content: '{"annotation-sources": [ {"name": "dbSNP", "columns": ["name", "func", "class"]}, ' +
+                              '{"name": "RefSeq", "columns": ["name2"]}, ' + 
+                              '{"name": snpEff, "columns": ["effect", "impact", "func_class"]} ], ' + 
+                              '"filters": [{"annotation-source": "dbNSFP", "column": "sift_score", "operand": "LT", "value": 0.05}, ' + 
+                             '{"annotation-source": "dbNSFP", "column": "polyphen_score", "operand": "GT", "value": 0.500}]}'};

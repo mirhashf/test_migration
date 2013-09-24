@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Bina Tertiary Portal">
+<meta name="author" content="Bina Technologies">
+
+<title>Bina Tertiary Analysis Platform</title>
+
+<link href="js/libs/w2ui-1.2/w2ui-1.2.css" rel="stylesheet">
+<link href="js/libs/bootstrap-3.0.0/css/bootstrap.min.css"
+	rel="stylesheet">
+<link href="css/custom.css" rel="stylesheet">
+
+<script src="js/libs/jquery-2.0.3/jquery-2.0.3.min.js"></script>
+<script src="js/libs/w2ui-1.2/w2ui-1.2.js"></script>
+<script src="js/libs/bootstrap-3.0.0/js/bootstrap.min.js"></script>
+<script src="js/main.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("#data_tab").attr("class", "active");
+		
+		function checkboxCheckedAction() {
+			var disableCreateDataSetBtn = false;
+			$('input:checkbox').each(function () {
+				var id = $(this).attr('id');
+				if (id && id.substring(0, 6) === 'sample' && $(this).is(':checked')) {
+					disableCreateDataSetBtn = true;
+					return;
+				}
+		  	});
+			if (disableCreateDataSetBtn) {
+				$("#create_data_set_btn").removeClass('disabled');
+			} else {
+				$("#create_data_set_btn").addClass('disabled');
+			}
+		}
+		
+		$("#sample_NA12877_r1").click(checkboxCheckedAction);
+		$("#sample_NA12877_r2").click(checkboxCheckedAction);
+		$("#sample_NA12878_r1").click(checkboxCheckedAction);
+		$("#sample_NA12878_r2").click(checkboxCheckedAction);
+		$("#sample_NA12882_r1").click(checkboxCheckedAction);
+	});
+</script>
+</head>
+
+<body>
+	<!-- Wrap all page content here -->
+	<div id="wrap">
+		<div id="header"></div>
+
+		<div class="container">
+			<div class="page-header">
+				<h3>My Data</h3>
+			</div>
+			<div class="row">
+				<div class="col-md-8">
+					<table class="table table-hover">
+						<tr>
+							<th></th>
+							<th>Sample Name</th>
+							<th>VCF</th>
+							<th>BAM</th>
+						</tr>
+						<tr>
+							<td><input type="checkbox" id="sample_NA12877_r1"></td>
+							<td>NA12877_r1</td>
+							<td><input type="checkbox" checked disabled></td>
+							<td><input type="checkbox" disabled></td>
+						</tr>
+						<tr>
+							<td><input type="checkbox" id="sample_NA12877_r2"></td>
+							<td>NA12877_r2</td>
+							<td><input type="checkbox" checked disabled></td>
+							<td><input type="checkbox" disabled></td>
+						</tr>
+						<tr>
+							<td><input type="checkbox" id="sample_NA12878_r1"></td>
+							<td>NA12878_r1</td>
+							<td><input type="checkbox" checked disabled></td>
+							<td><input type="checkbox" checked disabled></td>
+						</tr>
+						<tr>
+							<td><input type="checkbox" id="sample_NA12877_r2"></td>
+							<td>NA12878_r2</td>
+							<td><input type="checkbox" checked disabled></td>
+							<td><input type="checkbox" disabled></td>
+						</tr>
+						<tr>
+							<td><input type="checkbox" id="sample_NA12882_r1"></td>
+							<td>NA12882_r1</td>
+							<td><input type="checkbox" checked disabled></td>
+							<td><input type="checkbox" checked disabled></td>
+						</tr>
+					</table>
+					<div class="container ddd-borders">
+						<form class="form-inline" role="form">
+						  <label>Data set name: </label>
+						  <div class="form-group">
+						    <input type="text" class="form-control">
+						  </div>
+						  <button type="submit" class="btn btn-primary disabled" id="create_data_set_btn">Create data set</button>
+						</form>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="well text-center">
+						<button type="button" class="btn btn-primary">Upload from
+							Desktop</button><br/><br/>
+						<button type="button" class="btn btn-primary">Upload via
+							URL</button><br/><br/>
+						<button type="button" class="btn btn-primary">Import from
+							Bina Box</button>
+					</div>
+				</div>
+			</div>
+			
+		</div>
+	</div>
+	<div id="footer"></div>
+
+</body>
+</html>

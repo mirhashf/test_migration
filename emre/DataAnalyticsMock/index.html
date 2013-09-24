@@ -16,110 +16,130 @@
 <script src="js/libs/jquery-2.0.3/jquery-2.0.3.min.js"></script>
 <script src="js/libs/w2ui-1.2/w2ui-1.2.js"></script>
 <script src="js/libs/bootstrap-3.0.0/js/bootstrap.min.js"></script>
-<script src="js/main.js"></script>
-<script type="text/javascript">
-	$(document).ready(function() {
-		$("#data_tab").attr("class", "active");
-		
-		function checkboxCheckedAction() {
-			var disableCreateDataSetBtn = false;
-			$('input:checkbox').each(function () {
-				var id = $(this).attr('id');
-				if (id && id.substring(0, 6) === 'sample' && $(this).is(':checked')) {
-					disableCreateDataSetBtn = true;
-					return;
-				}
-		  	});
-			if (disableCreateDataSetBtn) {
-				$("#create_data_set_btn").removeClass('disabled');
-			} else {
-				$("#create_data_set_btn").addClass('disabled');
-			}
-		}
-		
-		$("#sample_NA12877_r1").click(checkboxCheckedAction);
-		$("#sample_NA12877_r2").click(checkboxCheckedAction);
-		$("#sample_NA12878_r1").click(checkboxCheckedAction);
-		$("#sample_NA12878_r2").click(checkboxCheckedAction);
-		$("#sample_NA12882_r1").click(checkboxCheckedAction);
-	});
-</script>
 </head>
 
 <body>
 	<!-- Wrap all page content here -->
 	<div id="wrap">
-		<div id="header"></div>
+		<div class="navbar navbar-default navbar-fixed-top">
+			<div class="container">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+						<span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="#"><img src="image/leaf-brand.png" style="margin-right: 10px;">Bina Analytics</a>
+				</div>
+			</div>
+		</div>
 
 		<div class="container">
-			<div class="page-header">
-				<h3>My Data</h3>
-			</div>
 			<div class="row">
-				<div class="col-md-8">
-					<table class="table table-hover">
-						<tr>
-							<th></th>
-							<th>Sample Name</th>
-							<th>VCF</th>
-							<th>BAM</th>
-						</tr>
-						<tr>
-							<td><input type="checkbox" id="sample_NA12877_r1"></td>
-							<td>NA12877_r1</td>
-							<td><input type="checkbox" checked disabled></td>
-							<td><input type="checkbox" disabled></td>
-						</tr>
-						<tr>
-							<td><input type="checkbox" id="sample_NA12877_r2"></td>
-							<td>NA12877_r2</td>
-							<td><input type="checkbox" checked disabled></td>
-							<td><input type="checkbox" disabled></td>
-						</tr>
-						<tr>
-							<td><input type="checkbox" id="sample_NA12878_r1"></td>
-							<td>NA12878_r1</td>
-							<td><input type="checkbox" checked disabled></td>
-							<td><input type="checkbox" checked disabled></td>
-						</tr>
-						<tr>
-							<td><input type="checkbox" id="sample_NA12877_r2"></td>
-							<td>NA12878_r2</td>
-							<td><input type="checkbox" checked disabled></td>
-							<td><input type="checkbox" disabled></td>
-						</tr>
-						<tr>
-							<td><input type="checkbox" id="sample_NA12882_r1"></td>
-							<td>NA12882_r1</td>
-							<td><input type="checkbox" checked disabled></td>
-							<td><input type="checkbox" checked disabled></td>
-						</tr>
-					</table>
-					<div class="container ddd-borders">
-						<form class="form-inline" role="form">
-						  <label>Data set name: </label>
+				<div class="col-md-6">
+					<div class="panel panel-info">
+					  <div class="panel-heading">
+					    <h3 class="panel-title">Login</h3>
+					  </div>
+					  <div class="panel-body">
+					    <form class="form-horizontal" role="form">
 						  <div class="form-group">
-						    <input type="text" class="form-control">
+						    <label for="inputEmail1" class="col-lg-2 control-label">Email</label>
+						    <div class="col-lg-10">
+						      <input type="email" class="form-control" id="inputEmail1">
+						    </div>
 						  </div>
-						  <button type="submit" class="btn btn-primary disabled" id="create_data_set_btn">Create data set</button>
+						  <div class="form-group">
+						    <label for="inputPassword1" class="col-lg-2 control-label">Password</label>
+						    <div class="col-lg-10">
+						      <input type="password" class="form-control" id="inputPassword1">
+						    </div>
+						  </div>
+						  <div class="form-group">
+						    <div class="col-lg-offset-2 col-lg-10">
+						      <div class="checkbox">
+						        <label>
+						          <input type="checkbox"> Remember me
+						        </label>
+						      </div>
+						    </div>
+						  </div>
+						  <div class="form-group">
+						    <div class="col-lg-offset-2 col-lg-10">
+						      <a href="data.html" class="btn btn-info">Submit</a>
+						      <a href="#">Forgot password?</a>
+						    </div>
+						  </div>
 						</form>
+					  </div>
 					</div>
 				</div>
-				<div class="col-md-4">
-					<div class="well text-center">
-						<button type="button" class="btn btn-primary">Upload from
-							Desktop</button><br/><br/>
-						<button type="button" class="btn btn-primary">Upload via
-							URL</button><br/><br/>
-						<button type="button" class="btn btn-primary">Import from
-							Bina Box</button>
+				<div class="col-md-6">
+					<div class="panel panel-info">
+					  <div class="panel-heading">
+					    <h3 class="panel-title">Register</h3>
+					  </div>
+					  <div class="panel-body">
+					    <form class="form-horizontal" role="form">
+					    	<div class="form-group">
+						    <label for="firstName" class="col-lg-2 control-label">First name</label>
+						    <div class="col-lg-10">
+						      <input type="text" class="form-control" id="first-name">
+						    </div>
+						  </div>
+						  <div class="form-group">
+						    <label for="lastName" class="col-lg-2 control-label">Last name</label>
+						    <div class="col-lg-10">
+						      <input type="text" class="form-control" id="last-name">
+						    </div>
+						  </div>
+						  <div class="form-group">
+						    <label for="company" class="col-lg-2 control-label">Company</label>
+						    <div class="col-lg-10">
+						      <input type="text" class="form-control" id="company">
+						    </div>
+						  </div>
+						  <div class="form-group">
+						    <label for="inputEmail1" class="col-lg-2 control-label">Email</label>
+						    <div class="col-lg-10">
+						      <input type="email" class="form-control" id="inputEmail1">
+						    </div>
+						  </div>
+						  <div class="form-group">
+						    <label for="inputPassword1" class="col-lg-2 control-label">Password</label>
+						    <div class="col-lg-10">
+						      <input type="password" class="form-control" id="inputPassword1">
+						    </div>
+						  </div>
+						  <div class="form-group">
+						    <label for="inputPassword2" class="col-lg-2 control-label">Confirm password</label>
+						    <div class="col-lg-10">
+						      <input type="password" class="form-control" id="inputPassword1">
+						    </div>
+						  </div>
+						  <div class="form-group">
+						    <div class="col-lg-offset-2 col-lg-10">
+						      <div class="checkbox">
+						        <label>
+						          <input type="checkbox"> Subscribe to newsletter
+						        </label>
+						      </div>
+						    </div>
+						  </div>
+						  <div class="form-group">
+						    <div class="col-lg-offset-2 col-lg-10">
+						      <button type="submit" class="btn btn-info">Sign in</button>
+						    </div>
+						  </div>
+						</form>
+					  </div>
 					</div>
 				</div>
 			</div>
 			
+
+			
 		</div>
 	</div>
-	<div id="footer"></div>
+	<div class="container"><p class="text-muted credit"><a href="http://binatechnologies.com">Bina Technologies Inc.</a></p></div>
 
 </body>
 </html>

@@ -9,7 +9,7 @@ $(document).ready(function() {
 		'</div>' +
 		'<div class="collapse navbar-collapse">' +
 			'<ul class="nav navbar-nav">' +
-				'<li id="data_tab"><a href="index.html"><span class="glyphicon glyphicon-hdd"></span> Data</a></li>' +
+				'<li id="data_tab"><a href="data.html"><span class="glyphicon glyphicon-hdd"></span> Data</a></li>' +
 				'<li id="datasets_tab"><a href="datasets.html"><span class="glyphicon glyphicon-list-alt"></span> Data sets</a></li>' +
 				'<li id="analyses_tab" class="dropdown"><a href="" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-random"></span> Analyses <b class="caret"></b></a>' +
 					'<ul class="dropdown-menu">' +
@@ -20,15 +20,15 @@ $(document).ready(function() {
 				'<li id="saved_queries_tab"><a href="saved_queries.html"><span class="glyphicon glyphicon-pushpin"></span> Saved Queries</a></li>' +
 				'<li id="ann_sources_tab"><a href="annotation_sources.html"><span class="glyphicon glyphicon-folder-open"></span> Ann. sources</a></li>' +
 			'</ul>' +
-			'<form class="navbar-form navbar-right" role="login" style="padding: 0px"> ' +
-		      '<div class="form-group"> ' +
-		        '<input type="text" class="form-control" placeholder="Username"> ' +
-		      '</div> ' +
-		      '<div class="form-group">' +
-		        '<input type="password" class="form-control" placeholder="Password"> ' +
-		      '</div> ' +
-		      '<button type="submit" class="btn btn-danger">Login</button>' +
-		    '</form>' +
+			'<ul class="nav navbar-nav navbar-right">' +
+		      '<li class="dropdown">' +
+		        '<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> Hello Dude! <b class="caret"></b></a>' +
+		        '<ul class="dropdown-menu">' +
+		          '<li><a href="#">Settings</a></li>' +
+		          '<li><a href="#">Logout</a></li>' +
+		        '</ul>' +
+		      '</li>' +
+		    '</ul>' +
 		'</div>' +
 	'</div>' +
 	'</div>');
