@@ -40,13 +40,13 @@ tabix -f $tmpdir/nopass.vcf.gz
 
 for vartype in SNP INDEL
 do
-(java -jar -Xmx1g -Xms1g $GATK_JAR -T SelectVariants -U LENIENT_VCF_PROCESSING -selectType $vartype -V $tmpdir/nopass.vcf.gz -o $tmpdir/"$vartype".vcf -R $reference ${exclude_filter[$filter]} &>$tmpdir/"$vartype".log; bgzip -f $tmpdir/"$vartype".vcf; tabix -f $tmpdir/"$vartype".vcf.gz) &
+(java -Xmx1g -Xms1g -jar $GATK_JAR -T SelectVariants -U LENIENT_VCF_PROCESSING -selectType $vartype -V $tmpdir/nopass.vcf.gz -o $tmpdir/"$vartype".vcf -R $reference ${exclude_filter[$filter]} &>$tmpdir/"$vartype".log; bgzip -f $tmpdir/"$vartype".vcf; tabix -f $tmpdir/"$vartype".vcf.gz) &
 done
 
 else
 for vartype in SNP INDEL
 do
-(java -jar -Xmx1g -Xms1g $GATK_JAR -T SelectVariants -U LENIENT_VCF_PROCESSING -selectType $vartype -V $vcf -o $tmpdir/"$vartype".vcf -R $reference ${exclude_filter[$filter]} &>$tmpdir/"$vartype".log; bgzip -f $tmpdir/"$vartype".vcf; tabix -f $tmpdir/"$vartype".vcf.gz) &
+(java -Xmx1g -Xms1g -jar $GATK_JAR -T SelectVariants -U LENIENT_VCF_PROCESSING -selectType $vartype -V $vcf -o $tmpdir/"$vartype".vcf -R $reference ${exclude_filter[$filter]} &>$tmpdir/"$vartype".log; bgzip -f $tmpdir/"$vartype".vcf; tabix -f $tmpdir/"$vartype".vcf.gz) &
 done
 fi
 wait

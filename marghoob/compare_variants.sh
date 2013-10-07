@@ -1,15 +1,20 @@
 #!/bin/bash
 
-set -x 
-export PATH=$HOME/vcftools_0.1.11/bin:/mnt/scratch3/marghoob/java7-install/jdk1.7.0_25/bin:$PATH
-export JAVA_HOME=/mnt/scratch3/marghoob/java7-install/jdk1.7.0_25
+set -xe
+export PERL5LIB=$HOME/vcftools_0.1.11/lib/perl5/site_perl
+export JAVA_HOME=$HOME/lake/opt/jdk1.7.0_25/
+export PATH=$HOME/vcftools_0.1.11/bin:$JAVA_HOME/bin:$PATH
 export GATK_JAR=$HOME/lake/opt/gatk-2.6-5-gba531bd/GenomeAnalysisTK.jar
 
 dir1=$1
 dir2=$2
 outdir=$3
 reference=$4
-dbsnp=$5
+outfile=$5
+
+rm -f $outfile
+
+DIR="$( cd "$( dirname "$0" )" && pwd )"
 
 mkdir -pv $outdir
 awk -v dir1=$dir1 '{print dir1"/vcfs/"$1".vcf.gz"}' $reference.fai > $outdir/files1
@@ -27,8 +32,8 @@ echo "Separating into indels and SNPs"
 for vartype in SNP INDEL
 do
 
-(java -jar $GATK_JAR -T SelectVariants -selectType $vartype -V $vcf1 -o $outdir/"$vartype"1.vcf -R $reference --excludeFiltered &>$outdir/"$vartype"1.log; bgzip -f $outdir/"$vartype"1.vcf; tabix -f $outdir/"$vartype"1.vcf.gz) &
-(java -jar $GATK_JAR -T SelectVariants -selectType $vartype -V $vcf2 -o $outdir/"$vartype"2.vcf -R $reference --excludeFiltered &>$outdir/"$vartype"2.log; bgzip -f $outdir/"$vartype"2.vcf; tabix -f $outdir/"$vartype"2.vcf.gz) &
+(java -Xmx1g -Xms1g -jar $GATK_JAR -T SelectVariants -U LENIENT_VCF_PROCESSING -selectType $vartype -V $vcf1 -o $outdir/"$vartype"1.vcf -R $reference --excludeFiltered &>$outdir/"$vartype"1.log; bgzip -f $outdir/"$vartype"1.vcf; tabix -f $outdir/"$vartype"1.vcf.gz) &
+(java -Xmx1g -Xms1g -jar $GATK_JAR -T SelectVariants -U LENIENT_VCF_PROCESSING -selectType $vartype -V $vcf2 -o $outdir/"$vartype"2.vcf -R $reference --excludeFiltered &>$outdir/"$vartype"2.log; bgzip -f $outdir/"$vartype"2.vcf; tabix -f $outdir/"$vartype"2.vcf.gz) &
 
 done
 wait
@@ -77,4 +82,4 @@ done
 wait
 
 echo "Getting the different counts"
-./gen_tables.sh $outdir > $outdir/tables.tsv
+$DIR/gen_tables.sh $outdir $dir1 $dir2 > $outfile

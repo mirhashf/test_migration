@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -ex
+
 indir=$1
 label1=$2
 label2=$3
