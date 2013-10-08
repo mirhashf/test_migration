@@ -5,12 +5,13 @@ export PERL5LIB=$HOME/vcftools_0.1.11/lib/perl5/site_perl
 export JAVA_HOME=$HOME/lake/opt/jdk1.7.0_25/
 export PATH=$HOME/vcftools_0.1.11/bin:$JAVA_HOME/bin:$PATH
 export GATK_JAR=$HOME/lake/opt/gatk-2.6-5-gba531bd/GenomeAnalysisTK.jar
+dbsnp=$HOME/lake/users/marghoob/GATK-bundle-hg19/dbsnp_137.hg19.vcf
+reference=$HOME/lake/users/marghoob/GATK-bundle-hg19/ucsc.hg19.fa
 
 dir1=$1
 dir2=$2
 outdir=$3
-reference=$4
-outfile=$5
+outfile=$4
 
 rm -f $outfile
 
@@ -24,9 +25,13 @@ echo "Concatenating the chromosome VCFs"
 vcf1=$outdir/all1.vcf.gz
 vcf2=$outdir/all2.vcf.gz
 
-(vcf-concat -f $outdir/files1 | bgzip > $vcf1; tabix -f $vcf1) &
-(vcf-concat -f $outdir/files2 | bgzip > $vcf2; tabix -f $vcf2) &
+(vcf-concat -f $outdir/files1 | bgzip > $outdir/all1.pre_annotated.vcf.gz; tabix -f $outdir/all1.pre_annotated.vcf.gz) &
+(vcf-concat -f $outdir/files1 | bgzip > $outdir/all2.pre_annotated.vcf.gz; tabix -f $outdir/all2.pre_annotated.vcf.gz) &
 wait
+
+echo "Annotating variants"
+(java -Xmx1g -Xms1g -jar $GATK_JAR -T VariantAnnotator -nt 8 -U LENIENT_VCF_PROCESSING -R $reference -D $dbsnp --variant $outdir/all1.pre_annotated.vcf.gz --out $outdir/all1.vcf &>$outdir/annotation1.log; bgzip -f $outdir/all1.vcf; tabix -f $outdir/all1.vcf.gz)
+(java -Xmx1g -Xms1g -jar $GATK_JAR -T VariantAnnotator -nt 8 -U LENIENT_VCF_PROCESSING -R $reference -D $dbsnp --variant $outdir/all2.pre_annotated.vcf.gz --out $outdir/all2.vcf &>$outdir/annotation2.log; bgzip -f $outdir/all2.vcf; tabix -f $outdir/all2.vcf.gz)
 
 echo "Separating into indels and SNPs"
 for vartype in SNP INDEL

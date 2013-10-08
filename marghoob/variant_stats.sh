@@ -5,11 +5,12 @@ export PERL5LIB=$HOME/vcftools_0.1.11/lib/perl5/site_perl
 export JAVA_HOME=$HOME/lake/opt/jdk1.7.0_25/
 export PATH=$HOME/vcftools_0.1.11/bin:$JAVA_HOME/bin:$PATH
 export GATK_JAR=$HOME/lake/opt/gatk-2.6-5-gba531bd/GenomeAnalysisTK.jar
+dbsnp=$HOME/lake/users/marghoob/GATK-bundle-hg19/dbsnp_137.hg19.vcf
+reference=$HOME/lake/users/marghoob/GATK-bundle-hg19/ucsc.hg19.fa
 
 jobdir=$1
 tmpdir=$2
-reference=$3
-outfile=$4
+outfile=$3
 
 rm -f $outfile
 
@@ -21,14 +22,17 @@ awk -v jobdir=$jobdir '{print jobdir"/vcfs/"$1".vcf.gz"}' $reference.fai > $tmpd
 echo "Concatenating the chromosome VCFs"
 vcf=$tmpdir/all.vcf.gz
 
-(vcf-concat -f $tmpdir/files | bgzip > $vcf; tabix -f $vcf)
+(vcf-concat -f $tmpdir/files | bgzip > $tmpdir/all.pre_annotated.vcf.gz; tabix -f $tmpdir/all.pre_annotated.vcf.gz)
+
+echo "Annotating variants"
+(java -Xmx1g -Xms1g -jar $GATK_JAR -T VariantAnnotator -nt 8 -U LENIENT_VCF_PROCESSING -R $reference -D $dbsnp --variant $tmpdir/all.pre_annotated.vcf.gz --out $tmpdir/all.vcf &>$tmpdir/annotation.log; bgzip -f $tmpdir/all.vcf; tabix -f $tmpdir/all.vcf.gz)
 
 declare -A exclude_filter
 exclude_filter["PASS"]="--excludeFiltered"
 exclude_filter["ALL"]=""
 exclude_filter["NONPASS"]=""
 
-for filter in ALL PASS NONPASS
+for filter in PASS #NONPASS
 do
 
 echo "Separating into indels and SNPs"
