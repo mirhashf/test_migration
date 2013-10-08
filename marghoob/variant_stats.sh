@@ -4,7 +4,7 @@ set -xe
 export PERL5LIB=$HOME/vcftools_0.1.11/lib/perl5/site_perl
 export JAVA_HOME=$HOME/lake/opt/jdk1.7.0_25/
 export PATH=$HOME/vcftools_0.1.11/bin:$JAVA_HOME/bin:$PATH
-export GATK_JAR=$HOME/lake/opt/gatk-2.6-5-gba531bd/GenomeAnalysisTK.jar
+export GATK_JAR=$HOME/lake/opt/gatk-2.7-2-g6bda569/GenomeAnalysisTK.jar
 dbsnp=$HOME/lake/users/marghoob/GATK-bundle-hg19/dbsnp_137.hg19.vcf
 reference=$HOME/lake/users/marghoob/GATK-bundle-hg19/ucsc.hg19.fa
 
