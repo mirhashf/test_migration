@@ -1,10 +1,11 @@
 #!/bin/bash
 
 set -xe 
-export PERL5LIB=$HOME/vcftools_0.1.11/lib/perl5/site_perl
+export PERL5LIB=$HOME/vcftools_0.1.11/perl
 export JAVA_HOME=$HOME/lake/opt/jdk1.7.0_25/
 export PATH=$HOME/vcftools_0.1.11/bin:$JAVA_HOME/bin:$PATH
 export GATK_JAR=$HOME/lake/opt/gatk-2.7-2-g6bda569/GenomeAnalysisTK.jar
+export ANNOVAR=$HOME/lake/users/marghoob/annovar
 dbsnp=$HOME/lake/users/marghoob/GATK-bundle-hg19/dbsnp_137.hg19.vcf
 reference=$HOME/lake/users/marghoob/GATK-bundle-hg19/ucsc.hg19.fa
 
@@ -53,6 +54,20 @@ do
 (java -Xmx1g -Xms1g -jar $GATK_JAR -T SelectVariants -U LENIENT_VCF_PROCESSING -selectType $vartype -V $vcf -o $tmpdir/"$vartype".vcf -R $reference ${exclude_filter[$filter]} &>$tmpdir/"$vartype".log; bgzip -f $tmpdir/"$vartype".vcf; tabix -f $tmpdir/"$vartype".vcf.gz) &
 done
 fi
+wait
+
+echo "Converting to annovar format"
+for vartype in SNP INDEL
+do
+$ANNOVAR/convert2annovar.pl -format vcf4 <(gunzip -c $tmpdir/$vartype.vcf.gz) -includeinfo -outfile $tmpdir/$vartype.avinput 2>$tmpdir/convert2annovar.log &
+done
+wait
+
+echo "Annotating variants using annovar"
+for vartype in SNP INDEL
+do
+$ANNOVAR/annotate_variation.pl --filter --dbtype snp137 -buildver hg19 $tmpdir/$vartype.avinput $ANNOVAR/humandb/ 2>$tmpdir/annotate_variation.log &
+done
 wait
 
 echo "Getting stats on SNPs and indels"

@@ -30,8 +30,10 @@ vcf2=$outdir/all2.vcf.gz
 wait
 
 echo "Annotating variants"
-(java -Xmx1g -Xms1g -jar $GATK_JAR -T VariantAnnotator -nt 8 -U LENIENT_VCF_PROCESSING -R $reference -D $dbsnp --variant $outdir/all1.pre_annotated.vcf.gz --out $outdir/all1.vcf &>$outdir/annotation1.log; bgzip -f $outdir/all1.vcf; tabix -f $outdir/all1.vcf.gz)
-(java -Xmx1g -Xms1g -jar $GATK_JAR -T VariantAnnotator -nt 8 -U LENIENT_VCF_PROCESSING -R $reference -D $dbsnp --variant $outdir/all2.pre_annotated.vcf.gz --out $outdir/all2.vcf &>$outdir/annotation2.log; bgzip -f $outdir/all2.vcf; tabix -f $outdir/all2.vcf.gz)
+(mv $outdir/all1.pre_annotated.vcf.gz $outdir/all1.vcf.gz; tabix -f $outdir/all1.vcf.gz)
+(mv $outdir/all2.pre_annotated.vcf.gz $outdir/all2.vcf.gz; tabix -f $outdir/all2.vcf.gz)
+#(java -Xmx1g -Xms1g -jar $GATK_JAR -T VariantAnnotator -nt 8 -U LENIENT_VCF_PROCESSING -R $reference -D $dbsnp --variant $outdir/all1.pre_annotated.vcf.gz --out $outdir/all1.vcf &>$outdir/annotation1.log; bgzip -f $outdir/all1.vcf; tabix -f $outdir/all1.vcf.gz)
+#(java -Xmx1g -Xms1g -jar $GATK_JAR -T VariantAnnotator -nt 8 -U LENIENT_VCF_PROCESSING -R $reference -D $dbsnp --variant $outdir/all2.pre_annotated.vcf.gz --out $outdir/all2.vcf &>$outdir/annotation2.log; bgzip -f $outdir/all2.vcf; tabix -f $outdir/all2.vcf.gz)
 
 echo "Separating into indels and SNPs"
 for vartype in SNP INDEL
