@@ -121,8 +121,11 @@ vcf-stats $tmpdir/$vartype".vcf.gz" -p $tmpdir/$vartype &
 done
 
 echo "Comparing with NIST calls"
-vcf-compare -a $tmpdir/SNP.vcf.gz $NISTVCF &>$tmpdir/SNP.vcf-compare.NIST.txt &
-vcf-compare -a -g $tmpdir/SNP.vcf.gz $NISTVCF &>$tmpdir/SNP.vcf-compare.genotyped.NIST.txt &
+for vartype in SNP INDEL
+do
+vcf-compare $tmpdir/$vartype.snpsift.vcf.gz $NISTVCF.$vartype.hg19.annotated.vcf.gz &>$tmpdir/$vartype.$filter.vcf-compare.NIST.txt &
+#vcf-compare -a -g $tmpdir/$vartype.snpsift.vcf.gz $NISTVCF.$vartype.hg19.annotated.vcf.gz &>$tmpdir/$vartype.$filter.vcf-compare.genotyped.NIST.txt &
+done
 
 echo "Generating known and novel subsets of INDELS and SNPs"
 for vartype in SNP INDEL
