@@ -1,10 +1,16 @@
 #!/bin/bash
 
-set -xe
+function usage {
+  echo "compare_variants.sh <jobdir1> <jobdir2> <workdir> <summaryfile>"
+  exit 1
+}
+
+set -e
 export PERL5LIB=$HOME/vcftools_0.1.11/lib/perl5/site_perl
 export JAVA_HOME=$HOME/lake/opt/jdk1.7.0_25/
 export PATH=$HOME/vcftools_0.1.11/bin:$JAVA_HOME/bin:$PATH
 export GATK_JAR=$HOME/lake/opt/gatk-2.7-2-g6bda569/GenomeAnalysisTK.jar
+export SNPSIFT=$HOME/lake/users/marghoob/snpEff/SnpSift.jar
 dbsnp=$HOME/lake/users/marghoob/GATK-bundle-hg19/dbsnp_137.hg19.vcf
 reference=$HOME/lake/users/marghoob/GATK-bundle-hg19/ucsc.hg19.fa
 
@@ -12,6 +18,12 @@ dir1=$1
 dir2=$2
 outdir=$3
 outfile=$4
+ANNOTATE="true"
+
+[ -z "$dir1" ] && usage
+[ -z "$dir2" ] && usage
+[ -z "$outdir" ] && usage
+[ -z "$outfile" ] && usage
 
 rm -f $outfile
 
@@ -32,8 +44,15 @@ wait
 if [ "$ANNOTATE" == "true" ]
 then
 echo "Annotating variants"
-(java -Xmx1g -Xms1g -jar $GATK_JAR -T VariantAnnotator -nt 8 -U LENIENT_VCF_PROCESSING -R $reference -D $dbsnp --variant $outdir/all1.pre_annotated.vcf.gz --out $outdir/all1.vcf &>$outdir/annotation1.log; bgzip -f $outdir/all1.vcf; tabix -f $outdir/all1.vcf.gz)
-(java -Xmx1g -Xms1g -jar $GATK_JAR -T VariantAnnotator -nt 8 -U LENIENT_VCF_PROCESSING -R $reference -D $dbsnp --variant $outdir/all2.pre_annotated.vcf.gz --out $outdir/all2.vcf &>$outdir/annotation2.log; bgzip -f $outdir/all2.vcf; tabix -f $outdir/all2.vcf.gz)
+start_time=$(date +%s)
+(java -Xmx1g -Xms1g -jar $SNPSIFT annotate $dbsnp <(gunzip -c $outdir/all1.pre_annotated.vcf.gz|awk 'BEGIN{OFS="\t"} /^#/{print $0} !/^#/{printf("%s\t%s\t.",$1,$2); for(i=4;i<=NF;++i)printf("\t%s", $i);printf("\n")}') 2>$outdir/snpsift1.log | bgzip > $outdir/all1.vcf.gz; tabix -f $outdir/all1.vcf.gz) &
+(java -Xmx1g -Xms1g -jar $SNPSIFT annotate $dbsnp <(gunzip -c $outdir/all2.pre_annotated.vcf.gz|awk 'BEGIN{OFS="\t"} /^#/{print $0} !/^#/{printf("%s\t%s\t.",$1,$2); for(i=4;i<=NF;++i)printf("\t%s", $i);printf("\n")}') 2>$outdir/snpsift2.log | bgzip > $outdir/all2.vcf.gz; tabix -f $outdir/all2.vcf.gz) &
+#(java -Xmx1g -Xms1g -jar $GATK_JAR -T VariantAnnotator -nt 8 -U LENIENT_VCF_PROCESSING -R $reference -D $dbsnp --variant $outdir/all1.pre_annotated.vcf.gz --out $outdir/all1.vcf &>$outdir/annotation1.log; bgzip -f $outdir/all1.vcf; tabix -f $outdir/all1.vcf.gz)
+#(java -Xmx1g -Xms1g -jar $GATK_JAR -T VariantAnnotator -nt 8 -U LENIENT_VCF_PROCESSING -R $reference -D $dbsnp --variant $outdir/all2.pre_annotated.vcf.gz --out $outdir/all2.vcf &>$outdir/annotation2.log; bgzip -f $outdir/all2.vcf; tabix -f $outdir/all2.vcf.gz)
+wait
+end_time=$(date +%s)
+diff_time=$(( $end_time - $start_time ))
+echo "Annotation took $diff_time seconds"
 else
 (mv $outdir/all1.pre_annotated.vcf.gz $outdir/all1.vcf.gz; tabix -f $outdir/all1.vcf.gz)
 (mv $outdir/all2.pre_annotated.vcf.gz $outdir/all2.vcf.gz; tabix -f $outdir/all2.vcf.gz)
