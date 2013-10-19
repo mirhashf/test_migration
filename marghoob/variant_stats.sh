@@ -1,6 +1,15 @@
 #!/bin/bash
 
-set -xe 
+set -e
+
+myname=`basename $0`
+function usage {
+  echo "$myname <jobdir> <workdir> <outputfile> <gatk-version>"
+  exit 1
+}
+
+[ $# -ne 4 ] && usage
+ 
 jobdir=$1
 tmpdir=$2
 outfile=$3
@@ -14,145 +23,119 @@ gatk_paths["2.6-5"]="$HOME/lake/opt/gatk-2.6-5-gba531bd"
 gatk_paths["2.7-2"]="$HOME/lake/opt/gatk-2.7-2-g6bda569"
 
 GATK_PATH=${gatk_paths[$gatk_ver]}
+LAKE_PATH=$HOME/lake
 
 export PERL5LIB=$HOME/vcftools_0.1.11/perl
-export JAVA_HOME=$HOME/lake/opt/jdk1.7.0_25/
+export JAVA_HOME=$LAKE_PATH/opt/jdk1.7.0_25/
 export PATH=$HOME/vcftools_0.1.11/bin:$JAVA_HOME/bin:$PATH
 export GATK_JAR=$GATK_PATH/GenomeAnalysisTK.jar
-export ANNOVAR=$HOME/lake/users/marghoob/annovar
-export SNPSIFT=$HOME/lake/users/marghoob/snpEff/SnpSift.jar
-export NISTVCF=$HOME/lake/users/marghoob/NIST/NISThighConf.hg19.vcf.gz
-dbsnp=$HOME/lake/users/marghoob/GATK-bundle-hg19/dbsnp_137.hg19.vcf
-reference=$HOME/lake/users/marghoob/GATK-bundle-hg19/ucsc.hg19.fa
+export SNPSIFT=$LAKE_PATH/opt/snpEff/SnpSift.jar
+export NISTVCF=$LAKE_PATH/users/marghoob/NIST/NISThighConf
+dbsnp=$LAKE_PATH/users/marghoob/GATK-bundle-hg19/dbsnp_137.hg19.vcf
+reference=$LAKE_PATH/users/marghoob/GATK-bundle-hg19/ucsc.hg19.fa
 
 ANNOTATE=true
 
 rm -f $outfile
 
 DIR="$( cd "$( dirname "$0" )" && pwd )"
-
 mkdir -pv $tmpdir
 awk -v jobdir=$jobdir '{print jobdir"/vcfs/"$1".vcf.gz"}' $reference.fai > $tmpdir/files
 
 echo "Concatenating the chromosome VCFs"
 vcf=$tmpdir/all.vcf.gz
 
-if [ "$ANNOTATE" == "true" ]
-then
-echo "Concatenating and clearing ID field"
-(vcf-concat -f $tmpdir/files |awk 'BEGIN{OFS="\t"} /^#/{print $0} !/^#/{printf("%s\t%s\t.\t",$1,$2); for(i=4;i<=NF;++i)printf("%s\t", $i);printf("\n")}'|bgzip > $tmpdir/all.pre_annotated.vcf.gz; tabix -f $tmpdir/all.pre_annotated.vcf.gz)
+if [ "$ANNOTATE" == "true" ]; then
+  echo "Clearing ID field and annotating using SnpSift"
+  java -Xmx1g -Xms1g -jar $SNPSIFT annotate $dbsnp <(vcf-concat -f $tmpdir/files|awk 'BEGIN{OFS="\t"} /^#/{print $0} !/^#/{printf("%s\t%s\t.",$1,$2); for(i=4;i<=NF;++i)printf("\t%s", $i);printf("\n")}') 2>$tmpdir/snpsift.log | bgzip > $tmpdir/all.annotated.vcf.gz
 else
-(vcf-concat -f $tmpdir/files | bgzip > $tmpdir/all.pre_annotated.vcf.gz; tabix -f $tmpdir/all.pre_annotated.vcf.gz)
+  vcf-concat -f $tmpdir/files | bgzip > $tmpdir/all.annotated.vcf.gz
 fi
+tabix -f $tmpdir/all.annotated.vcf.gz
 
-if [ "$ANNOTATE" == "true" ]
-then
-echo "Annotating variants"
-(java -Xmx1g -Xms1g -jar $GATK_JAR -T VariantAnnotator -nt 8 -U LENIENT_VCF_PROCESSING -R $reference -D $dbsnp --variant $tmpdir/all.pre_annotated.vcf.gz --out $tmpdir/all.vcf &>$tmpdir/annotation.log; bgzip -f $tmpdir/all.vcf; tabix -f $tmpdir/all.vcf.gz)
-else
-mv $tmpdir/all.pre_annotated.vcf.gz $tmpdir/all.vcf.gz; mv $tmpdir/all.pre_annotated.vcf.gz.tbi $tmpdir/all.vcf.gz.tbi;
-fi
-
-declare -A exclude_filter
-exclude_filter["PASS"]="--excludeFiltered"
-exclude_filter["ALL"]=""
-exclude_filter["NONPASS"]=""
-
-for filter in PASS #NONPASS
-do
-
-echo "Separating into indels and SNPs"
-if [ "$filter" == "NONPASS" ]
-then
-
-cat <(gunzip -c $vcf|grep "^#") <(gunzip -c $vcf|grep -v "^#"|awk '{if ($7 != "PASS") print $0}') |bgzip > $tmpdir/nopass.vcf.gz
-tabix -f $tmpdir/nopass.vcf.gz
-
-for vartype in SNP INDEL
-do
-(java -Xmx1g -Xms1g -jar $GATK_JAR -T SelectVariants -U LENIENT_VCF_PROCESSING -selectType $vartype -V $tmpdir/nopass.vcf.gz -o $tmpdir/"$vartype".vcf -R $reference ${exclude_filter[$filter]} &>$tmpdir/"$vartype".log; bgzip -f $tmpdir/"$vartype".vcf; tabix -f $tmpdir/"$vartype".vcf.gz) &
+for filter in ALL PASS NONPASS; do
+  for vartype in SNP INDEL; do
+    mkdir -pv $tmpdir/$filter/$vartype
+  done
 done
 
-else
-for vartype in SNP INDEL
-do
-(java -Xmx1g -Xms1g -jar $GATK_JAR -T SelectVariants -U LENIENT_VCF_PROCESSING -selectType $vartype -V $vcf -o $tmpdir/"$vartype".vcf -R $reference ${exclude_filter[$filter]} &>$tmpdir/"$vartype".log; bgzip -f $tmpdir/"$vartype".vcf; tabix -f $tmpdir/"$vartype".vcf.gz) &
+for vartype in SNP INDEL; do
+  mkdir -pv $tmpdir/NIST/$vartype
 done
-fi
-wait
 
-if [ -n "$ANNOVAR" ]
-then
-echo "Converting to annovar format"
-for vartype in SNP INDEL
-do
-$ANNOVAR/convert2annovar.pl -format vcf4 <(gunzip -c $tmpdir/$vartype.vcf.gz) -includeinfo -outfile $tmpdir/$vartype.avinput 2>$tmpdir/convert2annovar.log &
+echo "Building subsets from NIST calls"
+for vartype in SNP INDEL; do
+  (
+    echo "Building subsets of NIST $vartype"
+    (cd $tmpdir/NIST && ln -s $NISTVCF.$vartype.hg19.annotated.vcf.gz $vartype.vcf.gz && tabix -f $vartype.vcf.gz)
+    (cat <(gunzip -c $tmpdir/NIST/$vartype.vcf.gz|grep "^#") <(gunzip -c $tmpdir/NIST/$vartype.vcf.gz|grep -v "^#"|awk '{if ($3 != ".") print $0}') | bgzip > $tmpdir/NIST/$vartype/known.vcf.gz; tabix -f $tmpdir/NIST/$vartype/known.vcf.gz) &
+    (cat <(gunzip -c $tmpdir/NIST/$vartype.vcf.gz|grep "^#") <(gunzip -c $tmpdir/NIST/$vartype.vcf.gz|grep -v "^#"|awk '{if ($3 == ".") print $0}') | bgzip > $tmpdir/NIST/$vartype/novel.vcf.gz; tabix -f $tmpdir/NIST/$vartype/novel.vcf.gz) &
+  ) &
 done
 wait
 
-echo "Annotating variants using annovar"
-for vartype in SNP INDEL
-do
-$ANNOVAR/annotate_variation.pl --filter --dbtype snp137 -buildver hg19 $tmpdir/$vartype.avinput $ANNOVAR/humandb/ 2>$tmpdir/annotate_variation.log &
+for vartype in SNP INDEL; do
+  echo "Generating subsets ALL, PASS for $vartype"
+  (
+    (java -Xmx1g -Xms1g -jar $GATK_JAR -T SelectVariants -U LENIENT_VCF_PROCESSING -selectType $vartype -V $tmpdir/all.annotated.vcf.gz -R $reference -o $tmpdir/ALL/$vartype.vcf &>$tmpdir/ALL/SelectVariants.$vartype.log; bgzip -f $tmpdir/ALL/$vartype.vcf; tabix -f $tmpdir/ALL/$vartype.vcf.gz) &
+    (java -Xmx1g -Xms1g -jar $GATK_JAR -T SelectVariants -U LENIENT_VCF_PROCESSING -selectType $vartype -V $tmpdir/all.annotated.vcf.gz -R $reference --excludeFiltered -o $tmpdir/PASS/$vartype.vcf &>$tmpdir/PASS/SelectVariants.$vartype.log; bgzip -f $tmpdir/PASS/$vartype.vcf; tabix -f $tmpdir/PASS/$vartype.vcf.gz) &
+    wait
+    (vcf-isec -c $tmpdir/ALL/$vartype.vcf.gz $tmpdir/PASS/$vartype.vcf.gz | bgzip > $tmpdir/NONPASS/$vartype.vcf.gz; tabix -f $tmpdir/NONPASS/$vartype.vcf.gz)
+  ) &
 done
 wait
 
-for vartype in SNP INDEL
-do
-awk -v dbsnp=$dbsnp 'BEGIN{OFS=""; print "#!/bin/bash"} {if ($10 != $2) {if ($2 != ".") {print "egrep -m 1 \"" $2 "[[:space:]]\" "dbsnp} else {print "echo "}; if ($10 != ".") {print "egrep -m 1 \"" $10 "[[:space:]]\" "dbsnp} else {print "echo "}; print "echo ----------------------"}}' $tmpdir/$vartype.avinput.hg19_snp137_dropped > $tmpdir/$vartype.egreps_dropped.sh
-awk -v dbsnp=$dbsnp 'BEGIN{OFS=""; print "#!/bin/bash"} {if ($8 != ".") {print "egrep -m 1 \"" $8 "[[:space:]]\" "dbsnp; print "echo ----------------------"}}' $tmpdir/$vartype.avinput.hg19_snp137_filtered > $tmpdir/$vartype.egreps_filtered.sh
-chmod 0700 $tmpdir/$vartype.egreps_dropped.sh $tmpdir/$vartype.egreps_filtered.sh
-done
-fi
-
-if [ -n "$SNPSIFT" ]
-then
-for vartype in SNP INDEL
-do
-java -Xmx1g -Xms1g -jar $SNPSIFT annotate $dbsnp <(gunzip -c $tmpdir/$vartype.vcf.gz|awk 'BEGIN{OFS="\t"} /^#/{print $0} !/^#/{printf("%s\t%s\t.\t",$1,$2); for(i=4;i<=NF;++i)printf("%s\t", $i);printf("\t%s\n", $3)}') 2>$tmpdir/$vartype.snpsift.log > $tmpdir/$vartype.snpsift.vcf &
-done
-wait
-fi
-
-echo "Getting stats on SNPs and indels"
-for vartype in SNP INDEL
-do
-vcf-stats $tmpdir/$vartype".vcf.gz" -p $tmpdir/$vartype &
-done
-
-echo "Comparing with NIST calls"
-for vartype in SNP INDEL
-do
-vcf-compare $tmpdir/$vartype.snpsift.vcf.gz $NISTVCF.$vartype.hg19.annotated.vcf.gz &>$tmpdir/$vartype.$filter.vcf-compare.NIST.txt &
-#vcf-compare -a -g $tmpdir/$vartype.snpsift.vcf.gz $NISTVCF.$vartype.hg19.annotated.vcf.gz &>$tmpdir/$vartype.$filter.vcf-compare.genotyped.NIST.txt &
-done
-
-echo "Generating known and novel subsets of INDELS and SNPs"
-for vartype in SNP INDEL
-do
-
-mkdir -p $tmpdir/$vartype
-
-(cat <(gunzip -c $tmpdir/$vartype.vcf.gz|grep "^#") <(gunzip -c $tmpdir/$vartype.vcf.gz |grep -v "^#"|awk '{if ($3 != ".") print $0}') | bgzip > $tmpdir/$vartype/known.vcf.gz; tabix -f $tmpdir/$vartype/known.vcf.gz) &
-(cat <(gunzip -c $tmpdir/$vartype.vcf.gz|grep "^#") <(gunzip -c $tmpdir/$vartype.vcf.gz |grep -v "^#"|awk '{if ($3 == ".") print $0}') | bgzip > $tmpdir/$vartype/novel.vcf.gz; tabix -f $tmpdir/$vartype/novel.vcf.gz) &
-
+for filter in ALL PASS NONPASS; do
+  for vartype in SNP INDEL; do
+    echo "Generating known and novel subsets of subset $filter of $vartype"
+    (cat <(gunzip -c $tmpdir/$filter/$vartype.vcf.gz|grep "^#") <(gunzip -c $tmpdir/$filter/$vartype.vcf.gz|grep -v "^#"|awk '{if ($3 != ".") print $0}') | bgzip > $tmpdir/$filter/$vartype/known.vcf.gz; tabix -f $tmpdir/$filter/$vartype/known.vcf.gz) &
+    (cat <(gunzip -c $tmpdir/$filter/$vartype.vcf.gz|grep "^#") <(gunzip -c $tmpdir/$filter/$vartype.vcf.gz|grep -v "^#"|awk '{if ($3 == ".") print $0}') | bgzip > $tmpdir/$filter/$vartype/novel.vcf.gz; tabix -f $tmpdir/$filter/$vartype/novel.vcf.gz) &
+  done
 done
 wait
 
-for vartype in SNP INDEL
-do
-for subset in known novel
-do
-vcf-stats $tmpdir/$vartype/$subset.vcf.gz -p $tmpdir/$vartype/$subset &
+for filter in ALL PASS NONPASS; do
+  for vartype in SNP INDEL; do
+    echo "Generating stats for subset $filter of $vartype"
+    vcf-stats $tmpdir/$filter/$vartype.vcf.gz -p $tmpdir/$filter/$vartype.stats/ &
+    vcf-stats $tmpdir/$filter/$vartype/known.vcf.gz -p $tmpdir/$filter/$vartype/known.stats/ &
+    vcf-stats $tmpdir/$filter/$vartype/novel.vcf.gz -p $tmpdir/$filter/$vartype/novel.stats/ &
+  done
 done
-done
-
 wait
 
-echo "Getting the different counts"
-$DIR/gen_single_tables.sh $tmpdir "$jobdir-$filter" >> $outfile
-echo "" >> $outfile
+echo "Comparing the various sets against NIST high-confidence calls"
+for filter in ALL PASS NONPASS; do
+  for vartype in SNP INDEL; do
+    vcf-compare $tmpdir/$filter/$vartype.vcf.gz $tmpdir/NIST/$vartype.vcf.gz > $tmpdir/$filter/vcf-compare.NIST.$vartype.txt &
+    for subset in known novel; do
+      vcf-compare $tmpdir/$filter/$vartype/$subset.vcf.gz $tmpdir/NIST/$vartype/$subset.vcf.gz > $tmpdir/$filter/$vartype/vcf-compare.NIST.$subset.txt &
+    done
+  done
+done
+wait
 
+# Now print out the counts
+echo "filter,variant,subset,found_in_nist,missing_in_nist,missing_in_this,nist_sens,nist_fdr,titv,fraction" > $outfile
+for filter in ALL PASS NONPASS; do
+  for vartype in SNP INDEL; do
+    vcf1="$tmpdir/$filter/$vartype.vcf.gz"
+    vcf2="$tmpdir/NIST/$vartype.vcf.gz"
+    counts=`grep ^VN $tmpdir/$filter/vcf-compare.NIST.$vartype.txt|cut -f 2-|awk -v vcf1="$vcf1" -v vcf2="$vcf2" -F '\t' '{if (NF == 3) {common=$1}; if (NF==2) {if (index($2, vcf1)) {first=$1} else {second=$1}}} END{total1=common+first; total2=common+second; print common","first","second","(100*common/total2)","(100*first/total1)}'`
+    total_base=`grep -v "^#" $tmpdir/$filter/$vartype.stats/$vartype.stats.counts|head -n 1|awk '{print $1}'`
+    titv=`grep -v "^#" $tmpdir/$filter/$vartype.stats/$vartype.stats.tstv|head -n 1|awk '{print $3}'`
+    echo "$filter,$vartype,all,$total_base,$counts,$titv,100" >> $outfile
+
+    for subset in known novel; do
+      vcf1="$tmpdir/$filter/$vartype/$subset.vcf.gz"
+      vcf2="$tmpdir/NIST/$vartype/$subset.vcf.gz"
+      counts=`grep ^VN $tmpdir/$filter/$vartype/vcf-compare.NIST.$subset.txt|cut -f 2-|awk -v vcf1="$vcf1" -v vcf2="$vcf2" -F '\t' '{if (NF == 3) {common=$1}; if (NF==2) {if (index($2, vcf1)) {first=$1} else {second=$1}}} END{total1=common+first; total2=common+second; print common","first","second","(100*common/total2)","(100*first/total1)}'`
+      total=`grep -v "^#" $tmpdir/$filter/$vartype/$subset.stats/$subset.stats.counts|head -n 1|awk '{print $1}'`
+      titv=`grep -v "^#" $tmpdir/$filter/$vartype/$subset.stats/$subset.stats.tstv|head -n 1|awk '{print $3}'`
+      fraction=`echo "scale=2; 100.0*$total/$total_base"|bc -l`
+      echo "$filter,$vartype,$subset,$total,$counts,$titv,$fraction" >> $outfile
+    done
+  done
 done
 
 #rm -rf $tmpdir
