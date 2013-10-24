@@ -4,7 +4,7 @@ set -ex
 
 export JAVA_HOME=~/lake/opt/jdk1.7.0_25/
 export PATH=$HOME/vcftools_0.1.11/bin:$JAVA_HOME/bin:$PATH:/usr/lib/bina/samtools/current/bin/
-CHR_LIST="chr1"
+CHR_LIST="chr22"
 
 GATK_JAR=$HOME/lake/opt/gatk-2.7-2-g6bda569/GenomeAnalysisTK.jar
 BWARUNNER_DIR=$PWD/bina/bwarunner/current/bin

@@ -41,7 +41,12 @@ rm -f $outfile
 
 DIR="$( cd "$( dirname "$0" )" && pwd )"
 mkdir -pv $workdir
-awk -v jobdir=$jobdir '{print jobdir"/vcfs/"$1".vcf.gz"}' $reference.fai > $workdir/files
+
+rm -f $workdir/files
+for file in `awk -v jobdir=$jobdir '{print jobdir"/vcfs/"$1".vcf.gz"}' $reference.fai`; do
+  [ -s "$file" ] && echo $file >> $workdir/files
+done
+[ ! -s "$workdir/files" ] && exit
 
 echo "Concatenating the chromosome VCFs"
 vcf=$workdir/all.vcf.gz
@@ -76,7 +81,7 @@ echo "Building subsets from NIST calls"
 for vartype in SNP INDEL; do
   (
     echo "Building subsets of NIST $vartype"
-    (cd $workdir/NIST && ln -s $NISTVCF.$vartype.hg19.annotated.vcf.gz $vartype.vcf.gz && tabix -f $vartype.vcf.gz)
+    (cd $workdir/NIST && rm -f $vartype.vcf.gz &&  ln -s $NISTVCF.$vartype.hg19.annotated.vcf.gz $vartype.vcf.gz && tabix -f $vartype.vcf.gz)
     (cat <(gunzip -c $workdir/NIST/$vartype.vcf.gz|grep "^#") <(gunzip -c $workdir/NIST/$vartype.vcf.gz|grep -v "^#"|awk '{if ($3 != ".") print $0}') | bgzip > $workdir/NIST/$vartype/known.vcf.gz; tabix -f $workdir/NIST/$vartype/known.vcf.gz) &
     (cat <(gunzip -c $workdir/NIST/$vartype.vcf.gz|grep "^#") <(gunzip -c $workdir/NIST/$vartype.vcf.gz|grep -v "^#"|awk '{if ($3 == ".") print $0}') | bgzip > $workdir/NIST/$vartype/novel.vcf.gz; tabix -f $workdir/NIST/$vartype/novel.vcf.gz) &
   ) &
