@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# This script checks for SV deletion events against a truth set and prints out a report for each contig as well as for the whole-genome
+
 set -e
 
 PATH=$PATH:~/lake/opt/bedtools-2.17.0/bin
@@ -13,11 +15,48 @@ function usage {
 }
 
 function print_overlap_counts {
-  awk -v mesg="$3" 'BEGIN { found = 0 } { if (NF > 4 && $5 != ".") found++ } END { percent = NR == 0? "nan": 100.0 * found / NR; print found "/" NR " (" percent " %) " mesg }' $1 >> $2
+  awk -v mesg="$3" -v min_size=$4 -v max_size=$5 'BEGIN { found = 0; checked = 0; } { size=$3 - $2; if (size < min_size || size >= max_size) next; checked++; if (NF > 4 && $5 != ".") found++ } END { percent = checked == 0? "nan": 100.0 * found / checked; print found "/" checked " (" percent " %) " mesg }' $1 >> $2
 }
+
+function print_overlap_counts_histogram {
+  awk -v mesg="$3" 'function get_bin(sv_size) {
+                      for (i=0; i <num_bins; i++) {
+                          if (sv_size <= bins[i]) { return i; }
+                      }
+                      return -1;
+                    }
+                    BEGIN {
+                        num_bins = 8;
+                        bins[-1] = 0;
+                        bins[0] = 100; bins[1] = 200; bins[2] = 400; bins[3] = 600; bins[4] = 800; bins[5] = 1000; bins[6] = 1000000; bins[7] = 1000000000;
+                        for (i = 0; i < num_bins; i++) {
+                            checked_count[i] = 0;
+                            found_count[i] = 0;
+                        }
+                    }
+                    {
+                        sv_size=$3 - $2;
+                        bin_id = get_bin(sv_size);
+                        if (bin_id == -1) next;
+                        checked_count[bin_id]++;
+                        if (NF > 4 && $5 != ".") {
+                            found_count[bin_id]++;
+                        }
+                    }
+                    END {
+                        for (i = 0; i < num_bins; i++) {
+                            percent = (checked_count[i] == 0)? "nan": 100.0 * found_count[i] / checked_count[i];
+                            printf("%d < size <= %d: %d / %d (%g) %s\n", bins[i-1], bins[i], found_count[i], checked_count[i], percent, mesg);
+                        }
+                    }' $1 >> $2
+} 
 
 [ -z "$BREAKDANCER_OUTDIR" -a -z "$CNVNATOR_OUTDIR" ] && usage
 [ -z "$WORKDIR" ] && usage
+
+RECIP_OVERLAP=0.5
+MIN_SIZE=0
+MAX_SIZE=10000000
 
 TOOLS=
 [ -n "$BREAKDANCER_OUTDIR" ] && TOOLS="breakdancer"
@@ -70,8 +109,8 @@ for chr in $CHR_LIST; do
     for tool in $TOOLS; do
       TOOL_BED="$WORKDIR/$tool/$chr.bed"
       if [ -s "$TOOL_BED" ]; then
-        bedtools intersect -wao -f 0.5 -r -a $TRUTH_BED -b $TOOL_BED > $WORKDIR/$tool/$chr.truth.overlap.with.$tool.bed
-        bedtools intersect -wao -f 0.5 -r -b $TRUTH_BED -a $TOOL_BED > $WORKDIR/$tool/$chr.$tool.overlap.with.truth.bed
+        bedtools intersect -wao -f $RECIP_OVERLAP -r -a $TRUTH_BED -b $TOOL_BED > $WORKDIR/$tool/$chr.truth.overlap.with.$tool.bed
+        bedtools intersect -wao -f $RECIP_OVERLAP -r -b $TRUTH_BED -a $TOOL_BED > $WORKDIR/$tool/$chr.$tool.overlap.with.truth.bed
       else
         cat $TRUTH_BED > $WORKDIR/$tool/$chr.truth.overlap.with.$tool.bed
       fi
@@ -87,8 +126,17 @@ for chr in $CHR_LIST; do
     cat $WORKDIR/$tool/$chr.truth.overlap.with.$tool.bed >> $WORKDIR/$tool/all.truth.overlap.with.$tool.bed
     cat $WORKDIR/$tool/$chr.$tool.overlap.with.truth.bed >> $WORKDIR/$tool/all.$tool.overlap.with.truth.bed
 
-    print_overlap_counts $WORKDIR/$tool/$chr.truth.overlap.with.$tool.bed $REPORT "truth events found in $tool output"
-    print_overlap_counts $WORKDIR/$tool/$chr.$tool.overlap.with.truth.bed $REPORT "$tool events found in truth set"
+    if [ -s "$WORKDIR/$tool/$chr.truth.overlap.with.$tool.bed" -o -s "$WORKDIR/$tool/$chr.$tool.overlap.with.truth.bed" ]; then
+      print_overlap_counts $WORKDIR/$tool/$chr.truth.overlap.with.$tool.bed $REPORT "truth events found in $tool output" $MIN_SIZE $MAX_SIZE
+      print_overlap_counts $WORKDIR/$tool/$chr.$tool.overlap.with.truth.bed $REPORT "$tool events found in truth set" $MIN_SIZE $MAX_SIZE
+    fi
+
+    if [ "$PRINT_CHR_HISTOGRAMS" == "true" ]; then
+      echo "" >> $REPORT
+      [ -s "$WORKDIR/$tool/$chr.truth.overlap.with.$tool.bed" ] && print_overlap_counts_histogram $WORKDIR/$tool/$chr.truth.overlap.with.$tool.bed $REPORT "truth events found in $tool output"
+      [ -s "$WORKDIR/$tool/$chr.$tool.overlap.with.truth.bed" ] && print_overlap_counts_histogram $WORKDIR/$tool/$chr.$tool.overlap.with.truth.bed $REPORT "$tool events found in truth set"
+      echo "" >> $REPORT
+    fi
   done
 
   echo "=====================================================================================================" >> $REPORT
@@ -99,6 +147,17 @@ echo "==========================================================================
 echo "all" >> $REPORT
 
 for tool in $TOOLS; do
-  print_overlap_counts $WORKDIR/$tool/all.truth.overlap.with.$tool.bed $REPORT "truth events found in $tool output"
-  print_overlap_counts $WORKDIR/$tool/all.$tool.overlap.with.truth.bed $REPORT "$tool events found in truth set"
+  print_overlap_counts $WORKDIR/$tool/all.truth.overlap.with.$tool.bed $REPORT "truth events found in $tool output" $MIN_SIZE $MAX_SIZE
+  print_overlap_counts $WORKDIR/$tool/all.$tool.overlap.with.truth.bed $REPORT "$tool events found in truth set" $MIN_SIZE $MAX_SIZE
+
+  print_overlap_counts_histogram $WORKDIR/$tool/all.truth.overlap.with.$tool.bed $REPORT "truth events found in $tool output"
+  print_overlap_counts_histogram $WORKDIR/$tool/all.$tool.overlap.with.truth.bed $REPORT "$tool events found in truth set"
 done
+
+#echo "=====================================================================================================" >> $REPORT
+#echo "Size-based profile of SVs" >> $REPORT
+#for tool in $TOOLS; do
+#  print_overlap_counts_histogram $WORKDIR/$tool/all.truth.overlap.with.$tool.bed $REPORT "truth events found in $tool output"
+#  print_overlap_counts_histogram $WORKDIR/$tool/all.$tool.overlap.with.truth.bed $REPORT "$tool events found in truth set"
+#  echo "" >> $REPORT
+#done

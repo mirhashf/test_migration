@@ -9,6 +9,11 @@ function is_deletion(str1, str2,    length_diff, j) {
   return -1;
 }
 
+BEGIN {
+  if (length(min_size) == 0) { min_size = 0; }
+  if (length(max_size) == 0) { max_size = 1000000000; }
+}
+
 # For non-comment lines in the VCF
 !/^#/{
   start = $2 - 1;
@@ -32,6 +37,7 @@ function is_deletion(str1, str2,    length_diff, j) {
     #printf("### %s\t%d\n", $0, index(ref_allele, alt_allele));
     #next;
   }
+  if (deletion_length < min_size || deletion_length >= max_size) { next; }
 
   gt_field = $10;
   split(gt_field, gt_fields, ":");

@@ -4,7 +4,8 @@ set -ex
 
 myname=`basename $0`
 function usage {
-  echo "START_E= END_E= $myname"
+  echo "START_E= END_E= NLANES= TOTAL_COVERAGE= CHR_LIST= $myname"
+  echo "CHR_LIST is optional"
   exit 1
 }
 
@@ -18,7 +19,8 @@ DELETIONS_VCF=~/lake/users/marghoob/homes.gersteinlab.org/people/aabyzov/outbox/
 
 [ -z "$START_E" ] && usage
 [ -z "$END_E" ] && usage
-#[ -z "$CHR_LIST" ] && usage
+[ -z "$NLANES" ] && usage
+[ -z "$TOTAL_COVERAGE" ] && usage
 
 SCRATCHDIR=$HOME/scratch/dwgsim
 WORKDIR=$PWD/work
@@ -99,12 +101,12 @@ for SNP_vcf in CEUTrio.PASS.SNP.hg19.vcf NIST.SNP.present.in.all.vcf NIST.SNP.mi
   prefix=`basename $SNP_vcf .vcf`
   awk '!/^#/ {print $1"\t"($2-1)"\t"$2}' $SNP_vcf > $prefix.bed
 done
-fi
+
 
 # Build the genome
 mkdir -pv vcf2diploid
 cd vcf2diploid
-#java -jar $VCF2DIPLOID -id NA12878 -chr $REFERENCE -vcf ../deletions.hg19.vcf ../CEUTrio.PASS.INDEL.hg19.vcf ../NIST.INDEL.present.in.all.vcf ../NIST.INDEL.missed.in.all.vcf ../CEUTrio.PASS.SNP.hg19.vcf ../NIST.SNP.present.in.all.vcf ../NIST.SNP.missed.in.all.vcf &>$LOGDIR/vcf2diploid.log
+java -jar $VCF2DIPLOID -id NA12878 -chr $REFERENCE -vcf ../deletions.hg19.vcf ../CEUTrio.PASS.INDEL.hg19.vcf ../NIST.INDEL.present.in.all.vcf ../NIST.INDEL.missed.in.all.vcf ../CEUTrio.PASS.SNP.hg19.vcf ../NIST.SNP.present.in.all.vcf ../NIST.SNP.missed.in.all.vcf &>$LOGDIR/vcf2diploid.log
 
 echo "Getting list of chromosomes"
 all_list=
@@ -118,12 +120,18 @@ cat $all_list > NA12878.fa
 $SAMTOOLS faidx NA12878.fa
 
 cd ..
+fi
 
-mkdir -pv fastq
-for lane in 0 1 2; do
-  $DWGSIM -e $START_E,$END_E -E $START_E,$END_E -r 0 -F 0 -d 330 -s 70 -C 6 -1 100 -2 100 -z $lane vcf2diploid/NA12878.fa fastq/simulated.lane$lane
+FASTQDIR=fastq.$START_E"_"$END_E"_"$NLANES"_"$TOTAL_COVERAGE
+mkdir -pv $FASTQDIR
+COVERAGE_PER_LANE=`echo "scale = 2; $TOTAL_COVERAGE / 2.0 / $NLANES"|bc -l`
+let NLANES_MINUS=NLANES-1
 
-  (gzip -1 -f fastq/simulated.lane$lane.bwa.read1.fastq)&
-  (gzip -1 -f fastq/simulated.lane$lane.bwa.read2.fastq)&
+rm -f $FASTQDIR/README
+for lane in `seq 0 $NLANES_MINUS`; do
+  echo "$DWGSIM -e $START_E,$END_E -E $START_E,$END_E -r 0 -F 0 -d 330 -s 70 -C $COVERAGE_PER_LANE -1 100 -2 100 -z $lane vcf2diploid/NA12878.fa $FASTQDIR/simulated.lane$lane" >> $FASTQDIR/README
+  $DWGSIM -e $START_E,$END_E -E $START_E,$END_E -r 0 -F 0 -d 330 -s 70 -C $COVERAGE_PER_LANE -1 100 -2 100 -z $lane vcf2diploid/NA12878.fa $FASTQDIR/simulated.lane$lane
+  (gzip -1 -f $FASTQDIR/simulated.lane$lane.bwa.read1.fastq)&
+  (gzip -1 -f $FASTQDIR/simulated.lane$lane.bwa.read2.fastq)&
   wait
 done

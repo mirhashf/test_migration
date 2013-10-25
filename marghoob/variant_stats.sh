@@ -51,6 +51,14 @@ done
 echo "Concatenating the chromosome VCFs"
 vcf=$workdir/all.vcf.gz
 
+if [ -n "$TRUTH_VCF" ]; then
+  echo "Generating subsets of truth VCF"
+  mkdir -pv $workdir/truth
+  for vartype in SNP INDEL; do
+    (java -Xmx1g -Xms1g -jar $GATK_JAR -T SelectVariants -U LENIENT_VCF_PROCESSING -selectType $vartype -V $TRUTH_VCF -R $reference -o $workdir/truth/$vartype.vcf --excludeNonVariants &>$workdir/truth/SelectVariants.$vartype.log; bgzip -f $workdir/truth/$vartype.vcf; tabix -f $workdir/truth/$vartype.vcf.gz) &
+  done
+fi
+
 if [ "$ANNOTATE" == "true" ]; then
   echo "Clearing ID field and annotating using SnpSift"
   if [ "$MERGE" == "true" ]; then
@@ -122,6 +130,9 @@ echo "Comparing the various sets against NIST high-confidence calls"
 for filter in ALL PASS NONPASS; do
   for vartype in SNP INDEL; do
     vcf-compare $workdir/$filter/$vartype.vcf.gz $workdir/NIST/$vartype.vcf.gz > $workdir/$filter/vcf-compare.NIST.$vartype.txt &
+    if [ -n "$TRUTH_VCF" ]; then
+      vcf-compare $workdir/$filter/$vartype.vcf.gz $workdir/truth/$vartype.vcf.gz > $workdir/$filter/vcf-compare.truth.$vartype.txt &
+    fi
     for subset in known novel; do
       vcf-compare $workdir/$filter/$vartype/$subset.vcf.gz $workdir/NIST/$vartype/$subset.vcf.gz > $workdir/$filter/$vartype/vcf-compare.NIST.$subset.txt &
     done
@@ -157,4 +168,12 @@ for filter in ALL PASS NONPASS; do
   done
 done
 
+echo "" >> $outfile
+echo "===================================================================================" >> $outfile
+echo "Stats w.r.t. the truth set"
+for filter in ALL PASS NONPASS; do
+  for vartype in SNP INDEL; do
+    counts=$(get_counts $workdir/$filter/$vartype.vcf.gz $workdir/$filter/$vartype.vcf.gz $workdir/$filter/vcf-compare.NIST.$vartype.txt)
+  done
+done
 #rm -rf $workdir
