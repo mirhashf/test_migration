@@ -21,13 +21,13 @@ function print_overlap_counts {
 function print_overlap_counts_histogram {
   awk -v mesg="$3" 'function get_bin(sv_size) {
                       for (i=0; i <num_bins; i++) {
-                          if (sv_size <= bins[i]) { return i; }
+                          if (sv_size > bins[i-1] && sv_size <= bins[i]) { return i; }
                       }
                       return -1;
                     }
                     BEGIN {
                         num_bins = 8;
-                        bins[-1] = 0;
+                        bins[-1] = 50;
                         bins[0] = 100; bins[1] = 200; bins[2] = 400; bins[3] = 600; bins[4] = 800; bins[5] = 1000; bins[6] = 1000000; bins[7] = 1000000000;
                         for (i = 0; i < num_bins; i++) {
                             checked_count[i] = 0;
@@ -46,21 +46,24 @@ function print_overlap_counts_histogram {
                     END {
                         for (i = 0; i < num_bins; i++) {
                             percent = (checked_count[i] == 0)? "nan": 100.0 * found_count[i] / checked_count[i];
-                            printf("%d < size <= %d: %d / %d (%g) %s\n", bins[i-1], bins[i], found_count[i], checked_count[i], percent, mesg);
+                            printf("%d < size <= %d: %d / %d (%g%%) %s\n", bins[i-1], bins[i], found_count[i], checked_count[i], percent, mesg);
                         }
                     }' $1 >> $2
 } 
 
-[ -z "$BREAKDANCER_OUTDIR" -a -z "$CNVNATOR_OUTDIR" ] && usage
+[ -z "$BREAKDANCER_OUTDIR" -a -z "$CNVNATOR_OUTDIR" -a -z "$BREAKSEQ_OUTDIR" -a -z "$PINDEL_OUTDIR" ] && usage
 [ -z "$WORKDIR" ] && usage
 
 RECIP_OVERLAP=0.5
-MIN_SIZE=0
+MIN_SIZE=50
 MAX_SIZE=10000000
+PRINT_CHR_HISTOGRAMS=true
 
 TOOLS=
 [ -n "$BREAKDANCER_OUTDIR" ] && TOOLS="breakdancer"
 [ -n "$CNVNATOR_OUTDIR" ] && TOOLS="$TOOLS cnvnator"
+[ -n "$BREAKSEQ_OUTDIR" ] && TOOLS="$TOOLS breakseq"
+[ -n "$PINDEL_OUTDIR" ] && TOOLS="$TOOLS pindel"
 
 WORKDIR=$PWD/$WORKDIR
 LOGDIR=$WORKDIR/logs
@@ -92,6 +95,9 @@ for chr in $CHR_LIST; do
 
   [ -n "$BREAKDANCER_OUTDIR" ] && awk '!/^#/ { if ($7 == "DEL") { print $1"\t"$2"\t"$5"\tBreakdancer" } }' $BREAKDANCER_OUTDIR/$chr.out > $WORKDIR/breakdancer/$chr.bed
   [ -n "$CNVNATOR_OUTDIR" ] && awk '!/^#/ { if ($1 != "deletion") next; split($2, chr_bp_split, ":"); split(chr_bp_split[2], bps, "-"); print chr_bp_split[1]"\t"bps[1]"\t"bps[2]"\tCnvnator" }' $CNVNATOR_OUTDIR/$chr.out > $WORKDIR/cnvnator/$chr.bed
+  [ -n "$BREAKSEQ_OUTDIR" ] && awk -v chr=$chr '{if ($1 == chr && $3 == "Deletion") print $1"\t"$4"\t"$5"\tBreakseq"}' $BREAKSEQ_OUTDIR/breakseq_out.gff > $WORKDIR/breakseq/$chr.unsorted.bed
+  [ -n "$BREAKSEQ_OUTDIR" -a -s "$WORKDIR/breakseq/$chr.unsorted.bed" ] && bedtools sort -i $WORKDIR/breakseq/$chr.unsorted.bed > $WORKDIR/breakseq/$chr.bed
+  [ -n "$PINDEL_OUTDIR" ] && [ -s "$PINDEL_OUTDIR/$chr.out_D" ] && (grep ChrID $PINDEL_OUTDIR/$chr.out_D | awk '{print $8 "\t" $10 "\t" $11 "\tPindel" }' > $WORKDIR/pindel/$chr.bed)
   awk -v chr=$chr '{if ($1 == chr) print $1"\t"$2"\t"$3"\tTruth"}' $WORKDIR/truth/deletions.bed > $WORKDIR/truth/deletions.$chr.bed
   [ -s "$WORKDIR/truth/deletions.$chr.bed" ] && bedtools sort -i $WORKDIR/truth/deletions.$chr.bed > $TRUTH_BED
 
