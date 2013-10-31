@@ -1,24 +1,26 @@
-﻿<div ng-controller="SigninCtrl" class="login-wrapper">
-    <a ng-click="redirectToIndex()" href="">
-        <img class="logo" src="../../img/logo-white.png">
-    </a>
-
-    <div class="box">
-        <div class="content-wrap">
-            <h6>Log in</h6>
-            <input class="form-control" type="text" placeholder="E-mail address" ng-model="email">
-            <input class="form-control" type="password" placeholder="Your password" ng-model="password">
-
-            <div class="alert alert-danger" ng-show="isShow">{{message}}</div>
-
-            <a class="btn-glow primary login" ng-click="signin()">Log in</a>
-        </div>
-    </div>
-
-    <div class="no-account">
-        <a ng-click="redirectToSignup()" href="">
-            <p>Don't have an account?</p>
+﻿<div ng-controller="SigninCtrl" class="signin-bg">
+    <div class="login-wrapper">
+        <a ng-click="redirectToIndex()" href="">
+            <img class="logo" src="../../img/logo-white.png">
         </a>
-        <a href="mailto:info@binatechnologies.com">Contact Bina!</a>
+
+        <div class="box">
+            <div class="content-wrap">
+                <h6>Log in</h6>
+                <input class="form-control" type="text" placeholder="E-mail address" ng-model="email">
+                <input class="form-control" type="password" placeholder="Your password" ng-model="password">
+
+                <div class="alert alert-danger" ng-show="isShow">{{message}}</div>
+
+                <a class="btn-glow primary login" ng-click="signin()">Log in</a>
+            </div>
+        </div>
+
+        <div class="no-account">
+            <a ng-click="redirectToSignup()" href="">
+                <p>Don't have an account?</p>
+            </a>
+            <a href="mailto:info@binatechnologies.com">Contact Bina!</a>
+        </div>
     </div>
 </div>

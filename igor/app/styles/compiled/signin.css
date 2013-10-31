@@ -1,5 +1,8 @@
-.login-bg {
+.signin-bg {
   background: url("../../img/bgs/grey_wash_wall.png") repeat;
+  position: fixed;
+  width: 100% !important;
+  height: 100% !important;
 }
 
 .login-wrapper {
