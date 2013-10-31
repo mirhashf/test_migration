@@ -19,36 +19,45 @@ function print_overlap_counts {
 }
 
 function print_overlap_counts_histogram {
-  awk -v mesg="$3" 'function get_bin(sv_size) {
-                      for (i=0; i <num_bins; i++) {
-                          if (sv_size > bins[i-1] && sv_size <= bins[i]) { return i; }
-                      }
-                      return -1;
-                    }
-                    BEGIN {
-                        num_bins = 8;
-                        bins[-1] = 50;
-                        bins[0] = 100; bins[1] = 200; bins[2] = 400; bins[3] = 600; bins[4] = 800; bins[5] = 1000; bins[6] = 1000000; bins[7] = 1000000000;
-                        for (i = 0; i < num_bins; i++) {
-                            checked_count[i] = 0;
-                            found_count[i] = 0;
-                        }
-                    }
-                    {
-                        sv_size=$3 - $2;
-                        bin_id = get_bin(sv_size);
-                        if (bin_id == -1) next;
-                        checked_count[bin_id]++;
-                        if (NF > 4 && $5 != ".") {
-                            found_count[bin_id]++;
-                        }
-                    }
-                    END {
-                        for (i = 0; i < num_bins; i++) {
-                            percent = (checked_count[i] == 0)? "nan": 100.0 * found_count[i] / checked_count[i];
-                            printf("%d < size <= %d: %d / %d (%g%%) %s\n", bins[i-1], bins[i], found_count[i], checked_count[i], percent, mesg);
-                        }
-                    }' $1 >> $2
+  awk -v mesg="$3" -v complement="$4" -v csv_file="$5" -v tool_name="$6" \
+    'function get_bin(sv_size) {
+       for (i=0; i <num_bins; i++) {
+         if (sv_size > bins[i-1] && sv_size <= bins[i]) { return i; }
+       }
+       return -1;
+    }
+    BEGIN {
+      num_bins = 8;
+      bins[-1] = 50;
+      bins[0] = 100; bins[1] = 200; bins[2] = 400; bins[3] = 600; bins[4] = 800; bins[5] = 1000; bins[6] = 1000000; bins[7] = 1000000000;
+      for (i = 0; i < num_bins; i++) {
+        checked_count[i] = 0;
+        found_count[i] = 0;
+      }
+    }
+    {
+      sv_size=$3 - $2;
+      bin_id = get_bin(sv_size);
+      if (bin_id == -1) next;
+      checked_count[bin_id]++;
+      if (NF > 4 && $5 != ".") {
+        found_count[bin_id]++;
+      }
+    }
+    END {
+      if (length(csv_file) > 0) printf("%s", tool_name) >> csv_file
+      for (i = 0; i < num_bins; i++) {
+        percent = "nan"
+        if (checked_count[i] != 0) {
+          percent = 100.0 * found_count[i] / checked_count[i];
+          if (complement != 0) percent = 100 - percent
+        }
+        printf("%d < size <= %d: %d / %d (%g%%) %s\n", bins[i-1], bins[i], found_count[i], checked_count[i], percent, mesg);
+        if (percent == "nan") percent = 0
+        if (length(csv_file) > 0) printf(",%g", percent) >> csv_file
+      }
+      if (length(csv_file) > 0) printf("\n") >> csv_file
+    }' $1 >> $2
 } 
 
 [ -z "$BREAKDANCER_OUTDIR" -a -z "$CNVNATOR_OUTDIR" -a -z "$BREAKSEQ_OUTDIR" -a -z "$PINDEL_OUTDIR" ] && usage
@@ -78,6 +87,7 @@ done
 REFERENCE=~/lake/users/marghoob/GATK-bundle-hg19/ucsc.hg19.fa
 SVDELETIONS=work/deletions.hg19.vcf
 
+#CHR_LIST=chr22
 if [ -z "$CHR_LIST" ]; then
   CHR_LIST=`awk '{print $1}' $REFERENCE.fai`
 fi
@@ -95,9 +105,9 @@ for chr in $CHR_LIST; do
 
   [ -n "$BREAKDANCER_OUTDIR" ] && awk '!/^#/ { if ($7 == "DEL") { print $1"\t"$2"\t"$5"\tBreakdancer" } }' $BREAKDANCER_OUTDIR/$chr.out > $WORKDIR/breakdancer/$chr.bed
   [ -n "$CNVNATOR_OUTDIR" ] && awk '!/^#/ { if ($1 != "deletion") next; split($2, chr_bp_split, ":"); split(chr_bp_split[2], bps, "-"); print chr_bp_split[1]"\t"bps[1]"\t"bps[2]"\tCnvnator" }' $CNVNATOR_OUTDIR/$chr.out > $WORKDIR/cnvnator/$chr.bed
-  [ -n "$BREAKSEQ_OUTDIR" ] && awk -v chr=$chr '{if ($1 == chr && $3 == "Deletion") print $1"\t"$4"\t"$5"\tBreakseq"}' $BREAKSEQ_OUTDIR/breakseq_out.gff > $WORKDIR/breakseq/$chr.unsorted.bed
+  [ -n "$BREAKSEQ_OUTDIR" ] && grep "PASS" $BREAKSEQ_OUTDIR/breakseq_out.gff | awk -v chr=$chr '{if ($1 == chr && $3 == "Deletion") print $1"\t"$4"\t"$5"\tBreakseq"}' > $WORKDIR/breakseq/$chr.unsorted.bed
   [ -n "$BREAKSEQ_OUTDIR" -a -s "$WORKDIR/breakseq/$chr.unsorted.bed" ] && bedtools sort -i $WORKDIR/breakseq/$chr.unsorted.bed > $WORKDIR/breakseq/$chr.bed
-  [ -n "$PINDEL_OUTDIR" ] && [ -s "$PINDEL_OUTDIR/$chr.out_D" ] && (grep ChrID $PINDEL_OUTDIR/$chr.out_D | awk '{print $8 "\t" $10 "\t" $11 "\tPindel" }' > $WORKDIR/pindel/$chr.bed)
+  [ -n "$PINDEL_OUTDIR" ] && [ -s "$PINDEL_OUTDIR/$chr.out_D" ] && (grep ChrID $PINDEL_OUTDIR/$chr.out_D | awk '{if ($27 >= 0) print $8 "\t" $10 "\t" $11 "\tPindel" }' > $WORKDIR/pindel/$chr.bed)
   awk -v chr=$chr '{if ($1 == chr) print $1"\t"$2"\t"$3"\tTruth"}' $WORKDIR/truth/deletions.bed > $WORKDIR/truth/deletions.$chr.bed
   [ -s "$WORKDIR/truth/deletions.$chr.bed" ] && bedtools sort -i $WORKDIR/truth/deletions.$chr.bed > $TRUTH_BED
 
@@ -139,8 +149,8 @@ for chr in $CHR_LIST; do
 
     if [ "$PRINT_CHR_HISTOGRAMS" == "true" ]; then
       echo "" >> $REPORT
-      [ -s "$WORKDIR/$tool/$chr.truth.overlap.with.$tool.bed" ] && print_overlap_counts_histogram $WORKDIR/$tool/$chr.truth.overlap.with.$tool.bed $REPORT "truth events found in $tool output"
-      [ -s "$WORKDIR/$tool/$chr.$tool.overlap.with.truth.bed" ] && print_overlap_counts_histogram $WORKDIR/$tool/$chr.$tool.overlap.with.truth.bed $REPORT "$tool events found in truth set"
+      [ -s "$WORKDIR/$tool/$chr.truth.overlap.with.$tool.bed" ] && print_overlap_counts_histogram $WORKDIR/$tool/$chr.truth.overlap.with.$tool.bed $REPORT "truth events found in $tool output" 0
+      [ -s "$WORKDIR/$tool/$chr.$tool.overlap.with.truth.bed" ] && print_overlap_counts_histogram $WORKDIR/$tool/$chr.$tool.overlap.with.truth.bed $REPORT "$tool events found in truth set" 1
       echo "" >> $REPORT
     fi
   done
@@ -156,14 +166,17 @@ for tool in $TOOLS; do
   print_overlap_counts $WORKDIR/$tool/all.truth.overlap.with.$tool.bed $REPORT "truth events found in $tool output" $MIN_SIZE $MAX_SIZE
   print_overlap_counts $WORKDIR/$tool/all.$tool.overlap.with.truth.bed $REPORT "$tool events found in truth set" $MIN_SIZE $MAX_SIZE
 
-  print_overlap_counts_histogram $WORKDIR/$tool/all.truth.overlap.with.$tool.bed $REPORT "truth events found in $tool output"
-  print_overlap_counts_histogram $WORKDIR/$tool/all.$tool.overlap.with.truth.bed $REPORT "$tool events found in truth set"
+  print_overlap_counts_histogram $WORKDIR/$tool/all.truth.overlap.with.$tool.bed $REPORT "truth events found in $tool output" 0
+  print_overlap_counts_histogram $WORKDIR/$tool/all.$tool.overlap.with.truth.bed $REPORT "$tool events found in truth set" 1
 done
 
-#echo "=====================================================================================================" >> $REPORT
-#echo "Size-based profile of SVs" >> $REPORT
-#for tool in $TOOLS; do
-#  print_overlap_counts_histogram $WORKDIR/$tool/all.truth.overlap.with.$tool.bed $REPORT "truth events found in $tool output"
-#  print_overlap_counts_histogram $WORKDIR/$tool/all.$tool.overlap.with.truth.bed $REPORT "$tool events found in truth set"
-#  echo "" >> $REPORT
-#done
+echo "Sensitivity" > $WORKDIR/report.csv
+for tool in $TOOLS; do
+  print_overlap_counts_histogram $WORKDIR/$tool/all.truth.overlap.with.$tool.bed $REPORT "truth events found in $tool output" 0 $WORKDIR/report.csv $tool
+done
+
+echo "" >> $WORKDIR/report.csv
+echo "False Discovery Rate" >> $WORKDIR/report.csv
+for tool in $TOOLS; do
+  print_overlap_counts_histogram $WORKDIR/$tool/all.$tool.overlap.with.truth.bed $REPORT "$tool events found in truth set" 1 $WORKDIR/report.csv $tool
+done

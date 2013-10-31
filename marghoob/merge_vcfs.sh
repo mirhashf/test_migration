@@ -8,7 +8,13 @@ function usage {
   exit 1
 }
 
-[ -z "$VCFS_DIR" -o -z "$OUTPUT_VCF" -o -z "$BGZIP" -o -z "$VCFTOOLS" -o -z "$VCFTOOLS" ] && usage
+[ -z "$VCFS_DIR" -o -z "$OUTPUT_VCF" ] && usage
+
+[ -z "$BGZIP" ] && BGZIP=`type -P bgzip`
+[ -z "$TABIX" ] && TABIX=`type -P tabix`
+[ -z "$VCFTOOLS" ] && VCFCONCAT=`type -P vcf-concat` || VCFCONCAT=$VCFTOOLS/bin/vcf-concat && PERL5LIB=$VCFTOOLS/perl
+
+[ -z "$BGZIP" -o -z "$TABIX" -o -z "$VCFCONCAT" ] && usage
 
 set -ex
 
@@ -18,6 +24,5 @@ for chr in `awk '{ print $1 }' $REFERENCE.fai`; do
 done
 
 echo "Concatenating vcfs from $VCFS_DIR"
-export PERL5LIB=$VCFTOOLS/perl
-$VCFTOOLS/bin/vcf-concat $file_list | $BGZIP > $OUTPUT_VCF.gz 
+$VCFCONCAT $file_list | $BGZIP > $OUTPUT_VCF.gz 
 $TABIX -f $OUTPUT_VCF.gz

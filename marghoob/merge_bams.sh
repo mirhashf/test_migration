@@ -11,4 +11,5 @@ function usage {
 set -ex
 
 bams=`ls $MAPPED_BAMS_DIR/*.bam $UNMAPPED_BAMS_DIR/*.bam`
-$SAMTOOLS merge -1 $OUTPUT_BAM $bams
+$SAMTOOLS merge -f -1 $OUTPUT_BAM $bams
+$SAMTOOLS index $OUTPUT_BAM

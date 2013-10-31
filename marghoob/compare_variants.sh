@@ -24,7 +24,7 @@ function merge_vcfs {
 
   local file_list=
   for chr in `awk '{ print $1 }' $reference.fai`; do
-    [ -e "$vcfdir/$chr.vcf.gz" ] && file_list="$vcfdir/$chr.vcf.gz $file_list"
+    [ -e "$vcfdir/$chr.vcf.gz" ] && file_list="$file_list $vcfdir/$chr.vcf.gz"
   done
 
   echo "Concatening vcfs from $vcfdir"
