@@ -1,272 +1,209 @@
-﻿<!DOCTYPE html>
-<html ng-app="SandBox">
-<head>
-    <title>Detail Admin - Home</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- bootstrap -->
-    <link href="../../styles/lib/bootstrap/bootstrap.css" rel="stylesheet" />
-    <link href="../../styles/lib/bootstrap/bootstrap-overrides.css" type="text/css" rel="stylesheet" />
-
-    <!-- libraries -->
-    <link href="../../styles/lib/jquery/jquery-ui-1.10.2.custom.css" rel="stylesheet" type="text/css" />
-    <link href="../../styles/lib/font-awesome.css" type="text/css" rel="stylesheet" />
-
-    <link href="../../styles/lib/jquery/jquery.dataTables.css" type="text/css" rel="stylesheet" />
-
-    <!-- this page specific styles -->
-    <link rel="stylesheet" href="../../styles/compiled/datatables.css" type="text/css" media="screen" />
-
-    <!-- global styles -->
-    <link rel="stylesheet" type="text/css" href="../../styles/compiled/common/layout.css">
-    <link rel="stylesheet" type="text/css" href="../../styles/compiled/common/elements.css">
-    <link rel="stylesheet" type="text/css" href="../../styles/compiled/common/icons.css">
-
-    <!-- this page specific styles -->
-    <link rel="stylesheet" href="../../styles/compiled/index.css" type="text/css" media="screen" />
-    <link rel="stylesheet" href="../../styles/compiled/signin.css" type="text/css" media="screen" />
-    
-
-    <!-- open sans font -->
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-
-    <!-- lato font -->
-    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,900,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css'>
-
-    <!--[if lt IE 9]>
-        <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-</head>
-<body ng-view class="login-bg">
-    <div ng-controller="CommonCtrl">
-        <!-- navbar -->
-        <header class="navbar navbar-inverse" role="banner">
-            <div class="navbar-header">
-                <button class="navbar-toggle" type="button" data-toggle="collapse" id="menu-toggler">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="index.html">
-                    <img src="../../img/logo.png"></a>
-            </div>
-            <ul class="nav navbar-nav pull-right hidden-xs">
-
-                <li class="notification-dropdown hidden-xs hidden-sm">
-                    <a href="#" class="trigger">
-                        <i class="icon-warning-sign"></i>
-                        <span class="count">8</span>
-                    </a>
-                </li>
-                <li class="settings hidden-xs hidden-sm">
-                    <a href="personal-info.html" role="button">
-                        <i class="icon-cog"></i>
-                    </a>
-                </li>
-                <li class="settings hidden-xs hidden-sm">
-                    <a href="signin.html" role="button">
-                        <i class="icon-share-alt"></i>
-                    </a>
-                </li>
-            </ul>
-        </header>
-        <!-- end navbar -->
-
-        <!-- sidebar -->
-        <div id="sidebar-nav">
-            <ul id="dashboard-menu">
-                <li class="active">
-                    <div class="pointer">
-                        <div class="arrow"></div>
-                        <div class="arrow_border"></div>
-                    </div>
-                    <a href="index.html">
-                        <i class="icon-home"></i>
-                        <span>Feed</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="chart-showcase.html">
-                        <i class="icon-beaker"></i>
-                        <span>Data</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="chart-showcase.html">
-                        <i class="icon-signal"></i>
-                        <span>Analyze</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="chart-showcase.html">
-                        <i class="icon-globe"></i>
-                        <span>Resources</span>
-                    </a>
-                </li>
-
-                <li>
-                    <a href="gallery.html">
-                        <i class="icon-cog"></i>
-                        <span>Settings</span>
-                    </a>
-                </li>
-            </ul>
+﻿<div ng-controller="CommonCtrl">
+    <!-- navbar -->
+    <header class="navbar navbar-inverse" role="banner">
+        <div class="navbar-header">
+            <button class="navbar-toggle" type="button" data-toggle="collapse" id="menu-toggler">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="index.html">
+                <img src="../../img/logo.png"></a>
         </div>
-        <!-- end sidebar -->
+        <ul class="nav navbar-nav pull-right hidden-xs">
 
+            <li class="notification-dropdown hidden-xs hidden-sm">
+                <a href="#" class="trigger">
+                    <i class="icon-warning-sign"></i>
+                    <span class="count">8</span>
+                </a>
+            </li>
+            <li class="settings hidden-xs hidden-sm">
+                <a href="personal-info.html" role="button">
+                    <i class="icon-cog"></i>
+                </a>
+            </li>
+            <li class="settings hidden-xs hidden-sm">
+                <a ng-click="logout()" href="" role="button">
+                    <i class="icon-share-alt"></i>
+                </a>
+            </li>
+        </ul>
+    </header>
+    <!-- end navbar -->
 
-        <!-- main container -->
-        <div class="content">
-            <!-- upper main stats -->
-            <div id="main-stats">
-                <div class="row stats-row">
-                    <div class="col-md-3 col-sm-3 stat">
-                        <div class="data">
-                            <span class="number">2457</span>
-                            Samples
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-sm-3 stat">
-                        <div class="data">
-                            <span class="number">3240</span>
-                            Queries
-                        </div>
-                    </div>
+    <!-- sidebar -->
+    <div id="sidebar-nav">
+        <ul id="dashboard-menu">
+            <li class="active">
+                <div class="pointer">
+                    <div class="arrow"></div>
+                    <div class="arrow_border"></div>
                 </div>
-            </div>
-            <!-- end upper main stats -->
+                <a href="index.html">
+                    <i class="icon-home"></i>
+                    <span>Feed</span>
+                </a>
+            </li>
+            <li>
+                <a href="chart-showcase.html">
+                    <i class="icon-beaker"></i>
+                    <span>Data</span>
+                </a>
+            </li>
+            <li>
+                <a href="chart-showcase.html">
+                    <i class="icon-signal"></i>
+                    <span>Analyze</span>
+                </a>
+            </li>
+            <li>
+                <a href="chart-showcase.html">
+                    <i class="icon-globe"></i>
+                    <span>Resources</span>
+                </a>
+            </li>
 
-
-            <div id="pad-wrapper" class="datatables-page">
-
-
-                <div class="row">
-
-
-                    <div class="col-md-12">
-                        <div class="row">
-                            <div class="col-md-8">
-                                <h4 class="title">Data <small>Imported datasets.</small>
-                                </h4>
-                            </div>
-                            <div class="col-md-4 text-right">
-                                <div class="btn btn-success title"><i class="icon-cloud-upload"></i>Upload Data</div>
-                            </div>
-                        </div>
-                        <table cellpadding="0" cellspacing="0" border="0" class="" id="example">
-                            <thead>
-                                <tr role="row">
-                                    <th tabindex="0" rowspan="1" colspan="1">Dataset
-                                    </th>
-                                    <th tabindex="0" rowspan="1" colspan="1">Status
-                                    </th>
-                                    <th tabindex="0" rowspan="1" colspan="1">Upload Date
-                                    </th>
-                                    <th tabindex="0" rowspan="1" colspan="1">Tags
-                                    </th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
-                                <tr>
-                                    <td>Amir's DNA</td>
-                                    <td><span class="label label-success">Processed</span></td>
-                                    <td class="center">10/23/2013</td>
-                                    <td class="center">4
-                                        <ul class="actions">
-                                            <li><i class="table-edit"></i></li>
-                                            <li class="last"><i class="table-delete"></i></li>
-                                        </ul>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Snyder DNA</td>
-                                    <td><span class="label label-warning">Failed Processing!</span></td>
-                                    <td class="center">10/23/2013</td>
-                                    <td class="center">5
-                                        <ul class="actions">
-                                            <li><i class="table-edit"></i></li>
-                                            <li class="last"><i class="table-delete"></i></li>
-                                        </ul>
-
-                                    </td>
-
-                                </tr>
-
-                                <tr>
-                                    <td>Amir's RNA</td>
-                                    <td><span class="label label-info">Processing...</span></td>
-                                    <td class="center">10/23/2013</td>
-                                    <td class="center">5
-
-                                        <ul class="actions">
-                                            <li><i class="table-edit"></i></li>
-                                            <li class="last"><i class="table-delete"></i></li>
-                                        </ul>
-                                    </td>
-
-                                </tr>
-                                <tr>
-                                    <td>Amir's DNA</td>
-                                    <td><span class="label label-success">Processed</span></td>
-                                    <td class="center">10/23/2013</td>
-                                    <td class="center">4
-                                        <ul class="actions">
-                                            <li><i class="table-edit"></i></li>
-                                            <li class="last"><i class="table-delete"></i></li>
-                                        </ul>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Snyder DNA</td>
-                                    <td><span class="label label-warning">Failed Processing!</span></td>
-                                    <td class="center">10/23/2013</td>
-                                    <td class="center">5
-                                        <ul class="actions">
-                                            <li><i class="table-edit"></i></li>
-                                            <li class="last"><i class="table-delete"></i></li>
-                                        </ul>
-
-                                    </td>
-
-                                </tr>
-                            </tbody>
-                        </table>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- scripts -->
-        <script src="http://code.jquery.com/jquery-latest.js"></script>
-        <script src="../../scripts/libs/bootstrap/bootstrap.min.js"></script>
-        <script src="../../scripts/libs/jquery/jquery-ui-1.10.2.custom.min.js"></script>
-        <!-- knob -->
-        <script src="../../scripts/libs/theme.js"></script>
-
-        <script src="../../scripts/libs/jquery/jquery.dataTables.js"></script>
-
-
-        <script src="../../scripts/libs/angular/angular.js"></script>
-        <script src="../../scripts/libs/angular/angular-resource.js"></script>
-        <script src="../../scripts/libs/angular/angular-cookies.js"></script>
-
-        <script src="../../scripts/custom/routingConfig.js"></script>
-        <script src="../../scripts/custom/app.js"></script>
-        <script src="../../scripts/custom/services/services.js"></script>
-        <script src="../../scripts/custom/controllers/commonCtrl.js"></script>
-        <script src="../../scripts/custom/controllers/signinCtrl.js"></script>
-
-        <script type="text/javascript">
-            $(document).ready(function () {
-                $('#example').dataTable({
-                    "sPaginationType": "full_numbers"
-                });
-            });
-        </script>
+            <li>
+                <a href="gallery.html">
+                    <i class="icon-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </li>
+        </ul>
     </div>
-</body>
-</html>
+    <!-- end sidebar -->
+
+
+    <!-- main container -->
+    <div class="content">
+        <!-- upper main stats -->
+        <div id="main-stats">
+            <div class="row stats-row">
+                <div class="col-md-3 col-sm-3 stat">
+                    <div class="data">
+                        <span class="number">2457</span>
+                        Samples
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-3 stat">
+                    <div class="data">
+                        <span class="number">3240</span>
+                        Queries
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end upper main stats -->
+
+
+        <div id="pad-wrapper" class="datatables-page">
+
+
+            <div class="row">
+
+
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h4 class="title">Data <small>Imported datasets.</small>
+                            </h4>
+                        </div>
+                        <div class="col-md-4 text-right">
+                            <div class="btn btn-success title"><i class="icon-cloud-upload"></i>Upload Data</div>
+                        </div>
+                    </div>
+                    <table cellpadding="0" cellspacing="0" border="0" class="" id="example">
+                        <thead>
+                            <tr role="row">
+                                <th tabindex="0" rowspan="1" colspan="1">Dataset
+                                </th>
+                                <th tabindex="0" rowspan="1" colspan="1">Status
+                                </th>
+                                <th tabindex="0" rowspan="1" colspan="1">Upload Date
+                                </th>
+                                <th tabindex="0" rowspan="1" colspan="1">Tags
+                                </th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td>Amir's DNA</td>
+                                <td><span class="label label-success">Processed</span></td>
+                                <td class="center">10/23/2013</td>
+                                <td class="center">4
+                                        <ul class="actions">
+                                            <li><i class="table-edit"></i></li>
+                                            <li class="last"><i class="table-delete"></i></li>
+                                        </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Snyder DNA</td>
+                                <td><span class="label label-warning">Failed Processing!</span></td>
+                                <td class="center">10/23/2013</td>
+                                <td class="center">5
+                                        <ul class="actions">
+                                            <li><i class="table-edit"></i></li>
+                                            <li class="last"><i class="table-delete"></i></li>
+                                        </ul>
+
+                                </td>
+
+                            </tr>
+
+                            <tr>
+                                <td>Amir's RNA</td>
+                                <td><span class="label label-info">Processing...</span></td>
+                                <td class="center">10/23/2013</td>
+                                <td class="center">5
+
+                                        <ul class="actions">
+                                            <li><i class="table-edit"></i></li>
+                                            <li class="last"><i class="table-delete"></i></li>
+                                        </ul>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td>Amir's DNA</td>
+                                <td><span class="label label-success">Processed</span></td>
+                                <td class="center">10/23/2013</td>
+                                <td class="center">4
+                                        <ul class="actions">
+                                            <li><i class="table-edit"></i></li>
+                                            <li class="last"><i class="table-delete"></i></li>
+                                        </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Snyder DNA</td>
+                                <td><span class="label label-warning">Failed Processing!</span></td>
+                                <td class="center">10/23/2013</td>
+                                <td class="center">5
+                                        <ul class="actions">
+                                            <li><i class="table-edit"></i></li>
+                                            <li class="last"><i class="table-delete"></i></li>
+                                        </ul>
+
+                                </td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#example').dataTable({
+                "sPaginationType": "full_numbers"
+            });
+        });
+    </script>

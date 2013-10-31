@@ -1,52 +1,24 @@
-﻿<!--<!DOCTYPE html>
-    <html>
-    <head>
-        <title>Detail Admin - Sign in</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-        <link href="../../styles/lib/bootstrap/bootstrap.css" rel="stylesheet">
-        <link href="../../styles/lib/bootstrap/bootstrap-overrides.css" type="text/css" rel="stylesheet">
-
-        <link rel="stylesheet" type="text/css" href="../../styles/compiled/common/layout.css">
-        <link rel="stylesheet" type="text/css" href="../../styles/compiled/common/elements.css">
-        <link rel="stylesheet" type="text/css" href="../../styles/compiled/common/icons.css">
-
-        <link rel="stylesheet" type="text/css" href="../../styles/lib/font-awesome.css">
-
-        <link rel="stylesheet" href="../../styles/compiled/signin.css" type="text/css" media="screen" />
-
-        <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-    </head>
-    <body class="login-bg">-->
-<div ng-controller="SigninCtrl" class="login-wrapper">
-    <a href="../index.html">
+﻿<div ng-controller="SigninCtrl" class="login-wrapper">
+    <a ng-click="redirectToIndex()" href="">
         <img class="logo" src="../../img/logo-white.png">
     </a>
 
     <div class="box">
         <div class="content-wrap">
             <h6>Log in</h6>
-            <input class="form-control" type="text" placeholder="E-mail address">
-            <input class="form-control" type="password" placeholder="Your password">
-            <!--
-                <a href="#" class="forgot">Forgot password?</a>
-                <div class="remember">
-                    <input id="remember-me" type="checkbox">
-                    <label for="remember-me">Remember me</label>
-                </div>
-                -->
-            <a class="btn-glow primary login">Log in</a>
+            <input class="form-control" type="text" placeholder="E-mail address" ng-model="email">
+            <input class="form-control" type="password" placeholder="Your password" ng-model="password">
+
+            <div class="alert alert-danger" ng-show="isShow">{{message}}</div>
+
+            <a class="btn-glow primary login" ng-click="signin()">Log in</a>
         </div>
     </div>
 
     <div class="no-account">
-        <p>Don't have an account?</p>
+        <a ng-click="redirectToSignup()" href="">
+            <p>Don't have an account?</p>
+        </a>
         <a href="mailto:info@binatechnologies.com">Contact Bina!</a>
     </div>
 </div>
-<!--    <script src="../../scripts/libs/jquery/jquery-ui-1.10.2.custom.min.js"></script>
-    <script src="../../scripts/libs/bootstrap/bootstrap.min.js"></script>
-    <script src="../../scripts/libs/theme.js"></script>
-</body>
-</html>-->

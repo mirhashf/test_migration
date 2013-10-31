@@ -1,19 +1,78 @@
 ﻿(function (exports) {
 
-    var userRoles = {
-        publicRole: 1, // 001
-        userRole: 2, // 010
-        adminRole: 4 // 100
+    var config = {
+        roles: [
+            'public',
+            'user',
+            'admin'],
+        accessLevels: {
+            'public': "*",
+            'anon': ['public'],
+            'user': ['user', 'admin'],
+            'admin': ['admin']
+        }
     };
 
-    exports.userRoles = userRoles;
-    exports.accessLevels = {
-        publicLevel: userRoles.publicRole | // 111
-            userRoles.userRole |
-            userRoles.adminRole,
-        anonLevel: userRoles.publicRole, // 001
-        userLevel: userRoles.userRole | // 110
-            userRoles.adminRole,
-        adminLevel: userRoles.adminRole // 100
-    };
+    exports.userRoles = buildRoles(config.roles);
+    exports.accessLevels = buildAccessLevels(config.accessLevels, exports.userRoles);
+
+    function buildRoles(roles) {
+
+        var bitMask = "01";
+        var userRoles = {};
+
+        for (var role in roles) {
+            var intCode = parseInt(bitMask, 2);
+            userRoles[roles[role]] = {
+                bitMask: intCode,
+                title: roles[role]
+            };
+            bitMask = (intCode << 1).toString(2);
+        }
+
+        return userRoles;
+    }
+
+    function buildAccessLevels(accessLevelDeclarations, userRoles) {
+
+        var accessLevels = {};
+        for (var level in accessLevelDeclarations) {
+
+            if (typeof accessLevelDeclarations[level] == 'string') {
+                if (accessLevelDeclarations[level] == '*') {
+                    var resultBitMask = '';
+
+                    for (var role in userRoles) {
+                        resultBitMask += "1";
+                    }
+                    //accessLevels[level] = parseInt(resultBitMask, 2);
+                    accessLevels[level] = {
+                        bitMask: parseInt(resultBitMask, 2),
+                        title: accessLevelDeclarations[level]
+                    };
+                } else {
+                    console.log("Access Control Error: Could not parse '" + accessLevelDeclarations[level] + "' as access definition for level '" + level + "'");
+                }
+
+            }
+            else {
+                var resultBitMask = 0;
+
+                for (var role in accessLevelDeclarations[level]) {
+                    if (userRoles.hasOwnProperty(accessLevelDeclarations[level][role])) {
+                        resultBitMask = resultBitMask | userRoles[accessLevelDeclarations[level][role]].bitMask;
+                    } else {
+                        console.log("Access Control Error: Could not find role '" + accessLevelDeclarations[level][role] + "' in registered roles while building access for '" + level + "'");
+                    }
+                }
+                accessLevels[level] = {
+                    bitMask: resultBitMask,
+                    title: accessLevelDeclarations[level][role]
+                };
+            }
+        }
+
+        return accessLevels;
+    }
+
 })(typeof exports === 'undefined' ? this['routingConfig'] = {} : exports);

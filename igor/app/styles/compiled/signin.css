@@ -91,6 +91,9 @@
   font-size: 13px;
   padding: 8px 30px;
 }
+.login-wrapper .box .alert {
+  display: block;
+}
 .login-wrapper .no-account {
   margin: 0 auto;
   float: none;

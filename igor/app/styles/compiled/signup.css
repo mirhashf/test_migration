@@ -145,6 +145,10 @@ body {
   border-bottom-color: #000;
 }
 
+.login-wrapper .alert {
+  display: inline-block;
+}
+
 /* responsive */
 @media (max-width: 767px) {
   .login-wrapper .box {

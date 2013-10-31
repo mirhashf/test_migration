@@ -1,62 +1,72 @@
 ﻿(function () {
     'use strict';
 
-    app.factory('Auth', function ($http, $cookieStore) {
-        var accessLevels = routingConfig.accessLevels
-            , userRoles = routingConfig.userRoles
-            , currentUser = $cookieStore.get('user') || { username: '', role: userRoles.public };
-
-        $cookieStore.remove('user');
-
-        function changeUser(user) {
-            _.extend(currentUser, user);
-        };
-
+    app.factory('messegesService', function () {
         return {
-            authorize: function (accessLevel, role) {
-                if (role === undefined)
-                    role = currentUser.role;
+            getMessage: function (type, status) {
+                var messages = this[type].filter(function (item) {
+                    return item.status == status;
+                });
 
-                return accessLevel.bitMask & role.bitMask;
+                return (messages[0] && messages[0].message) || "";
             },
-            isLoggedIn: function (user) {
-                if (user === undefined)
-                    user = currentUser;
-                return user.role.title == userRoles.user.title || user.role.title == userRoles.admin.title;
-            },
-            register: function (user, success, error) {
-                $http.post('/signin', user).success(function (res) {
-                    changeUser(res);
-                    success();
-                }).error(error);
-            },
-            login: function (user, success, error) {
-                $http.post('/signin', user).success(function (user) {
-                    changeUser(user);
-                    success(user);
-                }).error(error);
-            },
-            logout: function (success, error) {
-                $http.post('/signin').success(function () {
-                    changeUser({
-                        username: '',
-                        role: userRoles.public
-                    });
-                    success();
-                }).error(error);
-            },
-            accessLevels: accessLevels,
-            userRoles: userRoles,
-            user: currentUser
+            register: [{
+                status: 422,
+                message: "Invalid email or password does not match criteria"
+            }, {
+                status: 409,
+                message: "email already exists"
+            }],
+            login: [{
+                status: 401,
+                message: "user or password is wrong"
+            }]
         };
     });
 
-    app.factory('Users', function ($http) {
+    app.factory('authenticationService', ['$http', '$cookieStore', '$location', function ($http, $cookieStore, $location) {
         return {
-            getAll: function (success, error) {
-                $http.get('/signin').success(success).error(error);
+            isLogged: function (fnSuccess, fnError) {
+                $http({ method: 'GET', url: 'http://ec2-54-212-37-121.us-west-2.compute.amazonaws.com:8080/api/v1/session/user' })
+                    .success(function (data, status, headers, config) {
+                        fnSuccess && fnSuccess(data, status, headers, config);
+                        currentUser = true;
+                    })
+                    .error(function (data, status, headers, config) {
+                        fnError && fnError(data, status, headers, config);
+                        currentUser = false;
+                    });
+            },
+
+            login: function (dataJson, fnError) {
+                $http({ method: 'POST', url: 'http://ec2-54-212-37-121.us-west-2.compute.amazonaws.com:8080/api/v1/session', data: dataJson })
+                    .success(function (data, status, headers, config) {
+                        $location.path("/default");
+                    })
+                    .error(function (data, status, headers, config) {
+                        fnError && fnError(data, status, headers, config);
+                    });
+            },
+
+            register: function (dataJson, fnError) {
+                $http({ method: 'POST', url: 'http://ec2-54-212-37-121.us-west-2.compute.amazonaws.com:8080/api/v1/user', data: dataJson })
+                    .success(function (data, status, headers, config) {
+                        $location.path("/signin");
+                    })
+                    .error(function (data, status, headers, config) {
+                        fnError && fnError(data, status, headers, config);
+                    });
+            },
+
+            logout: function (fnSuccess, fnError) {
+                $http({ method: 'DELETE', url: 'http://ec2-54-212-37-121.us-west-2.compute.amazonaws.com:8080/api/v1/session', data: '', headers: { "Content-Type": 'application/json' } })
+                    .success(function (data, status, headers, config) {
+                        $location.path("/signin");
+                    })
+                    .error(function (data, status, headers, config) {
+                        fnError && fnError(data, status, headers, config);
+                    });
             }
         };
-    });
-
+    }]);
 })();
