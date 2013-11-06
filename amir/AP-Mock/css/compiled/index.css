@@ -9,7 +9,7 @@
 }
 #main-stats .stat {
   text-align: right;
-  padding: 15px 0px 20px 0px;
+  padding: 25px 0px 30px 0px;
   border-right: 1px solid #e8e9ee;
   position: relative;
   box-shadow: 1px 0px 0px 0px white;
@@ -39,14 +39,6 @@
   right: 50px;
 }
 
-#pad-wrapper h4.title {
-  margin-bottom: 45px;
-}
-
-#pad-wrapper div.title {
-  margin-bottom: 45px;
-}
-
 .section {
   border-top: 1px solid #edeff1;
   margin-top: 100px;
@@ -65,12 +57,6 @@
   font-size: 12px;
   font-family: "Open Sans", Arial;
   color: #9da3a9;
-}
-
-ul.actions {
-margin: 5px 0 0 0;
-padding: 0;
-float: right;
 }
 
 /* UI elements section */
@@ -180,20 +166,20 @@ float: right;
 .table-products .table .img img {
   margin-top: 4px;
 }
- ul.actions {
+.table-products .table ul.actions {
   margin: 5px 0 0 0;
   padding: 0;
   float: right;
 }
-ul.actions li {
+.table-products .table ul.actions li {
   display: inline;
   border-right: 1px solid #d0dde9;
   padding: 5px 6px 0px 3px;
 }
- ul.actions li.last {
+.table-products .table ul.actions li.last {
   border: 0 none;
 }
-ul.actions i {
+.table-products .table ul.actions i {
   cursor: pointer;
   opacity: 0.6;
   transition: opacity .1s linear;
@@ -201,7 +187,7 @@ ul.actions i {
   -webkit-transition: opacity .1s linear;
   -o-transition: opacity .1s linear;
 }
- ul.actions i:hover {
+.table-products .table ul.actions i:hover {
   opacity: 1;
 }
 .table-products .label {

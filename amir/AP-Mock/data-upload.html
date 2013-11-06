@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Upload Dataset</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- bootstrap -->
+    <link href="css/bootstrap/bootstrap.css" rel="stylesheet" />
+    <link href="css/bootstrap/bootstrap-overrides.css" type="text/css" rel="stylesheet" />
+
+    <!-- libraries -->
+    <link href="css/lib/jquery-ui-1.10.2.custom.css" rel="stylesheet" type="text/css" />
+    <link href="css/lib/font-awesome.css" type="text/css" rel="stylesheet" />
+    <link href="css/lib/uniform.default.css" type="text/css" rel="stylesheet">
+    <link href="css/lib/select2.css" type="text/css" rel="stylesheet">
+    <link href="css/lib/bootstrap-tokenfield.css" rel="stylesheet" type="text/css" />
+
+
+    <!-- this page specific styles -->
+    <link rel="stylesheet" href="css/compiled/datatables.css" type="text/css" media="screen" />
+
+
+    <!-- global styles -->
+    <link rel="stylesheet" type="text/css" href="css/compiled/layout.css">
+    <link rel="stylesheet" type="text/css" href="css/compiled/elements.css">
+    <link rel="stylesheet" type="text/css" href="css/compiled/icons.css">
+    <link rel="stylesheet" type="text/css" href="css/compiled/bina.css">
+
+    <!-- this page specific styles -->
+    <link rel="stylesheet" href="css/compiled/index.css" type="text/css" media="screen" />
+
+    <!-- open sans font -->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    <!-- lato font -->
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,900,300italic,400italic,700italic,900italic' rel='stylesheet' type='text/css'>
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+      <![endif]-->
+</head>
+
+<body>
+    <!-- navbar -->
+    <header class="navbar navbar-inverse" role="banner">
+        <div class="navbar-header">
+            <button class="navbar-toggle" type="button" data-toggle="collapse" id="menu-toggler">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="index.html">
+                <img src="img/logo.png">
+            </a>
+        </div>
+        <ul class="nav navbar-nav pull-right hidden-xs">
+
+            <li class="notification-dropdown hidden-xs hidden-sm">
+                <a href="#" class="trigger">
+                    <i class="icon-warning-sign"></i>
+                    <span class="count">8</span>
+                </a>
+            </li>
+            <li class="settings hidden-xs hidden-sm">
+                <a href="personal-info.html" role="button">
+                    <i class="icon-cog"></i>
+                </a>
+            </li>
+            <li class="settings hidden-xs hidden-sm">
+                <a href="signin.html" role="button">
+                    <i class="icon-share-alt"></i>
+                </a>
+            </li>
+        </ul>
+    </header>
+    <!-- end navbar -->
+
+    <!-- sidebar -->
+    <div id="sidebar-nav">
+        <ul id="dashboard-menu">
+            <li class="active">
+                <div class="pointer">
+                    <div class="arrow"></div>
+                    <div class="arrow_border"></div>
+                </div>
+                <a href="index.html">
+                    <i class="icon-home"></i>
+                    <span>Feed</span>
+                </a>
+            </li>
+            <li>
+                <a href="chart-showcase.html">
+                    <i class="icon-beaker"></i>
+                    <span>Data</span>
+                </a>
+            </li>
+            <li>
+                <a href="chart-showcase.html">
+                    <i class="icon-signal"></i>
+                    <span>Analyze</span>
+                </a>
+            </li>
+            <li>
+                <a href="chart-showcase.html">
+                    <i class="icon-globe"></i>
+                    <span>Resources</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="gallery.html">
+                    <i class="icon-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <!-- end sidebar -->
+
+
+    <!-- main container -->
+    <div class="content">
+        <div id="pad-wrapper" class="upload-page">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h4 class="title">
+                                <strong>Data</strong>/ Upload Data
+                                <small>Upload a new dataset to your Bina Platform.</small>
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="row">
+                                <div class="well upload-area col-md-11">
+                                    <i class="icon-cloud-upload upload-area-icon"></i>
+                                    <div class="upload-area-title">Select files to upload.</div>
+
+                                    <div class="upload-area-detail">Or drag and drop files</div>
+                                </div>
+                            </div>
+                            
+                            <div class="row file-area">
+                                <div class="col-md-12 row">
+                                    <div class="progress progress-striped thin">
+                                        <div class="progress-bar-success progress-bar" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%">
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-12 row">
+                                    <i class="icon-remove"></i> Filename.vcf (200MB)
+                                </div>
+                            </div>
+                        
+                            <div class="row file-area">
+                                <div class="col-md-12 row">
+                                    <div class="progress progress-striped thin">
+                                        <div class="progress-bar-success progress-bar" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%">
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-12 row">
+                                    <i class="icon-remove"></i> Filename.vcf (20MB)
+                                </div>
+                            </div>
+                        
+
+
+
+                        </div>
+                        <div class="col-md-8">
+                            <div class="form-wrapper col-special">
+
+                                <form>
+
+                                    <div class="field-box">
+                                        <label>Dataset Name:</label>
+                                        <div class="col-md-7">
+                                            <input class="form-control inline-input" placeholder="A descriptive name about your dataset." type="text">
+                                        </div>
+                                    </div>
+                                    <div class="field-box">
+                                        <label>Reference Genome:</label>
+                                        <div class="col-md-7">
+                                            <select style="width:250px" class="select2">
+                                                <option value="AK">Hg19</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="field-box">
+                                        <label>Tags</label>
+                                        <div class="col-md-7">
+                                            <input class="form-control inline-input tag-selector" type="text" placeholder="Comma separated tags about this dataset.">
+                                        </div>
+                                    </div>
+
+                                    <div class="field-box">
+                                        <label>Metadata:</label>
+                                        <div class="col-md-7">
+                                            <textarea class="form-control" rows="4"></textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="filed-box">
+                                        <label></label>
+                                        <div class="col-md-7">
+                                            <input type="button" class="btn-glow primary" value="Save Dataset">
+                                            <span>OR</span>
+                                            <input type="reset" value="Cancel" class="reset">
+                                        </div>
+
+                                    </div>
+
+
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- scripts -->
+        <script src="http://code.jquery.com/jquery-latest.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/jquery-ui-1.10.2.custom.min.js"></script>
+        <script src="js/theme.js"></script>
+        <script src="js/bootstrap-tokenfield.js"></script>
+
+
+        <script src="js/jquery.uniform.min.js"></script>
+        <script src="js/select2.min.js"></script>
+        <!-- call this page plugins -->
+        <script type="text/javascript">
+        $(function() {
+            // add uniform plugin styles to html elements
+            $("input:checkbox, input:radio").uniform();
+
+            // select2 plugin for select elements
+            $(".select2").select2({
+                placeholder: "Select reference genome used."
+            });
+
+            $(".tag-selector").tokenfield();
+
+        });
+        </script>
+</body>
+
+</html>
