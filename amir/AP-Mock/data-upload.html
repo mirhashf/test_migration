@@ -120,6 +120,11 @@
     </div>
     <!-- end sidebar -->
 
+    <!-- hidden upload form -->
+    <form name="upload-form">
+        <input type="file" id="upload" name="upload" style="visibility: hidden; width: 1px; height: 1px" multiple />
+    </form>
+
 
     <!-- main container -->
     <div class="content">
@@ -256,6 +261,8 @@
             });
 
             $(".tag-selector").tokenfield();
+
+            $(".upload-area").click(function() {$("#upload").click(); return false;});
 
         });
         </script>
