@@ -11,6 +11,7 @@ export PATH=$HOME/vcftools_0.1.11/bin:$JAVA_HOME/bin:$PATH
 export GATK_JAR=$HOME/lake/opt/gatk-2.7-2-g6bda569/GenomeAnalysisTK.jar
 export SNPSIFT=$HOME/lake/opt/snpEff/SnpSift.jar
 dbsnp=$HOME/lake/users/marghoob/GATK-bundle-hg19/dbsnp_137.hg19.vcf
+dbsnp=$HOME/river/users/marghoob/cosmic/Cosmic.hg19.vcf
 reference=$HOME/lake/users/marghoob/GATK-bundle-hg19/ucsc.hg19.fa
 
 function print_abs_path {

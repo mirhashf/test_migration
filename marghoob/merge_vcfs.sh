@@ -20,9 +20,15 @@ set -ex
 
 file_list=
 for chr in `awk '{ print $1 }' $REFERENCE.fai`; do
-  [ -e "$VCFS_DIR/$chr.vcf.gz" ] && file_list="$file_list $VCFS_DIR/$chr.vcf.gz"
+  vcfgz="$VCFS_DIR/$chr.vcf.gz"
+  [ -e "$vcfgz" ] && file_list="$file_list $vcfgz"
 done
 
+[ -z "$file_list" ] && echo "No vcfs found" && exit
+
 echo "Concatenating vcfs from $VCFS_DIR"
-$VCFCONCAT $file_list | $BGZIP > $OUTPUT_VCF.gz 
+
+cat $file_list | gunzip -c | awk 'BEGIN {header_seen = 0} /^#/ {if (header_seen == 0) print $0} !/^#/ {header_seen = 1; print $0}' | bgzip > $OUTPUT_VCF.gz
+
+#$VCFCONCAT $file_list | $BGZIP > $OUTPUT_VCF.gz 
 $TABIX -f $OUTPUT_VCF.gz

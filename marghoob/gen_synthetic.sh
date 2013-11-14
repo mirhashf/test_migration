@@ -129,8 +129,8 @@ let NLANES_MINUS=NLANES-1
 
 rm -f $FASTQDIR/README
 for lane in `seq 0 $NLANES_MINUS`; do
-  echo "$DWGSIM -e $START_E,$END_E -E $START_E,$END_E -r 0 -F 0 -d 330 -s 70 -C $COVERAGE_PER_LANE -1 100 -2 100 -z $lane vcf2diploid/NA12878.fa $FASTQDIR/simulated.lane$lane" >> $FASTQDIR/README
-  $DWGSIM -e $START_E,$END_E -E $START_E,$END_E -r 0 -F 0 -d 330 -s 70 -C $COVERAGE_PER_LANE -1 100 -2 100 -z $lane vcf2diploid/NA12878.fa $FASTQDIR/simulated.lane$lane
+  echo "$DWGSIM -e $START_E,$END_E -E $START_E,$END_E -y 0.02 -r 0 -F 0 -d 330 -s 70 -C $COVERAGE_PER_LANE -1 100 -2 100 -z $lane vcf2diploid/NA12878.fa $FASTQDIR/simulated.lane$lane" >> $FASTQDIR/README
+  $DWGSIM -e $START_E,$END_E -E $START_E,$END_E -y 0.02 -r 0 -F 0 -d 330 -s 70 -C $COVERAGE_PER_LANE -1 100 -2 100 -z $lane vcf2diploid/NA12878.fa $FASTQDIR/simulated.lane$lane
   (gzip -v -1 -f $FASTQDIR/simulated.lane$lane.bwa.read1.fastq)&
   (gzip -v -1 -f $FASTQDIR/simulated.lane$lane.bwa.read2.fastq)&
   wait
