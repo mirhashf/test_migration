@@ -36,6 +36,8 @@ IGVTOOLS=$LAKE/users/marghoob/IGVTools/igvtools.jar
 DWGSIM=$LAKE/opt/dwgsim/dwgsim
 BEDTOOLS_DIR=$LAKE/opt/bedtools-2.17.0/bin/
 SAMTOOLS=$LAKE/opt/samtools/samtools
+export PATH=$LAKE/opt/tabix-0.2.6:$LAKE/opt/vcftools_0.1.11/bin:$PATH
+export PERL5LIB=$LAKE/opt/vcftools_0.1.11/perl
 
 REFERENCE=$LAKE/users/marghoob/GATK-bundle-hg19/ucsc.hg19.fa
 
