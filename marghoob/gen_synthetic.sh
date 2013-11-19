@@ -1,44 +1,39 @@
 #!/bin/bash
 
-set -ex
+set -e
 
 myname=`basename $0`
 function usage {
   echo "START_E= END_E= NLANES= TOTAL_COVERAGE= CHR_LIST= $myname"
-  echo "CHR_LIST is optional"
+  echo "CHR_LIST is optional. If it is empty, all chromosomes are simulated."
   exit 1
 }
 
-NIST=$HOME/lake/users/marghoob/NIST/NISThighConf
-GATKVCF=~/lake/users/marghoob/GATK-bundle-hg19/CEUTrio.HiSeq.WGS.b37.bestPractices.phased.hg19.vcf.gz
-DELETIONS_VCF=~/lake/users/marghoob/homes.gersteinlab.org/people/aabyzov/outbox/private/NA12878_variants/NA12878.2010_06.and.fosmid.deletions.phased.vcf
+LAKE=/net/kodiak/volumes/lake/shared
+RIVER=/net/kodial/volumes/river/shared
 
-#CHR_LIST="chr22"
-#START_E=0.0001
-#END_E=0.001
+NIST=$LAKE/users/marghoob/NIST/NISThighConf
+GATKVCF=$LAKE/users/marghoob/GATK-bundle-hg19/CEUTrio.HiSeq.WGS.b37.bestPractices.phased.hg19.vcf.gz
+DELETIONS_VCF=$LAKE/users/marghoob/homes.gersteinlab.org/people/aabyzov/outbox/private/NA12878_variants/NA12878.2010_06.and.fosmid.deletions.phased.vcf
 
-[ -z "$START_E" ] && usage
-[ -z "$END_E" ] && usage
-[ -z "$NLANES" ] && usage
-[ -z "$TOTAL_COVERAGE" ] && usage
+[ -z "$START_E" -o -z "$END_E" -o -z "$NLANES" -o -z "$TOTAL_COVERAGE" ] && usage
 
 SCRATCHDIR=$HOME/scratch/dwgsim
 WORKDIR=$PWD/work
 LOGDIR=$WORKDIR/log
-mkdir -p $WORKDIR
-mkdir -pv $SCRATCHDIR
-mkdir -pv $LOGDIR
+mkdir -pv $WORKDIR $SCRATCHDIR $LOGDIR
 
 # Tool vars
-LIFTVCF=~/git/sandbox/marghoob/lift_vcf.sh
-GATK_JAR=/home/marghoob/lake/opt/CancerAnalysisPackage-2013.2-18-g8207e53/GenomeAnalysisTK.jar
-VCF2DIPLOID=~/lake/users/marghoob/vcf2diploid/vcf2diploid.jar
-IGVTOOLS=~/lake/users/marghoob/IGVTools/igvtools.jar
-DWGSIM=~/lake/opt/dwgsim/dwgsim
-BEDTOOLS_DIR=~/lake/opt/bedtools-2.17.0/bin/
-SAMTOOLS=/usr/lib/bina/samtools/current/bin/samtools
+DIR="$( cd "$( dirname "$0" )" && pwd )"
+LIFTVCF=$DIR/lift_vcf.sh
+GATK_JAR=$LAKE/opt/CancerAnalysisPackage-2013.2-18-g8207e53/GenomeAnalysisTK.jar
+VCF2DIPLOID=$LAKE/users/marghoob/vcf2diploid/vcf2diploid.jar
+IGVTOOLS=$LAKE/users/marghoob/IGVTools/igvtools.jar
+DWGSIM=$LAKE/opt/dwgsim/dwgsim
+BEDTOOLS_DIR=$LAKE/opt/bedtools-2.17.0/bin/
+SAMTOOLS=$LAKE/opt/samtools/samtools
 
-REFERENCE=~/lake/users/marghoob/GATK-bundle-hg19/ucsc.hg19.fa
+REFERENCE=$LAKE/users/marghoob/GATK-bundle-hg19/ucsc.hg19.fa
 
 cd $WORKDIR
 
@@ -46,8 +41,6 @@ cd $WORKDIR
 if [ -z "$CHR_LIST" ]; then
   CHR_LIST=`awk '{print $1}' $REFERENCE.fai`
 fi
-
-if (( 0 )); then
 
 # Prepare the right VCF for deletions
 echo "Lifting the deletion SVs from b36 to b37 after removing records with incorrect filter and removing the END field in INFO column"
@@ -66,14 +59,16 @@ done
 wait
 
 for var in SNP INDEL; do
-  (echo "Extracting $var missed from NIST"
-  vcf-isec -c $NIST.$var.hg19.annotated.vcf.gz CEUTrio.PASS.$var.hg19.vcf.gz | bgzip > NIST.$var.missed.in.pass.vcf.gz; tabix -f NIST.$var.missed.in.pass.vcf.gz
+  (
+    echo "Extracting $var missed from NIST"
+    vcf-isec -c $NIST.$var.hg19.annotated.vcf.gz CEUTrio.PASS.$var.hg19.vcf.gz | bgzip > NIST.$var.missed.in.pass.vcf.gz; tabix -f NIST.$var.missed.in.pass.vcf.gz
 
-  echo "Extracting $var present in ALL, but not in PASS and in NIST"
-  vcf-isec CEUTrio.ALL.$var.hg19.vcf.gz NIST.$var.missed.in.pass.vcf.gz | bgzip > NIST.$var.present.in.all.vcf.gz; tabix -f NIST.$var.present.in.all.vcf.gz
+    echo "Extracting $var present in ALL, but not in PASS and in NIST"
+    vcf-isec CEUTrio.ALL.$var.hg19.vcf.gz NIST.$var.missed.in.pass.vcf.gz | bgzip > NIST.$var.present.in.all.vcf.gz; tabix -f NIST.$var.present.in.all.vcf.gz
 
-  echo "Extracting $var not present in ALL but in NIST"
-  vcf-isec -c NIST.$var.missed.in.pass.vcf.gz NIST.$var.present.in.all.vcf.gz | bgzip > NIST.$var.missed.in.all.vcf.gz; tabix -f NIST.$var.missed.in.all.vcf.gz) &
+    echo "Extracting $var not present in ALL but in NIST"
+    vcf-isec -c NIST.$var.missed.in.pass.vcf.gz NIST.$var.present.in.all.vcf.gz | bgzip > NIST.$var.missed.in.all.vcf.gz; tabix -f NIST.$var.missed.in.all.vcf.gz
+  ) &
 done
 wait
 
@@ -81,10 +76,8 @@ for vcf in *.vcf.gz; do
   (gunzip $vcf && java -Xms1g -Xmx1g -jar $IGVTOOLS index $vcf) &
 done
 wait
-fi
 
 # Generate the bedfiles from the VCFs
-if (( 0 )); then
 awk '!/^#/ {
              split($8, info_split, ";");
              svlen = 0;
@@ -120,7 +113,6 @@ cat $all_list > NA12878.fa
 $SAMTOOLS faidx NA12878.fa
 
 cd ..
-fi
 
 FASTQDIR=fastq.$START_E"_"$END_E"_"$NLANES"_"$TOTAL_COVERAGE
 mkdir -pv $FASTQDIR
@@ -131,7 +123,7 @@ rm -f $FASTQDIR/README
 for lane in `seq 0 $NLANES_MINUS`; do
   echo "$DWGSIM -e $START_E,$END_E -E $START_E,$END_E -y 0.02 -r 0 -F 0 -d 330 -s 70 -C $COVERAGE_PER_LANE -1 100 -2 100 -z $lane vcf2diploid/NA12878.fa $FASTQDIR/simulated.lane$lane" >> $FASTQDIR/README
   $DWGSIM -e $START_E,$END_E -E $START_E,$END_E -y 0.02 -r 0 -F 0 -d 330 -s 70 -C $COVERAGE_PER_LANE -1 100 -2 100 -z $lane vcf2diploid/NA12878.fa $FASTQDIR/simulated.lane$lane
-  (gzip -v -1 -f $FASTQDIR/simulated.lane$lane.bwa.read1.fastq)&
-  (gzip -v -1 -f $FASTQDIR/simulated.lane$lane.bwa.read2.fastq)&
+  gzip -v -1 -f $FASTQDIR/simulated.lane$lane.bwa.read1.fastq &>$LOGDIR/$lane.read1.gzip.log &
+  gzip -v -1 -f $FASTQDIR/simulated.lane$lane.bwa.read2.fastq &>$LOGDIR/$lane.read2.gzip.log &
   wait
 done
