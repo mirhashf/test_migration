@@ -33,13 +33,15 @@ refids=("b36" "b37" "hg18" "hg19")
 [ $(contains "${refids[@]}" $src) == "n" ] && echo "Src refname $src non-existent" && exit 1
 [ $(contains "${refids[@]}" $dst) == "n" ] && echo "Dst refname $dst non-existent" && exit 1
 
-export JAVA_HOME=$HOME/lake/opt/jdk1.7.0_25/
-export PATH=$HOME/vcftools_0.1.11/bin:$JAVA_HOME/bin:$PATH
-export GATK_DEV=/mnt/scratch0/marghoob/git/gatk-protected/
-export CHAIN_DIR=$HOME/lake/users/marghoob/ftp.broadinstitute.org/Liftover_Chain_Files/
-export b36=$HOME/lake/users/marghoob/ftp.broadinstitute.org/bundle/2.5/b36/human_b36_both
-export b37=$HOME/lake/users/marghoob/ftp.broadinstitute.org/bundle/2.5/b37/human_g1k_v37
-export hg19=$HOME/lake/users/marghoob/GATK-bundle-hg19/ucsc.hg19
+LAKE=/net/kodiak/volumes/lake/shared
+export JAVA_HOME=$LAKE/opt/jdk1.7.0_25/
+export PATH=$LAKE/opt/vcftools_0.1.11/bin:$JAVA_HOME/bin:$PATH
+export PERL5LIB=$LAKE/opt/vcftools_0.1.11/perl
+export GATK_DEV=$LAKE/users/marghoob/gatk-protected/
+export CHAIN_DIR=$LAKE/users/marghoob/ftp.broadinstitute.org/Liftover_Chain_Files/
+export b36=$LAKE/users/marghoob/ftp.broadinstitute.org/bundle/2.5/b36/human_b36_both
+export b37=$LAKE/users/marghoob/ftp.broadinstitute.org/bundle/2.5/b37/human_g1k_v37
+export hg19=$LAKE/users/marghoob/GATK-bundle-hg19/ucsc.hg19
 
 CHAIN=$CHAIN_DIR/"$src"to"$dst".chain
 

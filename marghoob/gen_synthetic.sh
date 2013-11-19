@@ -5,6 +5,10 @@ set -e
 myname=`basename $0`
 function usage {
   echo "START_E= END_E= NLANES= TOTAL_COVERAGE= CHR_LIST= $myname"
+  echo "START_E=Error rate on the first base."
+  echo "END_E=Error rate on the last base."
+  echo "NLANES=Number of lanes. NLANES pairs of FASTQs will be generated."
+  echo "TOTAL_COVERAGE=Total coverage across all lanes."
   echo "CHR_LIST is optional. If it is empty, all chromosomes are simulated."
   exit 1
 }
