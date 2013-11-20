@@ -79,7 +79,10 @@ done
 wait
 
 for vcf in *.vcf.gz; do
-  (gunzip $vcf && java -Xms1g -Xmx1g -jar $IGVTOOLS index $vcf) &
+  (
+    vcfunzipped=`basename $vcf .gz`
+    gunzip -c $vcf > $vcfunzipped && java -Xms1g -Xmx1g -jar $IGVTOOLS index $vcfunzipped
+  ) &
 done
 wait
 
