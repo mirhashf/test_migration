@@ -11,7 +11,6 @@ export PATH=$HOME/vcftools_0.1.11/bin:$JAVA_HOME/bin:$PATH
 export GATK_JAR=$HOME/lake/opt/gatk-2.7-2-g6bda569/GenomeAnalysisTK.jar
 export SNPSIFT=$HOME/lake/opt/snpEff/SnpSift.jar
 dbsnp=$HOME/lake/users/marghoob/GATK-bundle-hg19/dbsnp_137.hg19.vcf
-dbsnp=$HOME/river/users/marghoob/cosmic/Cosmic.hg19.vcf
 reference=$HOME/lake/users/marghoob/GATK-bundle-hg19/ucsc.hg19.fa
 
 function print_abs_path {
@@ -37,7 +36,7 @@ function annotate_vcf {
   local outvcf=$2
   local logfile=$3
 
-  (java  -Xmx1g -Xms1g -jar $SNPSIFT annotate $dbsnp <(gunzip -c $invcf|awk 'BEGIN{OFS="\t"} /^#/{print $0} !/^#/{printf("%s\t%s\t.",$1,$2); for(i=4;i<=NF;++i)printf("\t%s", $i);printf("\n")}') 2>$logfile | bgzip > $outvcf; tabix -f $outvcf) &
+  (java  -Xmx1g -Xms1g -jar $SNPSIFT annotate $dbsnp <(gunzip -c $invcf|awk 'BEGIN{OFS="\t"} /^#/{print $0} !/^#/{printf("%s\t%s\t.",$1,$2); for(i=4;i<=NF;++i)printf("\t%s", $i);printf("\n")}') 2>$logfile | java  -Xmx1g -Xms1g -jar $SNPSIFT varType - | bgzip > $outvcf; tabix -f $outvcf) &
 }
 
 function filter_and_select_vcf {
