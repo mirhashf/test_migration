@@ -19,6 +19,7 @@ BGZIP=$LAKE/tabix/bgzip
 TABIX=$LAKE/tabix/tabix
 BWAINDEX=$RIVER/users/marghoob/synthetic_genome/indexes/bwaindex
 HEADER=$RIVER/users/marghoob/synthetic_genome/header.sam
+SAMTOOLS=samtools
 
 myname=`basename $0`
 

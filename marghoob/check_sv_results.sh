@@ -6,7 +6,8 @@ set -e
 
 PATH=$PATH:~/lake/opt/bedtools-2.17.0/bin
 REFERENCE=~/lake/users/marghoob/GATK-bundle-hg19/ucsc.hg19.fa
-SVDELETIONS=work/deletions.hg19.vcf
+SYNTHETIC_GENOME=~/river/users/marghoob/synthetic_genome/work
+SVDELETIONS=$SYNTHETIC_GENOME/deletions.hg19.vcf
 TABIX=/usr/lib/bina/tabix/current/bin/tabix
 
 DIR="$( cd "$( dirname "$0" )" && pwd )"
@@ -123,8 +124,9 @@ function print_overlap_counts_histogram {
 
 [ -z "$BREAKDANCER_OUTDIR" -a -z "$CNVNATOR_OUTDIR" -a -z "$BREAKSEQ_GFF" -a -z "$PINDEL_OUTDIR" ] && usage
 [ -z "$WORKDIR" ] && usage
+[ -z "$IGNORE_OTHER" ] && IGNORE_OTHER=0
 
-RECIP_OVERLAP=0.5
+#RECIP_OVERLAP=0.99
 MIN_SIZE=51
 MAX_SIZE=10000000
 PRINT_CHR_STATS=false
@@ -154,22 +156,25 @@ REPORT=$WORKDIR/report.txt
 rm -f $REPORT $WORKDIR/truth/*
 
 # Convert the SV deletions file to a bedfile
-ignore_other=0
-awk -v ignore_other=$ignore_other -v min_size=$MIN_SIZE -f $DIR/sv_deletions_vcf_to_bed.awk $SVDELETIONS > $WORKDIR/truth/deletions.bed
+awk -v min_size=$MIN_SIZE -f $DIR/indels.awk <(gunzip -c $SYNTHETIC_GENOME/INDEL.merged.vcf.gz|grep -v SVLEN) | grep deletion | bedtools sort > $WORKDIR/truth/indels.bed
+awk -v ignore_other=$IGNORE_OTHER -v min_size=$MIN_SIZE -f $DIR/sv_deletions_vcf_to_bed.awk $SVDELETIONS | bedtools sort > $WORKDIR/truth/deletions.bed
+cat $WORKDIR/truth/deletions.bed $WORKDIR/truth/indels.bed | bedtools sort | uniq > $WORKDIR/truth/deletions.indels.bed
 
 echo "Generating the BED files"
 for chr in $CHR_LIST; do
   echo "Checking results for $chr"
   (
     TRUTH_BED=$WORKDIR/truth/deletions.$chr.bed
+    INDEL_BED=$WORKDIR/truth/indels.$chr.bed
 
     [ -n "$BREAKDANCER_OUTDIR" ] && awk '!/^#/ { if ($7 == "DEL") { print $1"\t"$2"\t"$5"\tBreakdancer" } }' $BREAKDANCER_OUTDIR/$chr.out > $WORKDIR/breakdancer/$chr.bed
     [ -n "$CNVNATOR_OUTDIR" ] && awk '!/^#/ { if ($1 != "deletion") next; split($2, chr_bp_split, ":"); split(chr_bp_split[2], bps, "-"); print chr_bp_split[1]"\t"bps[1]"\t"bps[2]"\tCnvnator" }' $CNVNATOR_OUTDIR/$chr.out > $WORKDIR/cnvnator/$chr.bed
-    [ -n "$BREAKSEQ_GFF" ] && (grep "PASS" $BREAKSEQ_GFF | awk -v chr=$chr '{if ($1 == chr && $3 == "Deletion") print $1"\t"$4 - 1 "\t"$5 - 1 "\tBreakseq"}' | bedtools sort > $WORKDIR/breakseq/$chr.bed)
-    [ -n "$BREAKSEQ2_OUTDIR" ] && (grep "PASS" $BREAKSEQ2_OUTDIR/breakseq_out.gff | awk -v chr=$chr '{if ($1 == chr && $3 == "Deletion") print $1"\t"$4 - 1 "\t"$5 - 1 "\tBreakseq"}' | bedtools sort > $WORKDIR/breakseq2/$chr.bed)
-    [ -n "$BREAKSEQ2_OUTDIR" ] && (cat $BREAKSEQ2_OUTDIR/breakseq_out.gff | awk -v chr=$chr '{if ($1 == chr && $3 == "Deletion") print $1"\t"$4 - 1 "\t"$5 - 1 "\tBreakseq"}' | bedtools sort > $WORKDIR/breakseq2all/$chr.bed)
+    [ -n "$BREAKSEQ_GFF" ] && (grep "PASS" $BREAKSEQ_GFF | awk -v chr=$chr '{if ($1 == chr && $3 == "Deletion") print $1"\t"$4 - 1 "\t"$5 "\tBreakseq"}' | bedtools sort > $WORKDIR/breakseq/$chr.bed)
+    [ -n "$BREAKSEQ2_OUTDIR" ] && (grep "PASS" $BREAKSEQ2_OUTDIR/breakseq_out.gff | awk -v chr=$chr '{if ($1 == chr && $3 == "Deletion") print $1"\t"$4 - 1 "\t"$5 "\tBreakseq"}' | bedtools sort > $WORKDIR/breakseq2/$chr.bed)
+    [ -n "$BREAKSEQ2_OUTDIR" ] && (cat $BREAKSEQ2_OUTDIR/breakseq_out.gff | awk -v chr=$chr '{if ($1 == chr && $3 == "Deletion") print $1"\t"$4 - 1 "\t"$5 "\tBreakseq"}' | bedtools sort > $WORKDIR/breakseq2all/$chr.bed)
     [ -n "$PINDEL_OUTDIR" ] && [ -s "$PINDEL_OUTDIR/$chr.out_D" ] && (grep ChrID $PINDEL_OUTDIR/$chr.out_D | awk -v minsize=$MIN_SIZE '{if ($27 >= 0 && $11 - $10 -1 >= minsize) print $8 "\t" $10 "\t" $11-1 "\tPindel" }' | bedtools sort > $WORKDIR/pindel/$chr.bed)
-    awk -v chr=$chr '{if ($1 == chr) print $1"\t"$2 - 1 "\t"$3 - 1 "\tTruth"}' $WORKDIR/truth/deletions.bed | bedtools sort > $TRUTH_BED
+    awk -v chr=$chr '{if ($1 == chr) print $1"\t"$2 "\t"$3 "\tTruth"}' $WORKDIR/truth/deletions.bed | bedtools sort > $TRUTH_BED
+    awk -v chr=$chr '{if ($1 == chr) print $1"\t"$2 "\t"$3 "\tTruth"}' $WORKDIR/truth/deletions.indels.bed | bedtools sort > $INDEL_BED
   ) &
 done
 wait
@@ -177,6 +182,7 @@ wait
 echo "Performing comparisons"
 for chr in $CHR_LIST; do
   TRUTH_BED=$WORKDIR/truth/deletions.$chr.bed
+  INDEL_BED=$WORKDIR/truth/indels.$chr.bed
   for tool in $TOOLS; do
     echo -n "" > $WORKDIR/$tool/$chr.truth.overlap.with.$tool.bed
     echo -n "" > $WORKDIR/$tool/$chr.$tool.overlap.with.truth.bed
@@ -187,9 +193,18 @@ for chr in $CHR_LIST; do
       TOOL_BED="$WORKDIR/$tool/$chr.bed"
       if [ -s "$TOOL_BED" ]; then
         bedtools intersect -wao -f $RECIP_OVERLAP -r -a $TRUTH_BED -b $TOOL_BED > $WORKDIR/$tool/$chr.truth.overlap.with.$tool.bed &
-        bedtools intersect -wao -f $RECIP_OVERLAP -r -b <($TABIX -h work/INDEL.merged.vcf.gz $chr) -a $TOOL_BED > $WORKDIR/$tool/$chr.$tool.overlap.with.truth.bed &
       else
         cat $TRUTH_BED > $WORKDIR/$tool/$chr.truth.overlap.with.$tool.bed
+      fi
+    done
+  fi
+
+  if [ -s "$INDEL_BED" ]; then
+    for tool in $TOOLS; do
+      TOOL_BED="$WORKDIR/$tool/$chr.bed"
+      if [ -s "$TOOL_BED" ]; then
+        bedtools intersect -wao -f $RECIP_OVERLAP -r -b $INDEL_BED -a $TOOL_BED > $WORKDIR/$tool/$chr.$tool.overlap.with.truth.bed &
+        #bedtools intersect -wao -f $RECIP_OVERLAP -r -b <($TABIX -h work/INDEL.merged.vcf.gz $chr) -a $TOOL_BED > $WORKDIR/$tool/$chr.$tool.overlap.with.truth.bed &
       fi
     done
   else
@@ -240,6 +255,7 @@ fi
 
 for chr in $CHR_LIST; do
   for tool in $TOOLS; do
+    echo -n ""
     rm -f $WORKDIR/$tool/$chr.*
   done
 done

@@ -28,6 +28,7 @@ BEGIN {
     start = start + deletion_offset
     deletion_count++;
   } else {
+    start++;
     non_deletion_count++
     non_deletion_records[non_deletion_count] = $0;
     event_type = "other"
@@ -79,7 +80,7 @@ BEGIN {
   } else {
     end_match = "end_mismatch"
   }
-  print $1 "\t" start "\t" end "\t" event_type "\t" 100.0 * (end - start - deletion_length) / deletion_length "\t" end_match "\t" deletion_offset "\t" gt "\t" $0 
+  print $1 "\t" start "\t" end "\t" event_type # "\t" 100.0 * (end - start - deletion_length) / deletion_length "\t" end_match "\t" deletion_offset "\t" gt "\t" $0 
   #print $1, start, end, svlen, "is_pass =", is_pass, computed_svlen, gt, $8, $10
   #if (computed_svlen != svlen) {
   #  mismatching_end++;
