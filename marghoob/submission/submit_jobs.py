@@ -15,6 +15,8 @@ parser.add_argument("--binabox", metavar="binabox_id", help="Bina box id", type=
 parser.add_argument("--datasets", metavar="dataset", help="Dataset file", required=True, type=file)
 parser.add_argument("--output_dir", metavar="output-dir", help="Output directory (must be on river)", required=True)
 parser.add_argument("--no_submit", action="store_true")
+parser.add_argument("--enable_vqsr", action="store_true", help="Enable VQSR")
+parser.add_argument("--enable_sv", action="store_true", help="Enable SV tools")
 
 sys.stderr.write("Command line\n")
 sys.stderr.write("%s\n" % ' '.join(sys.argv))
@@ -107,10 +109,12 @@ for gatk_version in gatk_versions:
       if run_type == "wes":
         workflow["vqsr_snp_train_args"] = {"--maxGaussians": 4}
         run_vqsr_indel = False
-      workflow["run_vqsr_snp"] = True
-      workflow["run_vqsr_indel"] = run_vqsr_indel
-      for run_svtool in ["run_breakseq", "run_pindel", "run_breakdancer", "run_cnvnator"]:
-        workflow[run_svtool] = (run_type == "wgs")
+      if args.enable_vqsr:
+        workflow["run_vqsr_snp"] = True
+        workflow["run_vqsr_indel"] = run_vqsr_indel
+      if args.enable_sv:
+        for run_svtool in ["run_breakseq", "run_pindel", "run_breakdancer", "run_cnvnator"]:
+          workflow[run_svtool] = (run_type == "wgs")
       workflow["worker_num"] = 1 if run_type == "wgs" else 1
       job = {
         "workflow": copy.deepcopy(workflow),

@@ -2,8 +2,8 @@
 
 set -ex
 
+myname=`basename $0`
 function usage {
-  myname=`basename $0`
   echo "CHR_LIST= START_E= END_E= NLANES= TOTAL_COVERAGE= $myname <basedir>"
   exit 1
 }
@@ -21,12 +21,15 @@ BEDFILE=
 # submit
 mkdir -pv $BASEDIR/output $BASEDIR/jobs
 FASTQDIR=$BASEDIR/fastqs/fastq.$START_E"_"$END_E"_"$NLANES"_"$TOTAL_COVERAGE
-PYTHONPATH="$PYTHONPATH" $DIR/../submission/submit_jobs.py --url "http://t-rex:19007" --datasets $FASTQDIR/datasets.json --output_dir $BASEDIR/output > $BASEDIR/jobs/jobs.txt
 
-# monitor
-cat $BASEDIR/jobs/jobs.txt | $DIR/../submission/monitor.py --url "http://t-rex:19007"
+if [ "$SKIP_SUBMIT_JOBS" != "true" ]; then
+  PYTHONPATH="$PYTHONPATH" $DIR/../submission/submit_jobs.py --url "http://t-rex:19007" --datasets $FASTQDIR/datasets.json --output_dir $BASEDIR/output > $BASEDIR/jobs/jobs.txt
 
-# check results
-for jobid in `cat $BASEDIR/jobs/jobs.txt`; do
-  echo $jobid
-done
+  # monitor
+  cat $BASEDIR/jobs/jobs.txt | $DIR/../submission/monitor.py --url "http://t-rex:19007" > $BASEDIR/jobs/status.txt
+
+  # check results
+  for jobid in `awk '{if ($2 == "Successful") print $1}' $BASEDIR/jobs/status.txt`; do
+    CHR_LIST="$CHR_LIST" $DIR/../submission/get_job_stats.sh $BASEDIR/output/$jobid $BASEDIR/reports/$jobid $BASEDIR/tmp
+  done
+fi
