@@ -1,0 +1,74 @@
+{
+    "base_recalibrator_args": {
+        "--disable_indel_quals": "", 
+        "-cov": [
+            "ReadGroupCovariate", 
+            "QualityScoreCovariate", 
+            "CycleCovariate", 
+            "ContextCovariate"
+        ]
+    }, 
+    "count_covariates_args": {
+        "-cov": [
+            "ReadGroupCovariate", 
+            "QualityScoreCovariate", 
+            "CycleCovariate", 
+            "DinucCovariate"
+        ]
+    }, 
+    "genotyper_args": {
+        "--genotype_likelihoods_model": "BOTH", 
+        "-A": [
+            "AlleleBalance", 
+            "DepthOfCoverage", 
+            "MappingQualityZero"
+        ], 
+        "-baq": "CALCULATE_AS_NECESSARY", 
+        "-stand_emit_conf": 0.1
+    }, 
+    "print_reads_args": {}, 
+    "table_recal_args": {
+        "--doNotWriteOriginalQuals": "", 
+        "-baq": "RECALCULATE"
+    },
+    "vqsr_groups": {
+        "indel": {
+            "annotations": [
+                "DP", 
+                "FS", 
+                "MQRankSum", 
+                "ReadPosRankSum"
+            ], 
+            "resources": [
+                "mills,VCF,known=false,training=true,truth=true,prior=12.0 lake:users/marghoob/GATK-bundle-hg19/Mills_and_1000G_gold_standard.indels.hg19.vcf", 
+                "dbsnp,VCF,known=true,training=false,truth=false,prior=2.0 lake:users/marghoob/GATK-bundle-hg19/dbsnp_137.hg19.vcf"
+            ]
+        }, 
+        "snp": {
+            "annotations": [
+                "QD", 
+                "MQRankSum", 
+                "ReadPosRankSum", 
+                "FS", 
+                "DP", 
+                "HaplotypeScore"
+            ], 
+            "resources": [
+                "hapmap,VCF,known=false,training=true,truth=true,prior=15.0 lake:users/marghoob/GATK-bundle-hg19/hapmap_3.3.hg19.vcf", 
+                "omni,VCF,known=false,training=true,truth=true,prior=12.0 lake:users/marghoob/GATK-bundle-hg19/1000G_omni2.5.hg19.vcf", 
+                "1000G,VCF,known=false,training=true,truth=false,prior=10.0 lake:users/marghoob/GATK-bundle-hg19/1000G_phase1.snps.high_confidence.hg19.vcf", 
+                "dbsnp,VCF,known=true,training=false,truth=false,prior=2.0 lake:users/marghoob/GATK-bundle-hg19/dbsnp_137.hg19.vcf"
+            ]
+        }
+    }, 
+    "vqsr_indel_apply_args": {
+        "--ts_filter_level": 99.9
+    }, 
+    "vqsr_indel_train_args": {
+        "--maxGaussians": 4
+    },
+    "vqsr_snp_train_args" : { }, 
+    "vqsr_snp_apply_args": {
+        "--ts_filter_level": 99.9
+    }
+} 

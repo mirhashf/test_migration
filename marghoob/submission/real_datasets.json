@@ -1,0 +1,52 @@
+{
+    "ill_3lane": {
+        "alignment_groups": [
+            {
+                "fastq": [
+                    "lake:/samples/whole-genomes/NA12878_additional/NA12878_Illumina3lanes/NA12878_NoIndex_L002_R1_001.fastq.gz", 
+                    "lake:/samples/whole-genomes/NA12878_additional/NA12878_Illumina3lanes/NA12878_NoIndex_L002_R2_001.fastq.gz"
+                 ], 
+                 "library": "pairedend", 
+                 "platform": "Illumina", 
+                 "read_group": "L002", 
+                 "sample": "NA12878"
+            }, 
+            {
+                "fastq": [
+                    "lake:/samples/whole-genomes/NA12878_additional/NA12878_Illumina3lanes/NA12878_NoIndex_L003_R1_001.fastq.gz", 
+                "lake:/samples/whole-genomes/NA12878_additional/NA12878_Illumina3lanes/NA12878_NoIndex_L003_R2_001.fastq.gz"
+                ], 
+                "library": "pairedend", 
+                "platform": "Illumina", 
+                "read_group": "L003", 
+                "sample": "NA12878"
+            }, 
+            {
+                "fastq": [
+                    "lake:/samples/whole-genomes/NA12878_additional/NA12878_Illumina3lanes/NA12878_NoIndex_L004_R1_001.fastq.gz", 
+                    "lake:/samples/whole-genomes/NA12878_additional/NA12878_Illumina3lanes/NA12878_NoIndex_L004_R2_001.fastq.gz"
+                 ], 
+                 "library": "pairedend", 
+                 "platform": "Illumina", 
+                 "read_group": "L004", 
+                 "sample": "NA12878"
+            }
+        ]
+    },
+
+    "ill_wes": {
+        "alignment_groups": [
+            {
+                "fastq": [
+                    "lake:/samples/exomes/NA12878/Agilent_V2/SRR098401_1.fastq.gz", 
+                    "lake:/samples/exomes/NA12878/Agilent_V2/SRR098401_2.fastq.gz"
+                 ], 
+                 "library": "pairedend", 
+                 "platform": "Illumina", 
+                 "read_group": "SRR098401", 
+                 "sample": "NA12878"
+            }
+        ],
+        "bedfile": "lake:/samples/exomes/targets/SureSelect_HumanExonV2/S0293689_Covered_readable.bed"
+    } 
+}

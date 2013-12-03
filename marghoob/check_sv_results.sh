@@ -4,9 +4,12 @@
 
 set -e
 
-PATH=$PATH:~/lake/opt/bedtools-2.17.0/bin
-REFERENCE=~/lake/users/marghoob/GATK-bundle-hg19/ucsc.hg19.fa
-SYNTHETIC_GENOME=~/river/users/marghoob/synthetic_genome/work
+LAKE=/net/kodiak/volumes/lake/shared
+RIVER=/net/kodiak/volumes/river/shared
+
+PATH=$PATH:$LAKE/opt/bedtools-2.17.0/bin
+REFERENCE=$LAKE/users/marghoob/GATK-bundle-hg19/ucsc.hg19.fa
+SYNTHETIC_GENOME=$RIVER/users/marghoob/synthetic_genome/work
 SVDELETIONS=$SYNTHETIC_GENOME/deletions.hg19.vcf
 TABIX=/usr/lib/bina/tabix/current/bin/tabix
 

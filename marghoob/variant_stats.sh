@@ -4,7 +4,7 @@ set -e
 
 myname=`basename $0`
 function usage {
-  echo "$myname <jobdir> <workdir> <outputfile> <gatk-version>"
+  echo "$myname <jobdir> <workdir> <outputfile>"
   exit 1
 }
 
@@ -48,36 +48,24 @@ function filter_and_select_vcf {
 }
 
 
-[ $# -ne 4 ] && usage
+[ $# -ne 3 ] && usage
  
 jobdir=$1
 workdir=$2
 outfile=$3
-gatk_ver=$4
 
 LAKE=/net/kodiak/volumes/lake/shared
-RIVER=/net/kodiak/volumes/river/shared
-
-declare -A gatk_paths
-gatk_paths["1.6"]="$LAKE/opt/gatk-1.6"
-gatk_paths["2.3-9"]="$LAKE/opt/gatk-2.3-9-gd785397"
-gatk_paths["2.5-2"]="$LAKE/opt/CancerAnalysisPackage-2013.2-18-g8207e53"
-gatk_paths["2.6-5"]="$LAKE/opt/gatk-2.6-5-gba531bd"
-gatk_paths["2.7-2"]="$LAKE/opt/gatk-2.7-2-g6bda569"
-
-GATK_PATH=${gatk_paths[$gatk_ver]}
 
 export PERL5LIB=$LAKE/opt/vcftools/perl
 export JAVA_HOME=$LAKE/opt/jdk1.7.0_25/
 export PATH=$LAKE/opt/vcftools/bin:$LAKE/opt/tabix:$JAVA_HOME/bin:$PATH
-export GATK_JAR=$GATK_PATH/GenomeAnalysisTK.jar
+export GATK_JAR=$LAKE/opt/gatk-2.7-2-g6bda569/GenomeAnalysisTK.jar
 export SNPSIFT=$LAKE/opt/snpEff/SnpSift.jar
 export NISTVCF=$LAKE/users/marghoob/NIST/NISThighConf
 dbsnp=$LAKE/users/marghoob/GATK-bundle-hg19/dbsnp_137.hg19.vcf
 reference=$LAKE/users/marghoob/GATK-bundle-hg19/ucsc.hg19.fa
 
 ANNOTATE=true
-MERGE=true
 
 rm -f $outfile
 
@@ -122,7 +110,9 @@ if [ -n "$CHECK_NIST" ]; then
   done
 fi
 
-for filter in ALL PASS; do
+filters="ALL PASS"
+
+for filter in $filters; do
   mkdir -pv $workdir/$filter
   for vartype in SNP INDEL; do
     echo "Separating out $vartype for $filter calls"
@@ -131,7 +121,7 @@ for filter in ALL PASS; do
 done
 wait
 
-for filter in ALL PASS; do
+for filter in $filters; do
   for vartype in SNP INDEL; do
     ( [ -n "$TRUTH_VCF" ] && vcf-compare $workdir/$filter/$vartype.vcf.gz $workdir/truth/$vartype.vcf.gz > $workdir/$filter/$vartype.truth.compare.txt ) &
     ( [ -n "$CHECK_NIST" ] && vcf-compare $workdir/$filter/$vartype.vcf.gz $workdir/NIST/$vartype.vcf.gz > $workdir/$filter/$vartype.NIST.compare.txt ) &
@@ -170,7 +160,7 @@ for vartype in SNP INDEL; do
 done
 wait
 
-for filter in ALL PASS; do #ALL PASS NONPASS; do
+for filter in $filters; do
   for vartype in SNP INDEL; do
     echo "Generating known and novel subsets of subset $filter of $vartype"
     (cat <(gunzip -c $workdir/$filter/$vartype.vcf.gz|grep "^#") <(gunzip -c $workdir/$filter/$vartype.vcf.gz|grep -v "^#"|awk '{if ($3 != ".") print $0}') | bgzip > $workdir/$filter/$vartype/known.vcf.gz; tabix -f $workdir/$filter/$vartype/known.vcf.gz) &
@@ -179,7 +169,7 @@ for filter in ALL PASS; do #ALL PASS NONPASS; do
 done
 wait
 
-for filter in ALL PASS; do #ALL PASS NONPASS; do
+for filter in $filters; do
   for vartype in SNP INDEL; do
     echo "Generating stats for subset $filter of $vartype"
     vcf-stats $workdir/$filter/$vartype.vcf.gz -p $workdir/$filter/$vartype.stats/ &
@@ -191,7 +181,7 @@ wait
 
 if [ -n "$CHECK_NIST" ]; then
   echo "Comparing the various sets against NIST high-confidence calls"
-  for filter in ALL PASS; do
+  for filter in $filters; do
     for vartype in SNP INDEL; do
       vcf-compare $workdir/$filter/$vartype.vcf.gz $workdir/NIST/$vartype.vcf.gz > $workdir/$filter/vcf-compare.NIST.$vartype.txt &
       if [ -n "$TRUTH_VCF" ]; then
@@ -217,7 +207,7 @@ function get_counts() {
 # Now print out the counts
 [ -n "$CHECK_NIST" ] && echo "filter,variant,subset,found_in_nist,missing_in_nist,missing_in_this,nist_sens,nist_fdr,titv,fraction" > $outfile
 [ -z "$CHECK_NIST" ] && echo "filter,variant,subset,titv,fraction" > $outfile
-for filter in ALL PASS; do #ALL PASS NONPASS; do
+for filter in $filters; do
   for vartype in SNP INDEL; do
     counts=
     [ -n "$CHECK_NIST" ] && counts=$(get_counts $workdir/$filter/$vartype.vcf.gz $workdir/$filter/$vartype.vcf.gz $workdir/$filter/vcf-compare.NIST.$vartype.txt)
