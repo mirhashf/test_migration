@@ -17,6 +17,9 @@ parser.add_argument("--output_dir", metavar="output-dir", help="Output directory
 parser.add_argument("--no_submit", action="store_true")
 parser.add_argument("--enable_vqsr", action="store_true", help="Enable VQSR")
 parser.add_argument("--enable_sv", action="store_true", help="Enable SV tools")
+parser.add_argument("--aligners", metavar="aligners", nargs='+', help="List of aligners (one of bina, bwa, bwamem)", required=False, default=["bwa"]) 
+parser.add_argument("--gatk_versions", metavar="gatk-versions", nargs='+', help="List of gatk versions (one of 2.7-2 or 2.3-9)", required=False, default=["2.7-2"])
+parser.add_argument("--dataset_names", metavar="dataset_names", nargs='+', help="List of dataset names in the dataset json", required=False)
 
 sys.stderr.write("Command line\n")
 sys.stderr.write("%s\n" % ' '.join(sys.argv))
@@ -27,12 +30,19 @@ username = args.username
 password = args.password
 binabox_id = args.binabox
 
-gatk_versions = ["2.3-9"] #, "2.7-2"]
-
 datasets = json.load(args.datasets)
 sample = 'NA12878'
 library = 'pairedend'
 platform = "Illumina"
+
+dataset_names=[]
+if not args.dataset_names:
+  dataset_names = datasets.keys()
+else:
+  for dataset_name in args.dataset_names:
+    if dataset_name not in datasets:
+      raise Exception("Dataset %s not found in %s" % (dataset_name, args.datasets.name()))
+  dataset_names = args.dataset_names
 
 output_dir = os.path.realpath(args.output_dir)
 river = "/net/kodiak/volumes/river/shared/"
@@ -40,12 +50,13 @@ if output_dir.startswith(river):
   output_prefix = "river:/" + os.path.relpath(output_dir, river)
 else:
   output_prefix = output_dir
+if not os.path.exists(output_dir): os.makedirs(output_dir)
 
 jobs = []
 
 gatk_jsons = {}
 dirname = os.path.dirname(os.path.realpath(__file__))
-for gatk_version in gatk_versions:
+for gatk_version in args.gatk_versions:
   gatk_json_file = open(dirname + "/gatk-" + gatk_version + ".json", "r")
   gatk_jsons[gatk_version] = json.load(gatk_json_file)
 
@@ -91,34 +102,32 @@ workflow_common = {
    }
 }
 
-for gatk_version in gatk_versions:
-  for run_bwa in [True]: #, False]:
-    for dataset_name in datasets:
+for gatk_version in args.gatk_versions:
+  for aligner in args.aligners:
+    for dataset_name in dataset_names:
       workflow = workflow_common
+      if aligner == "bwa": workflow["run_bwa"] = True
+      elif aligner == "bwamem": workflow["run_bwa_mem"] = True
       workflow["output_prefix"] = output_prefix
       if "alignment_groups" not in datasets[dataset_name]:
         raise Exception("alignment_groups missing for dataset %s" % (dataset_name))
       for key in datasets[dataset_name]:
         workflow[key] = datasets[dataset_name][key]
       run_type = "wes" if "bedfile" in datasets[dataset_name] else "wgs" 
-      tags = "%s,%s,%s,vqsr,%s" % (dataset_name, run_type, "bwa" if run_bwa else "bina", gatk_version)
-      workflow["run_bwa"] = run_bwa
-      max_mem_gb = 105 if run_bwa else 85
+      tags = "%s,%s,%s,vqsr,%s" % (dataset_name, run_type, aligner, gatk_version)
+      max_mem_gb = 85 if aligner == "bina" else 105
       if gatk_version == "2.7-2": workflow["run_reduce_reads"] = True
       workflow["sorter_args"] = {"-mark_duplicates": "", "-max_mem_gb": max_mem_gb}
       for key in gatk_jsons[gatk_version]:
         workflow[key] = gatk_jsons[gatk_version][key]
-      run_vqsr_indel = True
       if run_type == "wes":
         workflow["vqsr_snp_train_args"] = {"--maxGaussians": 4}
-        run_vqsr_indel = False
-      if args.enable_vqsr:
-        workflow["run_vqsr_snp"] = True
-        workflow["run_vqsr_indel"] = run_vqsr_indel
+      workflow["run_vqsr_snp"] = args.enable_vqsr
+      workflow["run_vqsr_indel"] = (run_type == "wgs") and args.enable_vqsr
       if args.enable_sv:
         for run_svtool in ["run_breakseq", "run_pindel", "run_breakdancer", "run_cnvnator"]:
           workflow[run_svtool] = (run_type == "wgs")
-      workflow["worker_num"] = 1 if run_type == "wgs" else 1
+      workflow["worker_num"] = 4 if run_type == "wgs" else 1
       job = {
         "workflow": copy.deepcopy(workflow),
         "bina_box":{
