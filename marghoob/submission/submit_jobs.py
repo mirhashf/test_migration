@@ -85,6 +85,9 @@ workflow_common = {
    "bina_aligner_args": {
        "-p": 32,
        "-trim": 30
+   },
+   "bwa_mem_args": {
+       "-t": 32
    }
 }
 
