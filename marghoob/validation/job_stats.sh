@@ -8,64 +8,16 @@ function usage {
   exit 1
 }
 
-function print_abs_path {
-  echo $(cd $(dirname $1); pwd)/$(basename $1)
-}
-
-function merge_vcfs {
-  local vcfdir=$1
-  local reference=$2
-  local outfile=$3
-
-  local file_list=
-  for chr in `awk '{ print $1 }' $reference.fai`; do
-    [ -e "$vcfdir/$chr.vcf.gz" ] && file_list="$file_list $vcfdir/$chr.vcf.gz"
-  done
-
-  echo "Concatening vcfs from $vcfdir"
-  (vcf-concat $file_list | bgzip > $outfile; tabix -f $outfile) &
-}
-
-function annotate_vcf {
-  local invcf=$1
-  local outvcf=$2
-  local logfile=$3
-
-  (java  -Xmx1g -Xms1g -jar $SNPSIFT annotate $dbsnp <(gunzip -c $invcf|awk 'BEGIN{OFS="\t"} /^#/{print $0} !/^#/{printf("%s\t%s\t.",$1,$2); for(i=4;i<=NF;++i)printf("\t%s", $i);printf("\n")}') 2>$logfile | java  -Xmx1g -Xms1g -jar $SNPSIFT varType - | bgzip > $outvcf; tabix -f $outvcf) &
-}
-
-function filter_and_select_vcf {
-  local invcf=$1
-  local outvcf=$2
-  local vartype=$3
-  local filter=$4
-  local logfile=$5
-
-  local exclude_filter=""
-  [ "$filter" == "PASS" ] && exclude_filter="--excludeFiltered"
-
-  (java -Xmx1g -Xms1g -jar $GATK_JAR -T SelectVariants -U LENIENT_VCF_PROCESSING -selectType $vartype $exclude_filter -env -V $invcf -o $outvcf -R $reference &>$logfile; bgzip -f $outvcf; tabix -f $outvcf.gz) &
-}
-
-
 [ $# -ne 3 ] && usage
  
 jobdir=$1
 workdir=$2
 reportdir=$3
 
-LAKE=/net/kodiak/volumes/lake/shared
-
-export PERL5LIB=$LAKE/opt/vcftools/perl
-export JAVA_HOME=$LAKE/opt/jdk1.7.0_25/
-export PATH=$LAKE/opt/vcftools/bin:$LAKE/opt/tabix:$JAVA_HOME/bin:$PATH
-export GATK_JAR=$LAKE/opt/gatk-2.7-2-g6bda569/GenomeAnalysisTK.jar
-export SNPSIFT=$LAKE/opt/snpEff/SnpSift.jar
-export NISTVCF=$LAKE/users/marghoob/NIST/NISThighConf
-dbsnp=$LAKE/users/marghoob/GATK-bundle-hg19/dbsnp_137.hg19.vcf
-reference=$LAKE/users/marghoob/GATK-bundle-hg19/ucsc.hg19.fa
-
 DIR="$( cd "$( dirname "$0" )" && pwd )"
+
+source $DIR/common.sh
+
 mkdir -pv $workdir $reportdir
 
 workdir=$(print_abs_path $workdir)
@@ -73,19 +25,11 @@ jobdir=$(print_abs_path $jobdir)
 reportdir=$(print_abs_path $reportdir)
 
 # This part does the variant-calling stats
-merge_vcfs $jobdir/vcfs $reference $workdir/all.pre_annotated.vcf.gz
-wait
+echo "Concatenating chromosome VCFs" >&2
+merge_vcfs $jobdir/vcfs $REFERENCE $workdir/all.pre_annotated.vcf.gz
 
 echo "Annotating variants" >&2
-start_time=$(date +%s)
 annotate_vcf $workdir/all.pre_annotated.vcf.gz $workdir/all.vcf.gz $workdir/snpsift.log
-wait
-end_time=$(date +%s)
-diff_time=$(( $end_time - $start_time ))
-echo "Annotation took $diff_time seconds" >&2
-
-echo "Concatenating the chromosome VCFs" >&2
-vcf=$workdir/all.vcf.gz
 
 echo "Generating subsets of NIST" >&2
 mkdir -pv $workdir/NIST
@@ -96,7 +40,7 @@ done
 mkdir -pv $workdir/PASS
 for vartype in SNP INDEL; do
   echo "Separating out $vartype for PASS calls" >&2
-  filter_and_select_vcf $workdir/all.vcf.gz $workdir/PASS/$vartype.vcf $vartype PASS $workdir/PASS/$vartype.log
+  (filter_and_select_vcf $workdir/all.vcf.gz $workdir/PASS/$vartype.vcf $vartype PASS $workdir/PASS/$vartype.log) &
 done
 wait
 
@@ -131,32 +75,33 @@ INDEL_novel_hethom=`awk "$awk_hethom_str" <(grep Novel $reportdir/counts/PASS.IN
 INDEL_hethom=`awk "$awk_hethom_str" $reportdir/counts/PASS.INDEL.hetcounts`
 
 # Get some SV stats
-breakseq_events=0
-breakdancer_events=0
-cnvnator_events=0
-pindel_events=0
-
-[ -e "$jobdir/breakseq" ] && breakseq_events=`grep PASS $jobdir/breakseq/breakseq.gff|wc -l`
-[ -e "$jobdir/breakdancer" ] && breakdancer_events=`cat $jobdir/breakdancer/*.out|grep -v "^#"|wc -l`
-[ -e "$jobdir/cnvnator" ] && cnvnator_events=`cat $jobdir/cnvnator/*.out|grep -v "^#"|wc -l`
-[ -e "$jobdir/pindel" ] && pindel_events=`cat $jobdir/pindel/*|grep ChrID|wc -l`
+[ -e "$jobdir/breakseq" ] && breakseq_events=`grep PASS $jobdir/breakseq/breakseq.gff|wc -l` || breakseq_events=0
+[ -e "$jobdir/breakdancer" ] && breakdancer_events=`cat $jobdir/breakdancer/*.out|grep -v "^#"|wc -l` || breakdancer_events=0
+[ -e "$jobdir/cnvnator" ] && cnvnator_events=`cat $jobdir/cnvnator/*.out|grep -v "^#"|wc -l` || cnvnator_events=0
+[ -e "$jobdir/pindel" ] && pindel_events=`cat $jobdir/pindel/*|grep ChrID|wc -l` || pindel_events=0
 
 # Do some accuracy QC
-is_wes=`grep -c bedfile $jobdir/job.json`
+is_wes=$(grep -c bedfile $jobdir/job.json|awk '{print $0}')
 
+# Constants ... somewhat arbitrarily chosen
 SNP_total_min=3000000
+SNP_NIST_sensitivity_min=90
 INDEL_total_min=300000
+INDEL_NIST_sensitivity_min=80
 SNP_known_frac_min=95
 INDEL_known_frac_min=80
 SNP_known_tstv_min=2
 SNP_known_hethom_min=1.2
-breakseq_min=100
+breakseq_min=0 # aggressive alignment can pretty much make breakseq1 ineffective
 breakdancer_min=10000
 cnvnator_min=5000
 pindel_min=500000
-if [ "$is_wes" != "0" ]; then
+if [ "$is_wes" == "1" ]; then
   SNP_total_min=20000
+  SNP_NIST_sensitivity_min=0
+  SNP_known_tstv_min=2.5
   INDEL_total_min=1000
+  INDEL_NIST_sensitivity_min=0
   breakseq_min=0
   breakdancer_min=0
   cnvnator_min=0
@@ -165,6 +110,8 @@ fi
 
 SNP_total_pass=$(echo "$SNP_total >= $SNP_total_min" | bc -l)
 INDEL_total_pass=$(echo "$INDEL_total >= $INDEL_total_min" | bc -l)
+SNP_NIST_sensitivity_pass=$(echo "$SNP_NIST_sensitivity >= $SNP_NIST_sensitivity_min" | bc -l)
+INDEL_NIST_sensitivity_pass=$(echo "$INDEL_NIST_sensitivity >= $INDEL_NIST_sensitivity_min" | bc -l)
 SNP_known_frac_pass=$(echo "$SNP_known_frac >= $SNP_known_frac_min" | bc -l)
 INDEL_known_frac_pass=$(echo "$INDEL_known_frac >= $INDEL_known_frac_min" | bc -l)
 SNP_known_tstv_pass=$(echo "$SNP_known_tstv >= $SNP_known_tstv_min" | bc -l)
@@ -174,7 +121,7 @@ breakdancer_pass=$(echo "$breakdancer_events >= $breakdancer_min" | bc -l)
 cnvnator_pass=$(echo "$cnvnator_events >= $cnvnator_min" | bc -l)
 pindel_pass=$(echo "$pindel_events >= $pindel_min" | bc -l)
 
-pass_fields="SNP_known_tstv_pass SNP_known_hethom_pass breakseq_pass breakdancer_pass cnvnator_pass pindel_pass"
+pass_fields="SNP_total_pass INDEL_total_pass SNP_NIST_sensitivity_pass INDEL_NIST_sensitivity_pass SNP_known_frac_pass INDEL_known_frac_pass SNP_known_tstv_pass SNP_known_hethom_pass breakseq_pass breakdancer_pass cnvnator_pass pindel_pass"
 all_pass=1
 for pass_field in $pass_fields; do
   [ "${!pass_field}" == "0" ] && all_pass=0
@@ -182,8 +129,8 @@ done
 
 # Print all the stats and pass/fail collected
 rm -f $reportdir/stats.csv
-fields="SNP_total SNP_known_frac SNP_NIST_sensitivity SNP_hethom SNP_known_tstv SNP_novel_tstv SNP_known_hethom SNP_novel_hethom INDEL_total INDEL_known_frac INDEL_NIST_sensitivity INDEL_hethom INDEL_known_hethom INDEL_novel_hethom breakseq_events breakdancer_events cnvnator_events pindel_events SNP_total_pass INDEL_total_pass SNP_known_frac_pass INDEL_known_frac_pass SNP_known_tstv_pass SNP_known_hethom_pass breakseq_pass breakdancer_pass cnvnator_pass pindel_pass all_pass"
-echo -n "jobdir" >> $reportdir/stats.csv
+fields="SNP_total SNP_known_frac SNP_NIST_sensitivity SNP_hethom SNP_known_tstv SNP_novel_tstv SNP_known_hethom SNP_novel_hethom INDEL_total INDEL_known_frac INDEL_NIST_sensitivity INDEL_hethom INDEL_known_hethom INDEL_novel_hethom breakseq_events breakdancer_events cnvnator_events pindel_events $pass_fields all_pass"
+echo -n "#jobdir" >> $reportdir/stats.csv
 for field in $fields; do
   echo -n ,$field >> $reportdir/stats.csv
 done
