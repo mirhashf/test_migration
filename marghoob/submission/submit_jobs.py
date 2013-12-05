@@ -115,7 +115,7 @@ for gatk_version in args.gatk_versions:
         if key == "comment": continue # skip comments
         workflow[key] = datasets[dataset_name][key]
       run_type = "wes" if "bedfile" in datasets[dataset_name] else "wgs" 
-      tags = "%s,%s,%s,vqsr,%s" % (dataset_name, run_type, aligner, gatk_version)
+      tags = "%s,%s,%s,%s,%s,%s" % (dataset_name, run_type, aligner, "vqsr" if args.enable_vqsr else "no-vqsr", "sv" if (args.enable_sv and run_type == "wgs") else "no-sv", gatk_version)
       max_mem_gb = 85 if aligner == "bina" else 105
       if gatk_version == "2.7-2": workflow["run_reduce_reads"] = True
       workflow["sorter_args"] = {"-mark_duplicates": "", "-max_mem_gb": max_mem_gb}
