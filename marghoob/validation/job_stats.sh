@@ -18,7 +18,7 @@ DIR="$( cd "$( dirname "$0" )" && pwd )"
 
 source $DIR/common.sh
 
-mkdir -pv $workdir $reportdir
+mkdir -p $workdir $reportdir
 
 workdir=$(print_abs_path $workdir)
 jobdir=$(print_abs_path $jobdir)
@@ -32,12 +32,12 @@ echo "Annotating variants" >&2
 annotate_vcf $workdir/all.pre_annotated.vcf.gz $workdir/all.vcf.gz $workdir/snpsift.log
 
 echo "Generating subsets of NIST" >&2
-mkdir -pv $workdir/NIST
+mkdir -p $workdir/NIST
 for vartype in SNP INDEL; do
   (cd $workdir/NIST && ln -sf $NISTVCF.$vartype.hg19.annotated.vcf.gz $vartype.vcf.gz && ln -sf $NISTVCF.$vartype.hg19.annotated.vcf.gz.tbi $vartype.vcf.gz.tbi)
 done
 
-mkdir -pv $workdir/PASS
+mkdir -p $workdir/PASS
 for vartype in SNP INDEL; do
   echo "Separating out $vartype for PASS calls" >&2
   (filter_and_select_vcf $workdir/all.vcf.gz $workdir/PASS/$vartype.vcf $vartype PASS $workdir/PASS/$vartype.log) &
@@ -46,7 +46,7 @@ wait
 
 # Count stuff
 echo "Counting things" >&2
-mkdir -pv $reportdir/counts
+mkdir -p $reportdir/counts
 for vartype in SNP INDEL; do
   (vcf-compare $workdir/PASS/$vartype.vcf.gz $workdir/NIST/$vartype.vcf.gz | grep ^VN | cut -f 2- | awk -v jobvcf="$workdir/PASS/$vartype.vcf.gz" 'BEGIN {FS="\t"} {if (NF==2) {if (index($2, jobvcf)==1) print "job "$1; else print "NIST " $1;} else print "both " $1}' > $reportdir/counts/PASS.$vartype.tsv) &
   (gunzip -c $workdir/PASS/$vartype.vcf.gz|awk '/^#/ {print $0} !/^#/ {if ($3 != ".") print $0}'|vcf-tstv|awk '{print $1}' > $reportdir/counts/PASS.$vartype.known.tstv) &

@@ -23,7 +23,7 @@ source $DIR/common.sh
 
 [ -n "$DEBUG" ] && set -x
 
-mkdir -pv $workdir $reportdir
+mkdir -p $workdir $reportdir
 
 workdir=$(print_abs_path $workdir)
 job1dir=$(print_abs_path $job1dir)
@@ -44,7 +44,7 @@ echo "Annotating variants" >&2
 (annotate_vcf $workdir/all2.pre_annotated.vcf.gz $workdir/all2.vcf.gz $workdir/snpsift2.log) &
 wait
 
-mkdir -pv $workdir/PASS
+mkdir -p $workdir/PASS
 echo "Separating out INDELs and SNPs" >&2
 for vartype in SNP INDEL; do
   (filter_and_select_vcf $workdir/all1.vcf.gz $workdir/PASS/1.$vartype.vcf $vartype PASS $workdir/PASS/1.$vartype.log) &
@@ -55,7 +55,7 @@ wait
 # Generate subsets
 echo "Extracting common and private call subsets" >&2
 for vartype in SNP INDEL; do
-  mkdir -pv $workdir/PASS/$vartype
+  mkdir -p $workdir/PASS/$vartype
   (vcf-isec $workdir/PASS/1.$vartype.vcf.gz $workdir/PASS/2.$vartype.vcf.gz | bgzip > $workdir/PASS/$vartype/common.vcf.gz; tabix -f $workdir/PASS/$vartype/common.vcf.gz) &
   (vcf-isec -c $workdir/PASS/1.$vartype.vcf.gz $workdir/PASS/2.$vartype.vcf.gz | bgzip > $workdir/PASS/$vartype/1.vcf.gz; tabix -f $workdir/PASS/$vartype/1.vcf.gz) &
   (vcf-isec -c $workdir/PASS/2.$vartype.vcf.gz $workdir/PASS/1.$vartype.vcf.gz | bgzip > $workdir/PASS/$vartype/2.vcf.gz; tabix -f $workdir/PASS/$vartype/2.vcf.gz) &
@@ -66,7 +66,7 @@ echo "Counting Known, Novel, Het, Hom" >&2
 for vartype in SNP INDEL; do
   for subset in 1 2 common; do
     countsdir=$reportdir/counts/PASS/$subset
-    mkdir -pv $countsdir
+    mkdir -p $countsdir
     (gunzip -c $workdir/PASS/$vartype/$subset.vcf.gz|awk '/^#/ {print $0} !/^#/ {if ($3 != ".") print $0}'|vcf-tstv|awk '{print $1}' > $countsdir/$vartype.known.tstv) &
     (gunzip -c $workdir/PASS/$vartype/$subset.vcf.gz|awk '/^#/ {print $0} !/^#/ {if ($3 == ".") print $0}'|vcf-tstv|awk '{print $1}' > $countsdir/$vartype.novel.tstv) &
     (gunzip -c $workdir/PASS/$vartype/$subset.vcf.gz | java -jar $SNPSIFT extractFields - ID HET HOM| awk 'BEGIN {FS="\t"} (NR>1){id = ($1 == "")? "Novel": "Known"; het = ($2 != "")? "Het": "Hom"; print id "\t" het}'|sort|uniq -c > $countsdir/$vartype.hetcounts) &
@@ -94,7 +94,7 @@ done
 
 echo "Generating comman and private deletion SV subset counts" >&2
 for svtool in breakdancer breakseq cnvnator pindel; do
-  mkdir -pv $reportdir/counts/PASS/1 $reportdir/counts/PASS/2 $reportdir/counts/PASS/common
+  mkdir -p $reportdir/counts/PASS/1 $reportdir/counts/PASS/2 $reportdir/counts/PASS/common
   bed1=$workdir/$svtool"1.bed"
   bed2=$workdir/$svtool"2.bed"
 
