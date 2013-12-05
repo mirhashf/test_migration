@@ -1,5 +1,5 @@
 {
-    "ill_3lane": {
+    "ill_3lane_NA12878": {
         "alignment_groups": [
             {
                 "fastq": [
@@ -31,10 +31,43 @@
                  "read_group": "L004", 
                  "sample": "NA12878"
             }
-        ]
+        ],
+        "comment": "3-lane sample from Illumina. Not publicly available"
     },
 
-    "ill_wes": {
+    "ill_platinum_57x_NA12878": {
+        "alignment_groups": [
+            {
+                "fastq": [
+                    "lake:/samples/whole-genomes/platinum/pcr-free-pedigree-50x/NA12878/ERR194147_1.fastq.gz", 
+                    "lake:/samples/whole-genomes/platinum/pcr-free-pedigree-50x/NA12878/ERR194147_2.fastq.gz"
+                 ], 
+                 "library": "pairedend", 
+                 "platform": "Illumina", 
+                 "read_group": "ERR194147", 
+                 "sample": "NA12878"
+            }
+        ],
+        "comment": "50x coverage from Platinum genomes pedigree"
+    },
+
+    "ill_platinum_longmate_NA12878": {
+        "alignment_groups": [
+            {
+                "fastq": [
+                    "lake:/samples/whole-genomes/Trio_longMate/ERR262997_1.fastq.gz", 
+                    "lake:/samples/whole-genomes/Trio_longMate/ERR262997_1.fastq.gz"
+                 ], 
+                 "library": "pairedend", 
+                 "platform": "Illumina", 
+                 "read_group": "ERR262997",
+                 "sample": "NA12878"
+            }
+        ],
+        "comment": "Long insert sizes of the order of 2000bp"
+    },
+
+    "ill_wes_NA12878": {
         "alignment_groups": [
             {
                 "fastq": [

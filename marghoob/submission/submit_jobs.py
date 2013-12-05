@@ -41,7 +41,7 @@ if not args.dataset_names:
 else:
   for dataset_name in args.dataset_names:
     if dataset_name not in datasets:
-      raise Exception("Dataset %s not found in %s" % (dataset_name, args.datasets.name()))
+      raise Exception("Dataset %s not found in %s" % (dataset_name, args.datasets.name))
   dataset_names = args.dataset_names
 
 output_dir = os.path.realpath(args.output_dir)
@@ -112,6 +112,7 @@ for gatk_version in args.gatk_versions:
       if "alignment_groups" not in datasets[dataset_name]:
         raise Exception("alignment_groups missing for dataset %s" % (dataset_name))
       for key in datasets[dataset_name]:
+        if key == "comment": continue # skip comments
         workflow[key] = datasets[dataset_name][key]
       run_type = "wes" if "bedfile" in datasets[dataset_name] else "wgs" 
       tags = "%s,%s,%s,vqsr,%s" % (dataset_name, run_type, aligner, gatk_version)
