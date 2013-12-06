@@ -78,9 +78,9 @@ for vartype in SNP INDEL; do
 done
 
 # Extract the sensitivity and fdr from the vcf-comparison output
-rm -f $REPORTDIR/stats.csv
+rm -f $REPORTDIR/vc_stats.csv
 for vartype in SNP INDEL; do
-  grep ^VN $REPORTDIR/$vartype.vcf-compare.txt | cut -f 2- | awk -v vartype=$vartype -v jobvcf="$TMPDIR/job/$vartype.vcf.gz" -v truthvcf="$TMPDIR/truth/$vartype.vcf.gz" 'BEGIN{FS = "\t"; counts[jobvcf]=0; counts[truthvcf] = 0; counts["both"] = 0} {if (NF == 2) {if (index($2, jobvcf) == 1) counts[jobvcf] = $1; else counts[truthvcf] = $1;} else counts["both"] = $1} END {total_true = counts["both"] + counts[truthvcf]; printf("%s,%g,%g\n", vartype, 100.0 * counts["both"] / total_true, 100.0 * counts[jobvcf] / (counts[jobvcf] + counts["both"]))}' >> $REPORTDIR/stats.csv
+  grep ^VN $REPORTDIR/$vartype.vcf-compare.txt | cut -f 2- | awk -v vartype=$vartype -v jobvcf="$TMPDIR/job/$vartype.vcf.gz" -v truthvcf="$TMPDIR/truth/$vartype.vcf.gz" 'BEGIN{FS = "\t"; counts[jobvcf]=0; counts[truthvcf] = 0; counts["both"] = 0} {if (NF == 2) {if (index($2, jobvcf) == 1) counts[jobvcf] = $1; else counts[truthvcf] = $1;} else counts["both"] = $1} END {total_true = counts["both"] + counts[truthvcf]; printf("%s,%g,%g\n", vartype, 100.0 * counts["both"] / total_true, 100.0 * counts[jobvcf] / (counts[jobvcf] + counts["both"]))}' >> $REPORTDIR/vc_stats.csv
 done
 
 # Now get the stats for the SV tools
@@ -88,3 +88,5 @@ done
 [ -e "$JOBDIR/breakseq" ] && BREAKSEQ_GFF=$JOBDIR/breakseq/breakseq.gff
 [ -e "$JOBDIR/cnvnator" ] && CNVNATOR_OUTDIR=$JOBDIR/cnvnator
 [ -e "$JOBDIR/pindel" ] && PINDEL_OUTDIR=$JOBDIR/pindel
+
+BREAKDANCER_OUTDIR=$BREAKDANCER_OUTDIR BREAKSEQ_GFF=$BREAKSEQ_GFF CNVNATOR_OUTDIR=$CNVNATOR_OUTDIR PINDEL_OUTDIR=$PINDEL_OUTDIR RECIP_OVERLAP=0.5 TRUE_INDEL_VCF_GZ=$TRUTH_VCFS_DIR/INDEL.vcf.gz TRUE_SV_VCF_GZ=$TRUTH_VCFS_DIR/deletions.vcf.gz $DIR/get_sv_stats.sh $TMPDIR/sv $REPORTDIR/sv

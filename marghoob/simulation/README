@@ -1,0 +1,5 @@
+This directory contains the scripts needed for simulation. The script top.sh invokes other scripts for the following steps:
+* gen_diploid.sh uses vcf2diploid to generate the maternal and paternal fasta files from the truth VCFs. The truth VCFs are hard-coded in the script.
+* gen_reads.sh uses dwgsim to generate the FASTQs with the desired coverage and error-profiles. The read lengths are 100-bp. In addition, it also generates the datasets json file to be used for submitting jobs.
+* ../submission/submit_jobs.py uses Amir's job submission client to submit different jobs with different coverages, aligners and GATK versions.
+* get_stats.sh is used to generate the sensitivity and fdr number for variant-calling and different SV tools.

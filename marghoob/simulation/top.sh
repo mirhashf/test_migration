@@ -23,7 +23,7 @@ mkdir -pv $BASEDIR/output $BASEDIR/jobs
 FASTQDIR=$BASEDIR/fastqs/fastq.$START_E"_"$END_E"_"$NLANES"_"$TOTAL_COVERAGE
 
 if [ "$SKIP_SUBMIT_JOBS" != "true" ]; then
-  PYTHONPATH="$PYTHONPATH" $DIR/../submission/submit_jobs.py --url "$URL" --datasets $FASTQDIR/datasets.json --output_dir $BASEDIR/output > $BASEDIR/jobs/jobs.txt
+  PYTHONPATH="$PYTHONPATH" $DIR/../submission/submit_jobs.py --url "$URL" --datasets $FASTQDIR/datasets.json --output_dir $BASEDIR/output --aligners bwa bwamem bina --enable_vqsr --enable_sv > $BASEDIR/jobs/jobs.txt
 
   # monitor
   cat $BASEDIR/jobs/jobs.txt | $DIR/../submission/monitor.py --url "$URL" > $BASEDIR/jobs/status.txt

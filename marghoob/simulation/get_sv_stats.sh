@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# This script checks for SV deletion events against a truth set and prints out a report for each contig as well as for the whole-genome
-
 set -e
 
 LAKE=/net/kodiak/volumes/lake/shared
@@ -9,27 +7,65 @@ RIVER=/net/kodiak/volumes/river/shared
 
 PATH=$PATH:$LAKE/opt/bedtools-2.17.0/bin
 REFERENCE=$LAKE/users/marghoob/GATK-bundle-hg19/ucsc.hg19.fa
-SYNTHETIC_GENOME=$RIVER/users/marghoob/synthetic_genome/work
-SVDELETIONS=$SYNTHETIC_GENOME/deletions.hg19.vcf
-TABIX=/usr/lib/bina/tabix/current/bin/tabix
 
 DIR="$( cd "$( dirname "$0" )" && pwd )"
 
 myname=`basename $0`
 
 function usage {
-  echo "BREAKDANCER_OUTDIR= CNVNATOR_OUTDIR= BREAKDANCER_OUTDIR= BREAKSEQ_GFF= RECIP_OVERLAP= $myname <workdir> <reportdir>"
+  echo "BREAKDANCER_OUTDIR= CNVNATOR_OUTDIR= BREAKDANCER_OUTDIR= BREAKSEQ_GFF= RECIP_OVERLAP= SYNTHETIC_GENOME_DIR= $myname <workdir> <reportdir>"
   exit 1
 }
 
-function print_overlap_counts {
-  awk -v mesg="$3" -v min_size=$4 -v max_size=$5 'BEGIN { found = 0; checked = 0; } { size=$3 - $2; if (size < min_size || size >= max_size) next; checked++; if (NF > 4 && $5 != "." && $5 != "0") found++ } END { percent = checked == 0? "nan": 100.0 * found / checked; print found "/" checked " (" percent " %) " mesg }' $1 >> $2
+function print_size_histogram {
+  bedfile=$1
+  bins=$2
+  prefix=$3
+  awk -v prefix=$prefix -v bins="$bins" \
+    'function get_bin(sv_size) {
+       for (i=0; i <num_bins; i++) {
+         if (sv_size <= sizes[i]) { return i; }
+       }
+       return -1;
+     }
+     BEGIN {
+       num_bins=split(bins, bins_arr, ",") - 1;
+       min_size = bins_arr[1]
+       sizes[-1] = min_size
+       for (i=0; i < num_bins; i++) {
+         sizes[i] = bins_arr[i+2]
+         counts[i] = 0
+       }
+     }
+     {
+       sv_size = $3 - $2;
+       if (sv_size <= min_size) next;
+       bin_id = get_bin(sv_size)
+       if (bin_id < 0) next;
+       counts[bin_id]++
+     }
+     END {
+       counts_file=prefix ".counts"
+       printf("%d-%d", min_size, sizes[0]) > counts_file
+       for (i=1; i<num_bins;i++) {
+         printf(",%d-%d", sizes[i-1], sizes[i]) >> counts_file
+       }
+       printf(",%d-%d\n", min_size, sizes[num_bins-1]) >> counts_file
+       total=counts[0]
+       printf("%d", counts[0]) >> counts_file
+       for (i=1; i < num_bins; i++) {
+         printf(",%d", counts[i]) >> counts_file
+         total += counts[i]
+       }
+       printf(",%d", total) >> counts_file
+
+     }' $bedfile
 }
 
 WORKDIR=$1
 REPORTDIR=$2
 [ -z "$BREAKDANCER_OUTDIR" -a -z "$CNVNATOR_OUTDIR" -a -z "$BREAKSEQ_GFF" -a -z "$PINDEL_OUTDIR" ] && usage
-[ -z "$WORKDIR" ] && usage
+[ -z "$WORKDIR" -o -z "$TRUE_INDEL_VCF_GZ" -o -z "$TRUE_SV_VCF_GZ" ] && usage
 
 MIN_SIZE=51
 MAX_SIZE=10000000
@@ -39,7 +75,6 @@ TOOLS=
 [ -n "$CNVNATOR_OUTDIR" ] && TOOLS="$TOOLS cnvnator"
 [ -n "$BREAKSEQ_GFF" ] && TOOLS="$TOOLS breakseq"
 [ -n "$PINDEL_OUTDIR" ] && TOOLS="$TOOLS pindel"
-
 
 mkdir -pv $WORKDIR/truth
 for tool in $TOOLS; do
@@ -55,13 +90,12 @@ REPORT=$WORKDIR/report.txt
 rm -f $REPORT $WORKDIR/truth/*
 
 # Convert the SV deletions file to a bedfile
-awk -v min_size=$MIN_SIZE -f $DIR/indels.awk <(gunzip -c $SYNTHETIC_GENOME/INDEL.merged.vcf.gz|grep -v SVLEN) | grep deletion | bedtools sort > $WORKDIR/truth/indels.bed
-awk -v min_size=$MIN_SIZE -f $DIR/sv_deletions_vcf_to_bed.awk $SVDELETIONS | bedtools sort > $WORKDIR/truth/deletions.bed
+gunzip -c $TRUE_INDEL_VCF_GZ | awk -v min_size=$MIN_SIZE -f $DIR/indels.awk | grep deletion | bedtools sort > $WORKDIR/truth/indels.bed
+gunzip -c $TRUE_SV_VCF_GZ | awk -v min_size=$MIN_SIZE -f $DIR/sv_deletions_vcf_to_bed.awk | bedtools sort > $WORKDIR/truth/deletions.bed
 cat $WORKDIR/truth/deletions.bed $WORKDIR/truth/indels.bed | bedtools sort | uniq > $WORKDIR/truth/deletions.indels.bed
 
 echo "Generating the BED files"
 for chr in $CHR_LIST; do
-  echo "Checking results for $chr"
   (
     TRUTH_BED=$WORKDIR/truth/deletions.$chr.bed
     INDEL_BED=$WORKDIR/truth/indels.$chr.bed
@@ -69,7 +103,7 @@ for chr in $CHR_LIST; do
     [ -n "$BREAKDANCER_OUTDIR" ] && awk '!/^#/ { if ($7 == "DEL") { print $1"\t"$2"\t"$5"\tBreakdancer" } }' $BREAKDANCER_OUTDIR/$chr.out > $WORKDIR/breakdancer/$chr.bed
     [ -n "$CNVNATOR_OUTDIR" ] && awk '!/^#/ { if ($1 != "deletion") next; split($2, chr_bp_split, ":"); split(chr_bp_split[2], bps, "-"); print chr_bp_split[1]"\t"bps[1]"\t"bps[2]"\tCnvnator" }' $CNVNATOR_OUTDIR/$chr.out > $WORKDIR/cnvnator/$chr.bed
     [ -n "$BREAKSEQ_GFF" ] && (grep "PASS" $BREAKSEQ_GFF | awk -v chr=$chr '{if ($1 == chr && $3 == "Deletion") print $1"\t"$4 - 1 "\t"$5 "\tBreakseq"}' | bedtools sort > $WORKDIR/breakseq/$chr.bed)
-    [ -n "$PINDEL_OUTDIR" ] && [ -s "$PINDEL_OUTDIR/$chr.out_D" ] && (grep ChrID $PINDEL_OUTDIR/$chr.out_D | awk -v minsize=$MIN_SIZE '{if ($27 >= 0 && $11 - $10 -1 >= minsize) print $8 "\t" $10 "\t" $11-1 "\tPindel" }' | bedtools sort > $WORKDIR/pindel/$chr.bed)
+    [ -n "$PINDEL_OUTDIR" ] && [ -s "$PINDEL_OUTDIR/$chr.out_D" ] && (grep ChrID $PINDEL_OUTDIR/$chr.*_D | awk -v minsize=$MIN_SIZE '{if ($27 >= 0 && $11 - $10 -1 >= minsize) print $8 "\t" $10 "\t" $11-1 "\tPindel" }' | bedtools sort > $WORKDIR/pindel/$chr.bed)
     awk -v chr=$chr '{if ($1 == chr) print $1"\t"$2 "\t"$3 "\tTruth"}' $WORKDIR/truth/deletions.bed | bedtools sort > $TRUTH_BED
     awk -v chr=$chr '{if ($1 == chr) print $1"\t"$2 "\t"$3 "\tTruth"}' $WORKDIR/truth/deletions.indels.bed | bedtools sort > $INDEL_BED
   ) &
@@ -127,8 +161,6 @@ for tool in $TOOLS; do
 done
 wait
 
-echo "Generating the report now"
-
 for chr in $CHR_LIST; do
   for tool in $TOOLS; do
     echo -n ""
@@ -142,29 +174,3 @@ for tool in $TOOLS; do
     print_size_histogram $WORKDIR/$tool/$prefix.bed "$BINS" $WORKDIR/$tool/$prefix
   done 
 done
-
-echo "=====================================================================================================" >> $REPORT
-echo "all" >> $REPORT
-
-for tool in $TOOLS; do
-  print_overlap_counts $WORKDIR/$tool/truth.overlap.with.$tool.bed $REPORT "truth events found in $tool output" $MIN_SIZE $MAX_SIZE
-  print_overlap_counts $WORKDIR/$tool/$tool.overlap.with.truth.bed $REPORT "$tool events found in truth set" $MIN_SIZE $MAX_SIZE
-
-  echo "" >> $REPORT
-  print_overlap_counts_histogram $WORKDIR/$tool/truth.overlap.with.$tool.bed $REPORT "truth events found in $tool output" 0
-  print_overlap_counts_histogram $WORKDIR/$tool/$tool.overlap.with.truth.bed $REPORT "$tool events not found in truth set" 1
-  echo "" >> $REPORT
-done
-
-echo "#Sensitivity" > $WORKDIR/report.csv
-for tool in $TOOLS; do
-  print_overlap_counts_histogram $WORKDIR/$tool/truth.overlap.with.$tool.bed $REPORT "truth events found in $tool output" 0 $WORKDIR/report.csv $tool
-done
-
-echo "" >> $WORKDIR/report.csv
-echo "" >> $REPORT
-echo "#False Discovery Rate" >> $WORKDIR/report.csv
-for tool in $TOOLS; do
-  print_overlap_counts_histogram $WORKDIR/$tool/$tool.overlap.with.truth.bed $REPORT "$tool events not found in truth set" 1 $WORKDIR/report.csv $tool $WORKDIR/counts.csv
-done
-echo "" >> $WORKDIR/report.csv
