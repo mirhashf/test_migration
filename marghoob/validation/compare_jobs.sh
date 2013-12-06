@@ -62,12 +62,14 @@ done
 wait
 
 echo "Counting Known, Novel, Het, Hom" >&2
+#SnpSift annotation adds HET/HOM, SNP/INS/DEL/MNP for each variant. So just need to count the right combination of annotations
 for vartype in SNP INDEL; do
   for subset in 1 2 common; do
     countsdir=$reportdir/counts/PASS/$subset
     mkdir -p $countsdir
     (gunzip -c $workdir/PASS/$vartype/$subset.vcf.gz|awk '/^#/ {print $0} !/^#/ {if ($3 != ".") print $0}'|vcf-tstv|awk '{print $1}' > $countsdir/$vartype.known.tstv) &
     (gunzip -c $workdir/PASS/$vartype/$subset.vcf.gz|awk '/^#/ {print $0} !/^#/ {if ($3 == ".") print $0}'|vcf-tstv|awk '{print $1}' > $countsdir/$vartype.novel.tstv) &
+    # SnpSift extractFields puts an empty string if the field was missing. So, convert the missing fields to the right values
     (gunzip -c $workdir/PASS/$vartype/$subset.vcf.gz | java -jar $SNPSIFT extractFields - ID HET HOM| awk 'BEGIN {FS="\t"} (NR>1){id = ($1 == "")? "Novel": "Known"; het = ($2 != "")? "Het": "Hom"; print id "\t" het}'|sort|uniq -c > $countsdir/$vartype.hetcounts) &
   done
 done
@@ -81,15 +83,15 @@ for svtool in breakseq breakdancer cnvnator; do
 done
 
 # Do the conversions
-[ -e "$job1dir/breakdancer" ] && cat $job1dir/breakdancer/*.out | awk '!/^#/ { if ($7 == "DEL" && $5 - $2 >= 50) { print $1"\t"$2"\t"$5"\tBreakdancer" } }' | bedtools sort > $workdir/breakdancer1.bed
+[ -e "$job1dir/breakdancer" ] && cat $job1dir/breakdancer/*.out | awk '!/^#/ { if ($7 == "DEL" && $8 >= 50) { print $1"\t"$2"\t"$5"\tBreakdancer" } }' | bedtools sort > $workdir/breakdancer1.bed
 [ -e "$job1dir/cnvnator" ] && cat $job1dir/cnvnator/*.out | awk '!/^#/ { if ($1 != "deletion") next; split($2, chr_bp_split, ":"); split(chr_bp_split[2], bps, "-"); if (bps[2] - bps[1] >= 50) print chr_bp_split[1]"\t"bps[1]"\t"bps[2]"\tCnvnator" }' | bedtools sort > $workdir/cnvnator1.bed
 [ -s "$job1dir/breakseq/breakseq.gff" ] && (grep "PASS" $job1dir/breakseq/breakseq.gff | awk '{if ($3 == "Deletion" && $5 - $4 + 1 >= 50) print $1"\t"$4 - 1 "\t"$5 "\tBreakseq"}' | bedtools sort > $workdir/breakseq1.bed)
-[ -e "$job1dir/pindel" ] && cat $job1dir/pindel/*._D | grep ChrID | awk -v minsize=50 '{if ($27 >= 0 && $11 - $10 -1 >= minsize) print $8 "\t" $10 "\t" $11-1 "\tPindel" }' | bedtools sort > $workdir/pindel1.bed
+[ -e "$job1dir/pindel" ] && cat $job1dir/pindel/*._D | grep ChrID | awk '{if ($11 - $10 -1 >= 50) print $8 "\t" $10 "\t" $11-1 "\tPindel" }' | bedtools sort > $workdir/pindel1.bed
 
-[ -e "$job2dir/breakdancer" ] && cat $job2dir/breakdancer/*.out | awk '!/^#/ { if ($7 == "DEL" && $5 - $2 >= 50) { print $1"\t"$2"\t"$5"\tBreakdancer" } }' | bedtools sort > $workdir/breakdancer2.bed
+[ -e "$job2dir/breakdancer" ] && cat $job2dir/breakdancer/*.out | awk '!/^#/ { if ($7 == "DEL" && $8 >= 50) { print $1"\t"$2"\t"$5"\tBreakdancer" } }' | bedtools sort > $workdir/breakdancer2.bed
 [ -e "$job2dir/cnvnator" ] && cat $job2dir/cnvnator/*.out | awk '!/^#/ { if ($1 != "deletion") next; split($2, chr_bp_split, ":"); split(chr_bp_split[2], bps, "-"); if (bps[2] - bps[1] >= 50) print chr_bp_split[1]"\t"bps[1]"\t"bps[2]"\tCnvnator" }' | bedtools sort > $workdir/cnvnator2.bed
 [ -s "$job2dir/breakseq/breakseq.gff" ] && grep "PASS" $job2dir/breakseq/breakseq.gff | awk '{if ($3 == "Deletion" && $5 - $4 + 1 >= 50) print $1"\t"$4 - 1 "\t"$5 "\tBreakseq"}' | bedtools sort > $workdir/breakseq2.bed
-[ -e "$job2dir/pindel" ] && cat $job2dir/pindel/*._D | grep ChrID | awk -v minsize=50 '{if ($27 >= 0 && $11 - $10 -1 >= minsize) print $8 "\t" $10 "\t" $11-1 "\tPindel" }' | bedtools sort > $workdir/pindel2.bed
+[ -e "$job2dir/pindel" ] && cat $job2dir/pindel/*._D | grep ChrID | awk '{if ($11 - $10 -1 >= 50) print $8 "\t" $10 "\t" $11-1 "\tPindel" }' | bedtools sort > $workdir/pindel2.bed
 
 echo "Generating comman and private deletion SV subset counts" >&2
 for svtool in breakdancer breakseq cnvnator pindel; do

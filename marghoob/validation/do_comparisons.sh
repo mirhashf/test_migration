@@ -1,5 +1,6 @@
 #!/bin/bash
 # Given a list of job dirs and labels, prints out a report on the individual jobs and pairwise comparisons
+# Input is assumed to be stdin
 
 set -e
 
