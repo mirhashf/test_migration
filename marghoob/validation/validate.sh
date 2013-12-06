@@ -4,14 +4,15 @@ set -ex
 
 myname=`basename $0`
 function usage {
-  echo "URL= $myname <basedir>"
-  echo "URL example: http://t-rex:19005"
+  echo "PYTHONPATH= URL= $myname <basedir>"
+  echo "URL must be the portal frontend to be used. Example: http://t-rex:19005"
   echo "basedir = Directory to do all stuff in (MUST BE ON RIVER)"
+  echo "PYTHONPATH must be set to the directory containing loomis2/python/client"
   exit 1
 }
 
 BASEDIR=$1
-[ -z "$BASEDIR" -o -z "$URL" ] && usage 
+[ -z "$BASEDIR" -o -z "$URL" -o -z "$PYTHONPATH" ] && usage 
 DIR="$( cd "$( dirname "$0" )" && pwd )"
 
 mkdir -pv $BASEDIR/output $BASEDIR/jobs

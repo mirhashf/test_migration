@@ -85,22 +85,29 @@ is_wes=$(grep -c bedfile $jobdir/job.json|awk '{print $0}')
 
 # Constants ... somewhat arbitrarily chosen
 SNP_total_min=3000000
+SNP_total_max=5000000
 SNP_NIST_sensitivity_min=90
 INDEL_total_min=300000
+INDEL_total_max=1000000
 INDEL_NIST_sensitivity_min=80
 SNP_known_frac_min=95
 INDEL_known_frac_min=80
 SNP_known_tstv_min=2
+SNP_known_tstv_max=2.5
 SNP_known_hethom_min=1.2
+SNP_known_hethom_max=1.8
 breakseq_min=0 # aggressive alignment can pretty much make breakseq1 ineffective
 breakdancer_min=10000
 cnvnator_min=5000
 pindel_min=500000
 if [ "$is_wes" == "1" ]; then
   SNP_total_min=20000
+  SNP_total_max=50000
   SNP_NIST_sensitivity_min=0
   SNP_known_tstv_min=2.5
+  SNP_known_tstv_max=3
   INDEL_total_min=1000
+  INDEL_total_max=5000
   INDEL_NIST_sensitivity_min=0
   breakseq_min=0
   breakdancer_min=0
@@ -108,14 +115,14 @@ if [ "$is_wes" == "1" ]; then
   pindel_min=0
 fi
 
-SNP_total_pass=$(echo "$SNP_total >= $SNP_total_min" | bc -l)
-INDEL_total_pass=$(echo "$INDEL_total >= $INDEL_total_min" | bc -l)
+SNP_total_pass=$(echo "$SNP_total >= $SNP_total_min && $SNP_total <= $SNP_total_max" | bc -l)
+INDEL_total_pass=$(echo "$INDEL_total >= $INDEL_total_min && $INDEL_total <= $INDEL_total_max" | bc -l)
 SNP_NIST_sensitivity_pass=$(echo "$SNP_NIST_sensitivity >= $SNP_NIST_sensitivity_min" | bc -l)
 INDEL_NIST_sensitivity_pass=$(echo "$INDEL_NIST_sensitivity >= $INDEL_NIST_sensitivity_min" | bc -l)
 SNP_known_frac_pass=$(echo "$SNP_known_frac >= $SNP_known_frac_min" | bc -l)
 INDEL_known_frac_pass=$(echo "$INDEL_known_frac >= $INDEL_known_frac_min" | bc -l)
-SNP_known_tstv_pass=$(echo "$SNP_known_tstv >= $SNP_known_tstv_min" | bc -l)
-SNP_known_hethom_pass=$(echo "$SNP_known_hethom >= $SNP_known_hethom_min" | bc -l)
+SNP_known_tstv_pass=$(echo "$SNP_known_tstv >= $SNP_known_tstv_min && $SNP_known_tstv <= $SNP_known_tstv_max" | bc -l)
+SNP_known_hethom_pass=$(echo "$SNP_known_hethom >= $SNP_known_hethom_min && $SNP_known_hethom <= $SNP_known_hethom_max" | bc -l)
 breakseq_pass=$(echo "$breakseq_events >= $breakseq_min" | bc -l)
 breakdancer_pass=$(echo "$breakdancer_events >= $breakdancer_min" | bc -l)
 cnvnator_pass=$(echo "$cnvnator_events >= $cnvnator_min" | bc -l)
