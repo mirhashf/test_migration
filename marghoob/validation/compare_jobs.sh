@@ -33,7 +33,6 @@ reportdir=$(print_abs_path $reportdir)
 [ -z "$LABEL1" ] && LABEL1=`basename $job1dir`
 [ -z "$LABEL2" ] && LABEL2=`basename $job2dir`
 
-if ((0)); then
 echo "Concatenating chromosome VCFs" >&2
 (merge_vcfs $job1dir/vcfs $REFERENCE $workdir/all1.pre_annotated.vcf.gz) &
 (merge_vcfs $job2dir/vcfs $REFERENCE $workdir/all2.pre_annotated.vcf.gz) &
@@ -72,7 +71,7 @@ for vartype in SNP INDEL; do
     (gunzip -c $workdir/PASS/$vartype/$subset.vcf.gz | java -jar $SNPSIFT extractFields - ID HET HOM| awk 'BEGIN {FS="\t"} (NR>1){id = ($1 == "")? "Novel": "Known"; het = ($2 != "")? "Het": "Hom"; print id "\t" het}'|sort|uniq -c > $countsdir/$vartype.hetcounts) &
   done
 done
-fi
+wait
 
 echo "Generating BED files from deletion SVs" >&2
 for svtool in breakseq breakdancer cnvnator; do

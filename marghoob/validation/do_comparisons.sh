@@ -35,7 +35,7 @@ for job1dir in "${!jobs[@]}"; do
 
     label1=${jobs[$job1dir]}
     label2=${jobs[$job2dir]}
-    LABEL1="$label1" LABEL2="$label2" $DIR/compare_jobs.sh "$job1dir" $job2dir" $workdir/$label1.vs.$label2 $reportdir/$label1.vs.$label2
+    LABEL1="$label1" LABEL2="$label2" $DIR/compare_jobs.sh "$job1dir" "$job2dir" $workdir/$label1.vs.$label2 $reportdir/$label1.vs.$label2
     echo "$label1 vs. $label2"
     cat $reportdir/$label1.vs.$label2/stats.csv
     echo ""
