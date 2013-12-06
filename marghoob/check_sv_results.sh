@@ -170,12 +170,12 @@ for chr in $CHR_LIST; do
     TRUTH_BED=$WORKDIR/truth/deletions.$chr.bed
     INDEL_BED=$WORKDIR/truth/indels.$chr.bed
 
-    [ -n "$BREAKDANCER_OUTDIR" ] && awk '!/^#/ { if ($7 == "DEL") { print $1"\t"$2"\t"$5"\tBreakdancer" } }' $BREAKDANCER_OUTDIR/$chr.out > $WORKDIR/breakdancer/$chr.bed
+    [ -n "$BREAKDANCER_OUTDIR" ] && awk -v minsize=$MIN_SIZE '!/^#/ { if ($7 == "DEL" && $8 >= minsize) { print $1"\t"$2"\t"$5"\tBreakdancer" } }' $BREAKDANCER_OUTDIR/$chr.out > $WORKDIR/breakdancer/$chr.bed
     [ -n "$CNVNATOR_OUTDIR" ] && awk '!/^#/ { if ($1 != "deletion") next; split($2, chr_bp_split, ":"); split(chr_bp_split[2], bps, "-"); print chr_bp_split[1]"\t"bps[1]"\t"bps[2]"\tCnvnator" }' $CNVNATOR_OUTDIR/$chr.out > $WORKDIR/cnvnator/$chr.bed
     [ -n "$BREAKSEQ_GFF" ] && (grep "PASS" $BREAKSEQ_GFF | awk -v chr=$chr '{if ($1 == chr && $3 == "Deletion") print $1"\t"$4 - 1 "\t"$5 "\tBreakseq"}' | bedtools sort > $WORKDIR/breakseq/$chr.bed)
     [ -n "$BREAKSEQ2_OUTDIR" ] && (grep "PASS" $BREAKSEQ2_OUTDIR/breakseq_out.gff | awk -v chr=$chr '{if ($1 == chr && $3 == "Deletion") print $1"\t"$4 - 1 "\t"$5 "\tBreakseq"}' | bedtools sort > $WORKDIR/breakseq2/$chr.bed)
     [ -n "$BREAKSEQ2_OUTDIR" ] && (cat $BREAKSEQ2_OUTDIR/breakseq_out.gff | awk -v chr=$chr '{if ($1 == chr && $3 == "Deletion") print $1"\t"$4 - 1 "\t"$5 "\tBreakseq"}' | bedtools sort > $WORKDIR/breakseq2all/$chr.bed)
-    [ -n "$PINDEL_OUTDIR" ] && [ -s "$PINDEL_OUTDIR/$chr.out_D" ] && (grep ChrID $PINDEL_OUTDIR/$chr.out_D | awk -v minsize=$MIN_SIZE '{if ($27 >= 0 && $11 - $10 -1 >= minsize) print $8 "\t" $10 "\t" $11-1 "\tPindel" }' | bedtools sort > $WORKDIR/pindel/$chr.bed)
+    [ -n "$PINDEL_OUTDIR" ] && [ -s "$PINDEL_OUTDIR/$chr.out_D" ] && (grep ChrID $PINDEL_OUTDIR/$chr.out_D | awk -v minsize=$MIN_SIZE '{if ($27 >= 0 && $11 - $10 -1 >= minsize) print $8 "\t" $10 "\t" $11-1 "\tPindel" }' | bedtools sort | uniq > $WORKDIR/pindel/$chr.bed)
     awk -v chr=$chr '{if ($1 == chr) print $1"\t"$2 "\t"$3 "\tTruth"}' $WORKDIR/truth/deletions.bed | bedtools sort > $TRUTH_BED
     awk -v chr=$chr '{if ($1 == chr) print $1"\t"$2 "\t"$3 "\tTruth"}' $WORKDIR/truth/deletions.indels.bed | bedtools sort > $INDEL_BED
   ) &
