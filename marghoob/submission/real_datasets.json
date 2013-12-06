@@ -14,7 +14,7 @@
             {
                 "fastq": [
                     "lake:/samples/whole-genomes/NA12878_additional/NA12878_Illumina3lanes/NA12878_NoIndex_L003_R1_001.fastq.gz", 
-                "lake:/samples/whole-genomes/NA12878_additional/NA12878_Illumina3lanes/NA12878_NoIndex_L003_R2_001.fastq.gz"
+                    "lake:/samples/whole-genomes/NA12878_additional/NA12878_Illumina3lanes/NA12878_NoIndex_L003_R2_001.fastq.gz"
                 ], 
                 "library": "pairedend", 
                 "platform": "Illumina", 
@@ -32,10 +32,10 @@
                  "sample": "NA12878"
             }
         ],
-        "comment": "3-lane sample from Illumina. Not publicly available"
+        "comment": "3-lane sample from Illumina. Not publicly available. 1186240676 reads of 100-bp."
     },
 
-    "ill_platinum_57x_NA12878": {
+    "ill_platinum_50x_NA12878": {
         "alignment_groups": [
             {
                 "fastq": [
@@ -48,7 +48,7 @@
                  "sample": "NA12878"
             }
         ],
-        "comment": "50x coverage from Platinum genomes pedigree"
+        "comment": "50x coverage from Platinum genomes pedigree. 1574530218 reads of 100-bp."
     },
 
     "ill_platinum_longmate_NA12878": {

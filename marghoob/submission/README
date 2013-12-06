@@ -1,0 +1,5 @@
+* The python scripts are useful for submitting WGS/WES jobs using commonly used datasets. 
+* submit_jobs.py submits multiple jobs with the specified GATK versions (either of 2.3-9 or 2.7-2), aligners (bina/bwa/bwamem) and dataset names in the specified dataset json file and prints the ids
+* list_datasets.py is useful to get the names of the datasets in the dataset json
+* real_datasets.json lists the datasets commonly used for validation. 
+* gatk*.json specifies the settings for the specific GATK version
