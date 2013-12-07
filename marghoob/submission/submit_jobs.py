@@ -20,6 +20,9 @@ parser.add_argument("--enable_sv", action="store_true", help="Enable SV tools")
 parser.add_argument("--aligners", metavar="aligners", nargs='+', help="List of aligners (one of bina, bwa, bwamem)", required=False, default=["bwa"]) 
 parser.add_argument("--gatk_versions", metavar="gatk-versions", nargs='+', help="List of gatk versions (one of 2.7-2 or 2.3-9)", required=False, default=["2.7-2"])
 parser.add_argument("--dataset_names", metavar="dataset_names", nargs='+', help="List of dataset names in the dataset json", required=False)
+parser.add_argument("--keep_sorted", action="store_true", help="Keep sorted BAMs")
+parser.add_argument("--keep_realigned", action="store_true", help="Keep realigned BAMs")
+parser.add_argument("--keep_recalibrated", action="store_true", help="Keep recalibrated BAMs")
 
 sys.stderr.write("Command line\n")
 sys.stderr.write("%s\n" % ' '.join(sys.argv))
@@ -63,9 +66,9 @@ for gatk_version in args.gatk_versions:
 workflow_common = {
    "fasta": "lake:/users/marghoob/GATK-bundle-hg19/ucsc.hg19.fa",
    "dbsnp": "lake:/users/marghoob/GATK-bundle-hg19/dbsnp_137.hg19.vcf",
-   "keep_sorted_bams": False,
-   "keep_realigned_bams": False,
-   "keep_recalibrated_bams": False,
+   "keep_sorted_bams": args.keep_sorted,
+   "keep_realigned_bams": args.keep_realigned,
+   "keep_recalibrated_bams": args.keep_recalibrated,
    "bplib": "lake:/users/marghoob/resources/bplib.fa",
    "pindel_args": {
        "-T": 4

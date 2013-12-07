@@ -5,6 +5,7 @@ myname=`basename $0`
 function usage {
   echo "$myname <bundleid> <outputdir>"
   echo "<bundleid> must be one of b36,b37,hg18,hg19"
+  echo "Example usage: $myname b37 /net/kodiak/volumes/lake/shared/users/marghoob/b37"
   exit 1
 }
 

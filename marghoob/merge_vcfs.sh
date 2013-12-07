@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function usage {
-  echo "VCFS_DIR=<path to vcfs dir> OUTPUT_VCF=<the merged vcf> BGZIP=<path to bgzip> TABIX=<path to tabix> VCFTOOLS=<path to vcftools dir> REFERENCE=<path to reference> merge_vcfs.sh"
+  echo "VCFS_DIR=<path to vcfs dir> OUTPUT_VCF=<the merged vcf> BGZIP=<path to bgzip> TABIX=<path to tabix> REFERENCE=<path to reference> merge_vcfs.sh"
   echo "Make sure the REFERENCE is indexed"
   echo "On a Bina appliance BGZIP=/usr/lib/bina/tabix/current/bin/bgzip TABIX=/usr/lib/bina/tabix/current/bin/tabix"
   echo "vcftools will need to be installed"
@@ -12,7 +12,6 @@ function usage {
 
 [ -z "$BGZIP" ] && BGZIP=`type -P bgzip`
 [ -z "$TABIX" ] && TABIX=`type -P tabix`
-[ -z "$VCFTOOLS" ] && VCFCONCAT=`type -P vcf-concat` || VCFCONCAT=$VCFTOOLS/bin/vcf-concat && PERL5LIB=$VCFTOOLS/perl
 
 [ -z "$BGZIP" -o -z "$TABIX" -o -z "$VCFCONCAT" ] && usage
 

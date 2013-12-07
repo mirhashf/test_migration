@@ -4,6 +4,7 @@ myname=`basename $0`
 
 function usage {
   echo "$myname <srcid> <dstid> <inputvcf> <outputvcf>"
+  echo "Example usage: $myname b36 b37 variants.b36.vcf variants.b37.vcf"
   exit 1
 }
 
