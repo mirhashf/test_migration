@@ -108,7 +108,7 @@ workflow_common = {
 for gatk_version in args.gatk_versions:
   for aligner in args.aligners:
     for dataset_name in dataset_names:
-      workflow = workflow_common
+      workflow = copy.deepcopy(workflow_common)
       if aligner == "bwa": workflow["run_bwa"] = True
       elif aligner == "bwamem": workflow["run_bwa_mem"] = True
       workflow["output_prefix"] = output_prefix
