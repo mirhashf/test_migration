@@ -13,7 +13,9 @@ DIR="$( cd "$( dirname "$0" )" && pwd )"
 myname=`basename $0`
 
 function usage {
-  echo "BREAKDANCER_OUTDIR= CNVNATOR_OUTDIR= BREAKDANCER_OUTDIR= BREAKSEQ_GFF= RECIP_OVERLAP= SYNTHETIC_GENOME_DIR= $myname <workdir> <reportdir>"
+  echo "BREAKDANCER_OUTDIR= CNVNATOR_OUTDIR= BREAKDANCER_OUTDIR= BREAKSEQ_GFF= RECIP_OVERLAP= TRUE_INDEL_VCF_GZ= TRUE_SV_VCF_GZ= $myname <workdir> <reportdir>"
+  echo "RECIP_OVERLAP is the reciprocal overlap. Typical setting 0.5"
+  echo "TRUE_INDEL_VCF_GZ and TRUE_SV_VCF_GZ are the compressed vcfs for true indels and true deletion SVs"
   exit 1
 }
 
