@@ -153,7 +153,7 @@
                 "read_group": "venter-pe_10000_1000",
                 "sample": "venter",
                 "library": "pe_10000_1000",
-                "platform": "Illumina",
+                "platform": "Sanger",
                 "fastq": [
                     "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_10000_1000.1.fastq.gz",
                     "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_10000_1000.2.fastq.gz"
@@ -163,7 +163,7 @@
                 "read_group": "venter-pe_10000_2000",
                 "sample": "venter",
                 "library": "pe_10000_2000",
-                "platform": "Illumina",
+                "platform": "Sanger",
                 "fastq": [
                     "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_10000_2000.1.fastq.gz",
                     "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_10000_2000.2.fastq.gz"
@@ -173,7 +173,7 @@
                 "read_group": "venter-pe_10201_755",
                 "sample": "venter",
                 "library": "pe_10201_755",
-                "platform": "Illumina",
+                "platform": "Sanger",
                 "fastq": [
                     "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_10201_755.1.fastq.gz",
                     "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_10201_755.2.fastq.gz"
@@ -183,7 +183,7 @@
                 "read_group": "venter-pe_11000_2200",
                 "sample": "venter",
                 "library": "pe_11000_2200",
-                "platform": "Illumina",
+                "platform": "Sanger",
                 "fastq": [
                     "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_11000_2200.1.fastq.gz",
                     "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_11000_2200.2.fastq.gz"
@@ -193,7 +193,7 @@
                 "read_group": "venter-pe_120000_24000",
                 "sample": "venter",
                 "library": "pe_120000_24000",
-                "platform": "Illumina",
+                "platform": "Sanger",
                 "fastq": [
                     "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_120000_24000.1.fastq.gz",
                     "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_120000_24000.2.fastq.gz"
@@ -203,7 +203,7 @@
                 "read_group": "venter-pe_12000_2400",
                 "sample": "venter",
                 "library": "pe_12000_2400",
-                "platform": "Illumina",
+                "platform": "Sanger",
                 "fastq": [
                     "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_12000_2400.1.fastq.gz",
                     "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_12000_2400.2.fastq.gz"
@@ -213,7 +213,7 @@
                 "read_group": "venter-pe_12500_1500",
                 "sample": "venter",
                 "library": "pe_12500_1500",
-                "platform": "Illumina",
+                "platform": "Sanger",
                 "fastq": [
                     "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_12500_1500.1.fastq.gz",
                     "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_12500_1500.2.fastq.gz"
@@ -223,7 +223,7 @@
                 "read_group": "venter-pe_1925_111",
                 "sample": "venter",
                 "library": "pe_1925_111",
-                "platform": "Illumina",
+                "platform": "Sanger",
                 "fastq": [
                     "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_1925_111.1.fastq.gz",
                     "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_1925_111.2.fastq.gz"
@@ -233,7 +233,7 @@
                 "read_group": "venter-pe_40000_8000",
                 "sample": "venter",
                 "library": "pe_40000_8000",
-                "platform": "Illumina",
+                "platform": "Sanger",
                 "fastq": [
                     "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_40000_8000.1.fastq.gz",
                     "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_40000_8000.2.fastq.gz"
@@ -243,7 +243,7 @@
                 "read_group": "venter-pe_42000_8400",
                 "sample": "venter",
                 "library": "pe_42000_8400",
-                "platform": "Illumina",
+                "platform": "Sanger",
                 "fastq": [
                     "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_42000_8400.1.fastq.gz",
                     "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_42000_8400.2.fastq.gz"
@@ -253,7 +253,7 @@
                 "read_group": "venter-pe_43000_8600",
                 "sample": "venter",
                 "library": "pe_43000_8600",
-                "platform": "Illumina",
+                "platform": "Sanger",
                 "fastq": [
                     "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_43000_8600.1.fastq.gz",
                     "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_43000_8600.2.fastq.gz"
@@ -263,7 +263,7 @@
                 "read_group": "venter-pe_44000_8800",
                 "sample": "venter",
                 "library": "pe_44000_8800",
-                "platform": "Illumina",
+                "platform": "Sanger",
                 "fastq": [
                     "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_44000_8800.1.fastq.gz",
                     "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_44000_8800.2.fastq.gz"
@@ -273,7 +273,7 @@
                 "read_group": "venter-pe_45000_9000",
                 "sample": "venter",
                 "library": "pe_45000_9000",
-                "platform": "Illumina",
+                "platform": "Sanger",
                 "fastq": [
                     "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_45000_9000.1.fastq.gz",
                     "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_45000_9000.2.fastq.gz"
@@ -283,7 +283,7 @@
                 "read_group": "venter-pe_9500_1000",
                 "sample": "venter",
                 "library": "pe_9500_1000",
-                "platform": "Illumina",
+                "platform": "Sanger",
                 "fastq": [
                     "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_9500_1000.1.fastq.gz",
                     "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_9500_1000.2.fastq.gz"
@@ -293,7 +293,7 @@
                 "read_group": "venter-se",
                 "sample": "venter",
                 "library": "se",
-                "platform": "Illumina",
+                "platform": "Sanger",
                 "fastq": [
                     "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.se.0.fastq.gz"
                 ]
