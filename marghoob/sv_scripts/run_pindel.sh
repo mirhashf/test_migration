@@ -2,14 +2,12 @@
 
 set -ex
 
-export PATH=$HOME/vcftools_0.1.11/bin:$PATH:/usr/lib/bina/samtools/current/bin/
+LAKE=/net/kodiak/volumes/lake/shared/
+RIVER=/net/kodiak/volumes/river/shared/
 
-LAKE=$HOME/lake
+INSTALL_PREFIX=$RIVER/users/marghoob/synthetic_genome/bina
 
-SAMTOOLS=$LAKE/opt/samtools/samtools
-BAM2CFG=$PWD/bina/breakdancer/current/bin/bam2cfg.pl
-BREAKDANCER=$PWD/bina/breakdancer/current/bin/breakdancer_max
-INSTALL_PREFIX=$PWD/bina
+BAM2CFG=$INSTALL_PREFIX/breakdancer/current/bin/bam2cfg.pl
 
 function print_abs_path {
   echo $(cd $(dirname $1); pwd)/$(basename $1)
@@ -28,7 +26,7 @@ function usage {
 [ ! -e "$PINDEL" ] && echo "$PINDEL not found" && exit 1
 
 mkdir -pv $WORKDIR $LOGDIR
-REFERENCE=~/lake/users/marghoob/GATK-bundle-hg19/ucsc.hg19.fa
+REFERENCE=$LAKE/users/marghoob/GATK-bundle-hg19/ucsc.hg19.fa
 
 if [ -z "$CHR_LIST" ]; then
   CHR_LIST=`awk '{print $1}' $REFERENCE.fai`
