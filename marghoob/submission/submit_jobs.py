@@ -14,15 +14,19 @@ parser.add_argument("--password", metavar="password", help="Password", default="
 parser.add_argument("--binabox", metavar="binabox_id", help="Bina box id", type=int, default=1)
 parser.add_argument("--datasets", metavar="dataset", help="Dataset file", required=True, type=file)
 parser.add_argument("--output_dir", metavar="output-dir", help="Output directory (must be on river)", required=True)
-parser.add_argument("--no_submit", action="store_true")
+parser.add_argument("--no_submit", action="store_true", help="Don't submit. Just print the job jsons.")
 parser.add_argument("--enable_vqsr", action="store_true", help="Enable VQSR")
 parser.add_argument("--enable_sv", action="store_true", help="Enable SV tools")
+parser.add_argument("--enable_hc", action="store_true", help="Use HaplotypeCaller for genotyping")
 parser.add_argument("--aligners", metavar="aligners", nargs='+', help="List of aligners (one of bina, bwa, bwamem)", required=False, default=["bwa"]) 
 parser.add_argument("--gatk_versions", metavar="gatk-versions", nargs='+', help="List of gatk versions (one of 2.7-2 or 2.3-9)", required=False, default=["2.7-2"])
 parser.add_argument("--dataset_names", metavar="dataset_names", nargs='+', help="List of dataset names in the dataset json", required=False)
 parser.add_argument("--keep_sorted", action="store_true", help="Keep sorted BAMs")
 parser.add_argument("--keep_realigned", action="store_true", help="Keep realigned BAMs")
 parser.add_argument("--keep_recalibrated", action="store_true", help="Keep recalibrated BAMs")
+parser.add_argument("--sample", help="Sample name", required=True)
+parser.add_argument("--library", help="Library name", required=False, default="pairedend")
+parser.add_argument("--platform", help="Platform name", required=False, default="Illumina")
 
 sys.stderr.write("Command line\n")
 sys.stderr.write("%s\n" % ' '.join(sys.argv))
@@ -34,9 +38,9 @@ password = args.password
 binabox_id = args.binabox
 
 datasets = json.load(args.datasets)
-sample = 'NA12878'
-library = 'pairedend'
-platform = "Illumina"
+sample = args.sample
+library = args.library
+platform = args.platform
 
 dataset_names=[]
 if not args.dataset_names:
@@ -112,6 +116,7 @@ for gatk_version in args.gatk_versions:
       if aligner == "bwa": workflow["run_bwa"] = True
       elif aligner == "bwamem": workflow["run_bwa_mem"] = True
       workflow["output_prefix"] = output_prefix
+      workflow["run_haplotype_caller"] = args.enable_hc
       if "alignment_groups" not in datasets[dataset_name]:
         raise Exception("alignment_groups missing for dataset %s" % (dataset_name))
       for key in datasets[dataset_name]:
@@ -151,8 +156,6 @@ for gatk_version in args.gatk_versions:
 c = Client(baseurl, username, password, False)
 c.login()
 for job in jobs:
-  
-  #print json.dumps(job, indent=True)
   if not args.no_submit:
     submitted_job = c.post(job, "job_list")
     print submitted_job["id"]
