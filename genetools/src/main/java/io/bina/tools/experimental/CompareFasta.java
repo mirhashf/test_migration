@@ -40,7 +40,7 @@ public class CompareFasta {
       ReferenceSequence leftContig;
       boolean theSame = true;
       while ((leftContig = leftFasta.nextSequence()) != null) {
-        ReferenceSequence rightContig = rightFasta.nextSequence();
+        ReferenceSequence rightContig = rightFasta.getSequence(leftContig.getName());
         log.info(String.format("Analyzing contig: %s", leftContig.getName()));
 
         if (!leftContig.getName().equals(rightContig.getName())) {
