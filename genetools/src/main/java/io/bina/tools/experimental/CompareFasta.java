@@ -1,6 +1,7 @@
+package io.bina.tools.experimental;
+
 import java.io.File;
 
-import net.sf.picard.reference.FastaSequenceFile;
 import net.sf.picard.reference.IndexedFastaSequenceFile;
 import net.sf.picard.reference.ReferenceSequence;
 import org.kohsuke.args4j.CmdLineException;
@@ -10,11 +11,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Created by amir on 2/27/14.
+ * Simple utility to compare to reference files
+ *
+ * @author amir
  */
 public class CompareFasta {
   private final static Logger log = LoggerFactory.getLogger(CompareFasta.class);
-  // --left /Users/amir/river/users/amir/hs37d5.fa --right /Users/amir/lake/references/human/human_g1k_v37_decoy/human_g1k_v37_decoy.fasta
   @Option(name = "--left", usage = "Left FASTA.", required = true)
   private File left;
 
@@ -34,7 +36,6 @@ public class CompareFasta {
       System.out.println(String.format("chr\tpos\t%s\t%s", left.getName(), right.getName()));
       IndexedFastaSequenceFile leftFasta = new IndexedFastaSequenceFile(left);
       IndexedFastaSequenceFile rightFasta = new IndexedFastaSequenceFile(right);
-
 
       ReferenceSequence leftContig;
       boolean theSame = true;
@@ -66,7 +67,6 @@ public class CompareFasta {
 
     } catch (final CmdLineException e) {
       parser.printUsage(System.err);
-      return;
     }
   }
 }
