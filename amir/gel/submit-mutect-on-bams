@@ -1,0 +1,47 @@
+#!/net/kodiak/volumes/lake/shared/opt/bina-tools/javajar tools-templatesubmitter.jar
+{
+    "workflow": {
+        "bam_groups": [
+            {
+                "bam": "<normal>",
+                "is_tumor": false
+            },
+            {
+                "bam": "<tumor>",
+                "is_tumor": true
+            }
+        ],
+        "fasta": "<fasta>",
+        "dbsnp": "<dbsnp>",
+        "cosmic": "<cosmic>",
+        "normal_panel": "<pon>",
+        "mutect_path": "lake:/opt/mutect/SomaticAnalysisTK.jar",
+        "output_prefix": "<output>",
+        "worker_num": 4,
+        "mounts": [
+            {
+                "name": "lake",
+                "address": "kodiak:/volumes/lake/shared"
+            },
+            {
+                "name": "river",
+                "address": "kodiak:/volumes/river/shared"
+            },
+            {
+                "name": "delta",
+                "address": "kodiak:/volumes/delta/shared"
+            }
+        ],
+        "thread_num": 16,
+        "mutect_args": {}
+    },
+    "bina_box": {
+        "id": 1
+    },
+    "workflow_type": "somatic-workflow/current/bin/somatic-workflow.jar",
+    "metadata": {
+                "project": "GeL",
+                "pi": "Amir",
+                "tags": "<study> mutect runfrombam"
+   } 
+}
