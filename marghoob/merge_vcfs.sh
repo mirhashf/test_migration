@@ -13,7 +13,7 @@ function usage {
 [ -z "$BGZIP" ] && BGZIP=`type -P bgzip`
 [ -z "$TABIX" ] && TABIX=`type -P tabix`
 
-[ -z "$BGZIP" -o -z "$TABIX" -o -z "$VCFCONCAT" ] && usage
+[ -z "$BGZIP" -o -z "$TABIX" ] && usage
 
 set -ex
 
