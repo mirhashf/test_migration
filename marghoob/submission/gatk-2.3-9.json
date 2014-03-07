@@ -6,8 +6,7 @@
             "QualityScoreCovariate", 
             "CycleCovariate", 
             "ContextCovariate"
-        ],
-        "--sort_by_all_columns": ""
+        ]
     }, 
     "count_covariates_args": {
         "-cov": [
