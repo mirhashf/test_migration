@@ -15,7 +15,7 @@ function usage {
 
 [ -z "$BGZIP" -o -z "$TABIX" ] && usage
 
-set -ex
+set -e
 
 file_list=
 for chr in `awk '{ print $1 }' $REFERENCE.fai`; do
@@ -27,7 +27,6 @@ done
 
 echo "Concatenating vcfs from $VCFS_DIR"
 
-cat $file_list | gunzip -c | awk 'BEGIN {header_seen = 0} /^#/ {if (header_seen == 0) print $0} !/^#/ {header_seen = 1; print $0}' | bgzip > $OUTPUT_VCF.gz
+vcf-concat $file_list | bgzip > $OUTPUT_VCF.gz
 
-#$VCFCONCAT $file_list | $BGZIP > $OUTPUT_VCF.gz 
 $TABIX -f $OUTPUT_VCF.gz
