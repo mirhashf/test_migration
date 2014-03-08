@@ -176,7 +176,7 @@ if not args.no_submit:
     #continue
     client = clients[i % len(clients)]
     submitted_job = client.post(job, "job_list")
-    print "%s,%s/#/binabox/monitor/1/%s,%s/#/binabox/view/3/%s" % (dataset_names[i],args.urls[i % len(clients)], submitted_job["id"], args.urls[i % len(clients)], submitted_job["id"])
+    print "%s,%s" % (dataset_names[i], submitted_job["id"])
   for client in clients:
     client.logout()
 else:
