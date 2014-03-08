@@ -2,25 +2,17 @@
 
 set -e
 
-export JAVA_HOME=~/lake/opt/jdk1.7.0_25/
+LAKE=/net/kodiak/volumes/lake/shared
+RIVER=/net/kodiak/volumes/river/shared
+export JAVA_HOME=$LAKE/opt/jdk1.7.0_25/
 export PATH=$HOME/vcftools_0.1.11/bin:$JAVA_HOME/bin:$PATH:/usr/lib/bina/samtools/current/bin/:$PWD/bina/bwa/current/bin/
 CHR_LIST=
 
 LAKE=$HOME/lake
 
-GATK_JAR=$HOME/lake/opt/gatk-2.7-2-g6bda569/GenomeAnalysisTK.jar
-BWARUNNER_DIR=$PWD/bina/bwarunner/current/bin
-BWARUNNER=$BWARUNNER_DIR/bwarunner.py
-BWA=$PWD/bina/bwa/current/bin/bwa
-SAMTOOLS=$LAKE/opt/samtools/samtools
-BGZIP=$PWD/bina/tabix/current/bin/bgzip
-TABIX=$PWD/bina/tabix/current/bin/tabix
-BAM2CFG=$PWD/bina/breakdancer/current/bin/bam2cfg.pl
-BREAKDANCER=$PWD/bina/breakdancer/current/bin/breakdancer_max
-BWAINDEX=$PWD/indexes/bwaindex
-HEADER=$PWD/header.sam
-INSTALL_PREFIX=$PWD/bina
-export CONTIGS=$PWD/indexes/contigs
+GATK_JAR=$LAKE/opt/gatk-2.7-2-g6bda569/GenomeAnalysisTK.jar
+INSTALL_PREFIX=$RIVER/synthetic_genome/bina
+export CONTIGS=$RIVER/synthetic_genome/indexes/b37/contigs
 
 myname=`basename $0`
 
