@@ -99,6 +99,9 @@
             "DinucCovariate"
         ]
     },
+    "print_reads_args": {
+        "-baq": "RECALCULATE"
+    },
     "realigner_args": {
         "--maxReadsInMemory": 500000
     },
