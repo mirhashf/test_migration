@@ -136,10 +136,17 @@ def process_merged_record(record):
 
   is_pass = False
   is_precise = False
+
+  precise_callset = [call[0:2] for call in (lists["Pindel"] + lists["BreakSeq"] + lists["HaplotypeCaller"])]
+  precise_pos1, precise_pos2 = pos1, pos2
+  if precise_callset and sv_type in ["DEL", "DUP", "INV"]:
+    precise_pos1 = min([call[0] for call in precise_callset])
+    precise_pos2 = max([call[1] for call in precise_callset])
+
   if sv_type in ["DEL", "INV", "INS", "DUP", "DUP:TANDEM"]:
     if len(lists["Pindel"]) == 1:
       source_start, source_end, source_size, source_gt, pindel_normal_count, pindel_num_reads = lists["Pindel"][0]
-      if float(source_size) / (float(pos2) - float(pos1)) >= 0.5:
+      if float(source_size) / (float(pos2) - float(pos1) - 1) >= 0.5 or float(source_size) / (float(precise_pos2) - float(precise_pos1) - 1) >= 0.5:
         pos1, pos2, gt, size = source_start, source_end, source_gt, source_size
         is_precise = True
         is_pass = True
@@ -149,7 +156,7 @@ def process_merged_record(record):
         is_pass = True
     elif len(lists["BreakSeq"]) == 1:
       source_start, source_end, source_size, source_gt = lists["BreakSeq"][0][0:4]
-      if float(source_size) / (float(pos2) - float(pos1)) >= 0.5:
+      if float(source_size) / (float(pos2) - float(pos1 - 1)) >= 0.5 or float(source_size) / (float(precise_pos2) - float(precise_pos1) - 1) >= 0.5:
         pos1, pos2, gt, size = source_start, source_end, source_gt, source_size
         is_precise = True
         is_pass = True
@@ -162,12 +169,12 @@ def process_merged_record(record):
         is_pass = True
     elif len(lists["Breakdancer"]) == 1:
       source_start, source_end, source_size, source_gt, bd_normal_count, bd_num_reads = lists["Breakdancer"][0]
-      if float(source_size) / (float(pos2) - float(pos1)) >= 0.5:
+      if float(source_size) / (float(pos2) - float(pos1) - 1) >= 0.5 or float(source_size) / (float(precise_pos2) - float(precise_pos1) - 1) >= 0.5:
         pos1, pos2, gt, size = source_start, source_end, source_gt, source_size
         is_pass = True
     elif len(lists["CNVnator"]) == 1:
       source_start, source_end, source_size, source_gt = lists["CNVnator"][0][0:4]
-      if float(source_size) / (float(pos2) - float(pos1)) >= 0.5:
+      if float(source_size) / (float(pos2) - float(pos1) - 1) >= 0.5 or float(source_size) / (float(precise_pos2) - float(precise_pos1) - 1) >= 0.5:
         pos1, pos2, gt, size = source_start, source_end, source_gt, source_size
         is_pass = True
     if not is_pass:
