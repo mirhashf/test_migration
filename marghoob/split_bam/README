@@ -1,0 +1,9 @@
+To run, extract read groups from the source BAM and then run split_bam
+
+* Extracting readgroups from BAM: ./extract_rgs.sh <bam>
+* Running split_bam: 
+  rg_list=`extract_rgs.sh <bam>`
+  LD_LIBRARY_PATH=/net/kodiak/volumes/river/shared/users/marghoob/git/htslib split_bam <bam> $rg_list <output_prefix>
+  the files will be named as: output_prefix<rg1>.bam output_prefix<rg2>.bam and so on. 
+
+  Note that the BAMs will not be indexed, so samtools index will need to be run on the output BAMs.

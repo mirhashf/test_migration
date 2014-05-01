@@ -1,0 +1,178 @@
+#!/bin/bash
+
+set -e
+
+LAKE=/net/kodiak/volumes/lake/shared
+RIVER=/net/kodiak/volumes/river/shared
+
+PATH=$PATH:$LAKE/opt/bedtools-2.17.0/bin
+REFERENCE=$LAKE/users/marghoob/GATK-bundle-hg19/ucsc.hg19.fa
+
+DIR="$( cd "$( dirname "$0" )" && pwd )"
+
+myname=`basename $0`
+
+function usage {
+  echo "BREAKDANCER_OUTDIR= CNVNATOR_OUTDIR= BREAKDANCER_OUTDIR= BREAKSEQ_GFF= RECIP_OVERLAP= TRUE_INDEL_VCF_GZ= TRUE_SV_VCF_GZ= $myname <workdir> <reportdir>"
+  echo "RECIP_OVERLAP is the reciprocal overlap. Typical setting 0.5"
+  echo "TRUE_INDEL_VCF_GZ and TRUE_SV_VCF_GZ are the compressed vcfs for true indels and true deletion SVs"
+  exit 1
+}
+
+function print_size_histogram {
+  bedfile=$1
+  bins=$2
+  prefix=$3
+  awk -v prefix=$prefix -v bins="$bins" \
+    'function get_bin(sv_size) {
+       for (i=0; i <num_bins; i++) {
+         if (sv_size <= sizes[i]) { return i; }
+       }
+       return -1;
+     }
+     BEGIN {
+       num_bins=split(bins, bins_arr, ",") - 1;
+       min_size = bins_arr[1]
+       sizes[-1] = min_size
+       for (i=0; i < num_bins; i++) {
+         sizes[i] = bins_arr[i+2]
+         counts[i] = 0
+       }
+     }
+     {
+       sv_size = $3 - $2;
+       if (sv_size <= min_size) next;
+       bin_id = get_bin(sv_size)
+       if (bin_id < 0) next;
+       counts[bin_id]++
+     }
+     END {
+       counts_file=prefix ".counts"
+       printf("%d-%d", min_size, sizes[0]) > counts_file
+       for (i=1; i<num_bins;i++) {
+         printf(",%d-%d", sizes[i-1], sizes[i]) >> counts_file
+       }
+       printf(",%d-%d\n", min_size, sizes[num_bins-1]) >> counts_file
+       total=counts[0]
+       printf("%d", counts[0]) >> counts_file
+       for (i=1; i < num_bins; i++) {
+         printf(",%d", counts[i]) >> counts_file
+         total += counts[i]
+       }
+       printf(",%d", total) >> counts_file
+
+     }' $bedfile
+}
+
+WORKDIR=$1
+REPORTDIR=$2
+[ -z "$BREAKDANCER_OUTDIR" -a -z "$CNVNATOR_OUTDIR" -a -z "$BREAKSEQ_GFF" -a -z "$PINDEL_OUTDIR" ] && usage
+[ -z "$WORKDIR" -o -z "$TRUE_INDEL_VCF_GZ" -o -z "$TRUE_SV_VCF_GZ" ] && usage
+
+MIN_SIZE=51
+MAX_SIZE=10000000
+
+TOOLS=
+[ -n "$BREAKDANCER_OUTDIR" ] && TOOLS="breakdancer"
+[ -n "$CNVNATOR_OUTDIR" ] && TOOLS="$TOOLS cnvnator"
+[ -n "$BREAKSEQ_GFF" ] && TOOLS="$TOOLS breakseq"
+[ -n "$PINDEL_OUTDIR" ] && TOOLS="$TOOLS pindel"
+
+mkdir -pv $WORKDIR/truth
+for tool in $TOOLS; do
+  mkdir -pv $WORKDIR/$tool
+  rm -f $WORKDIR/$tool/*
+done
+
+if [ -z "$CHR_LIST" ]; then
+  CHR_LIST=`awk '{printf $1" "}' $REFERENCE.fai`
+fi
+
+REPORT=$WORKDIR/report.txt
+rm -f $REPORT $WORKDIR/truth/*
+
+# Convert the SV deletions file to a bedfile
+gunzip -c $TRUE_INDEL_VCF_GZ | awk -v min_size=$MIN_SIZE -f $DIR/indels.awk | grep deletion | bedtools sort > $WORKDIR/truth/indels.bed
+gunzip -c $TRUE_SV_VCF_GZ | awk -v min_size=$MIN_SIZE -f $DIR/sv_deletions_vcf_to_bed.awk | bedtools sort > $WORKDIR/truth/deletions.bed
+cat $WORKDIR/truth/deletions.bed $WORKDIR/truth/indels.bed | bedtools sort | uniq > $WORKDIR/truth/deletions.indels.bed
+
+echo "Generating the BED files"
+for chr in $CHR_LIST; do
+  (
+    TRUTH_BED=$WORKDIR/truth/deletions.$chr.bed
+    INDEL_BED=$WORKDIR/truth/indels.$chr.bed
+
+    [ -n "$BREAKDANCER_OUTDIR" ] && awk '!/^#/ { if ($7 == "DEL") { print $1"\t"$2"\t"$5"\tBreakdancer" } }' $BREAKDANCER_OUTDIR/$chr.out > $WORKDIR/breakdancer/$chr.bed
+    [ -n "$CNVNATOR_OUTDIR" ] && awk '!/^#/ { if ($1 != "deletion") next; split($2, chr_bp_split, ":"); split(chr_bp_split[2], bps, "-"); print chr_bp_split[1]"\t"bps[1]"\t"bps[2]"\tCnvnator" }' $CNVNATOR_OUTDIR/$chr.out > $WORKDIR/cnvnator/$chr.bed
+    [ -n "$BREAKSEQ_GFF" ] && (grep "PASS" $BREAKSEQ_GFF | awk -v chr=$chr '{if ($1 == chr && $3 == "Deletion") print $1"\t"$4 - 1 "\t"$5 "\tBreakseq"}' | bedtools sort > $WORKDIR/breakseq/$chr.bed)
+    [ -n "$PINDEL_OUTDIR" ] && [ -s "$PINDEL_OUTDIR/$chr.out_D" ] && (grep ChrID $PINDEL_OUTDIR/$chr.*_D | awk -v minsize=$MIN_SIZE '{if ($27 >= 0 && $11 - $10 -1 >= minsize) print $8 "\t" $10 "\t" $11-1 "\tPindel" }' | bedtools sort > $WORKDIR/pindel/$chr.bed)
+    awk -v chr=$chr '{if ($1 == chr) print $1"\t"$2 "\t"$3 "\tTruth"}' $WORKDIR/truth/deletions.bed | bedtools sort > $TRUTH_BED
+    awk -v chr=$chr '{if ($1 == chr) print $1"\t"$2 "\t"$3 "\tTruth"}' $WORKDIR/truth/deletions.indels.bed | bedtools sort > $INDEL_BED
+  ) &
+done
+wait
+
+echo "Performing comparisons"
+for chr in $CHR_LIST; do
+  TRUTH_BED=$WORKDIR/truth/deletions.$chr.bed
+  INDEL_BED=$WORKDIR/truth/indels.$chr.bed
+  for tool in $TOOLS; do
+    echo -n "" > $WORKDIR/$tool/$chr.truth.overlap.with.$tool.bed
+    echo -n "" > $WORKDIR/$tool/$chr.$tool.overlap.with.truth.bed
+  done
+
+  if [ -s "$TRUTH_BED" ]; then
+    for tool in $TOOLS; do
+      TOOL_BED="$WORKDIR/$tool/$chr.bed"
+      if [ -s "$TOOL_BED" ]; then
+        bedtools intersect -wao -f $RECIP_OVERLAP -r -a $TRUTH_BED -b $TOOL_BED > $WORKDIR/$tool/$chr.truth.overlap.with.$tool.bed &
+      else
+        cat $TRUTH_BED > $WORKDIR/$tool/$chr.truth.overlap.with.$tool.bed
+      fi
+    done
+  fi
+
+  if [ -s "$INDEL_BED" ]; then
+    for tool in $TOOLS; do
+      TOOL_BED="$WORKDIR/$tool/$chr.bed"
+      if [ -s "$TOOL_BED" ]; then
+        bedtools intersect -wao -f $RECIP_OVERLAP -r -b $INDEL_BED -a $TOOL_BED > $WORKDIR/$tool/$chr.$tool.overlap.with.truth.bed &
+      fi
+    done
+  else
+    for tool in $TOOLS; do
+      TOOL_BED="$WORKDIR/$tool/$chr.bed"
+      [ -s "$TOOL_BED" ] &&  cat $TOOL_BED > $WORKDIR/$tool/$chr.$tool.overlap.with.truth.bed
+    done
+  fi
+done
+wait
+
+for tool in $TOOLS; do
+  (
+    echo "Concatenating stuff for $tool and $CHR_LIST"
+    for chr in $CHR_LIST; do
+      cat $WORKDIR/$tool/$chr.truth.overlap.with.$tool.bed >> $WORKDIR/$tool/truth.overlap.with.$tool.bed
+      cat $WORKDIR/$tool/$chr.$tool.overlap.with.truth.bed >> $WORKDIR/$tool/$tool.overlap.with.truth.bed
+    done
+    awk -v min_size=$MIN_SIZE '{if (NF > 4 && $5 != "." && $5 != "0" && $3 - $2 >= min_size) print $0}' $WORKDIR/$tool/truth.overlap.with.$tool.bed > $WORKDIR/$tool/truth.found.bed
+    awk -v min_size=$MIN_SIZE '{if (NF > 4 && $5 != "." && $5 != "0" && $3 - $2 >= min_size) print $0}' $WORKDIR/$tool/$tool.overlap.with.truth.bed > $WORKDIR/$tool/$tool.found.bed
+    awk -v min_size=$MIN_SIZE '{if (!(NF > 4 && $5 != "." && $5 != "0") && $3 - $2 >= min_size) print $1 "\t" $2 "\t" $3 "\t" $4}' $WORKDIR/$tool/truth.overlap.with.$tool.bed > $WORKDIR/$tool/truth.missing.bed
+    awk -v min_size=$MIN_SIZE '{if (!(NF > 4 && $5 != "." && $5 != "0") && $3 - $2 >= min_size) print $1 "\t" $2 "\t" $3 "\t" $4}' $WORKDIR/$tool/$tool.overlap.with.truth.bed > $WORKDIR/$tool/$tool.missing.bed
+  ) & 
+done
+wait
+
+for chr in $CHR_LIST; do
+  for tool in $TOOLS; do
+    echo -n ""
+    rm -f $WORKDIR/$tool/$chr.*
+  done
+done
+
+BINS="50,100,200,400,1000,2000,4000,8000,2000000"
+for tool in $TOOLS; do
+  for prefix in "truth.found" "truth.missing" "$tool.found" "$tool.missing"; do
+    print_size_histogram $WORKDIR/$tool/$prefix.bed "$BINS" $WORKDIR/$tool/$prefix
+  done 
+done

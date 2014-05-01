@@ -1,0 +1,132 @@
+#pad-wrapper h4.title {
+    margin-bottom: 45px;
+}
+
+.upload-page .upload-area {  
+  color: #6e829b;
+  border: 1px solid #DDD;
+  text-align: center;
+  vertical-align: middle;
+  opacity: 0.7;
+  cursor: pointer;
+}
+
+.upload-page .upload-area:hover {  
+  background-color: #FFF;
+  color: #6e829b;
+  opacity: 1;
+  border: 1px solid #EEE;
+}
+
+.upload-page .upload-area-title {
+  font-size: 20px;
+}
+
+.upload-page .upload-area-detail {
+  font-size: 15px;
+}
+
+.upload-page .upload-area-icon {
+  font-size: 50px;
+}
+
+.upload-page .form-wrapper {
+  margin-bottom: 40px;
+}
+.upload-page .form-wrapper .field-box {
+  margin-bottom: 30px;
+  margin-left: 0;
+  float: left;
+  width: 100%;
+}
+.upload-page .form-wrapper label {
+  display: inline-block;
+  float: left;
+  font-weight: 600;
+  cursor: auto;
+  font-size: 12px;
+  width: 140px;
+  text-align: left;
+}
+.upload-page .form-wrapper input:-moz-placeholder {
+  font-style: italic;
+}
+.upload-page .form-wrapper input:-ms-input-placeholder {
+  font-style: italic;
+}
+.upload-page .form-wrapper input::-webkit-input-placeholder {
+  font-style: italic;
+}
+.upload-page .form-wrapper .predefined {
+  position: relative;
+}
+.upload-page .form-wrapper .predefined input {
+  padding-left: 40px;
+}
+.upload-page .form-wrapper .predefined .value {
+  position: absolute;
+  top: 6px;
+}
+.upload-page .form-wrapper label.checkbox {
+  cursor: pointer;
+  color: #555;
+}
+.upload-page .form-wrapper label.radio {
+  position: relative;
+  left: -20px;
+  width: 100%;
+  cursor: pointer;
+  color: #555;
+}
+.upload-page .form-wrapper label.checkbox,
+.upload-page .form-wrapper label.radio {
+  font-weight: lighter;
+}
+.upload-page .form-wrapper label.checkbox input[type="checkbox"],
+.upload-page .form-wrapper label.checkbox input[type="radio"],
+.upload-page .form-wrapper label.radio input[type="checkbox"],
+.upload-page .form-wrapper label.radio input[type="radio"] {
+  font-size: large;
+  margin-left: 0px;
+}
+.upload-page .form-wrapper .wysi-column {
+  float: left;
+  width: 75%;
+}
+.upload-page .form-wrapper .column.pull-right label {
+  display: block;
+  width: 100%;
+}
+.upload-page .form-wrapper .column.pull-right .ui-select {
+  width: 250px;
+}
+.upload-page .form-wrapper .column.pull-right .input-group {
+  margin-bottom: 10px;
+  width: 250px;
+}
+.upload-page .form-wrapper .column.pull-right .input-datepicker {
+  width: 250px;
+}
+.upload-page .form-wrapper .select2-container {
+  margin-left: 0px;
+}
+
+/*Responsive*/
+@media (max-width: 767px) {
+  .upload-page .form-wrapper label.radio {
+    left: 0px;
+  }
+}
+
+.upload-page .progress.thin {
+  height: 10px;
+  margin-bottom: 5px;
+}
+
+.upload-page .table-delete {
+  margin-bottom: 18px;
+}
+
+.upload-page .file-area {
+  margin-bottom: 10px;
+}

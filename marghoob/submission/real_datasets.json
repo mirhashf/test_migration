@@ -1,0 +1,860 @@
+{
+    "ill_3lane_NA12878": {
+        "alignment_groups": [
+            {
+                "fastq": [
+                    "lake:/samples/whole-genomes/NA12878_additional/NA12878_Illumina3lanes/NA12878_NoIndex_L002_R1_001.fastq.gz", 
+                    "lake:/samples/whole-genomes/NA12878_additional/NA12878_Illumina3lanes/NA12878_NoIndex_L002_R2_001.fastq.gz"
+                 ], 
+                 "library": "pairedend", 
+                 "platform": "Illumina", 
+                 "read_group": "L002", 
+                 "sample": "NA12878"
+            }, 
+            {
+                "fastq": [
+                    "lake:/samples/whole-genomes/NA12878_additional/NA12878_Illumina3lanes/NA12878_NoIndex_L003_R1_001.fastq.gz", 
+                    "lake:/samples/whole-genomes/NA12878_additional/NA12878_Illumina3lanes/NA12878_NoIndex_L003_R2_001.fastq.gz"
+                ], 
+                "library": "pairedend", 
+                "platform": "Illumina", 
+                "read_group": "L003", 
+                "sample": "NA12878"
+            }, 
+            {
+                "fastq": [
+                    "lake:/samples/whole-genomes/NA12878_additional/NA12878_Illumina3lanes/NA12878_NoIndex_L004_R1_001.fastq.gz", 
+                    "lake:/samples/whole-genomes/NA12878_additional/NA12878_Illumina3lanes/NA12878_NoIndex_L004_R2_001.fastq.gz"
+                 ], 
+                 "library": "pairedend", 
+                 "platform": "Illumina", 
+                 "read_group": "L004", 
+                 "sample": "NA12878"
+            }
+        ],
+        "comment": "3-lane sample from Illumina. Not publicly available. 1186240676 reads of 100-bp."
+    },
+
+    "ill_platinum_50x_NA12878": {
+        "alignment_groups": [
+            {
+                "fastq": [
+                    "lake:/samples/whole-genomes/platinum/ERP001960_pedigree_50X/NA12878/ERR194147_1.fastq.gz", 
+                    "lake:/samples/whole-genomes/platinum/ERP001960_pedigree_50X/NA12878/ERR194147_2.fastq.gz"
+                 ], 
+                 "library": "pairedend", 
+                 "platform": "Illumina", 
+                 "read_group": "ERR194147", 
+                 "sample": "NA12878"
+            }
+        ],
+        "comment": "50x coverage from Platinum genomes pedigree. 1574530218 reads of 100-bp."
+    },
+
+    "ill_platinum_longmate_NA12878": {
+        "alignment_groups": [
+            {
+                "fastq": [
+                    "lake:/samples/whole-genomes/ERP002490_trio_longMate_30-40X/ERR262997_1.fastq.gz",
+                    "lake:/samples/whole-genomes/ERP002490_trio_longMate_30-40X/ERR262997_2.fastq.gz"
+                 ], 
+                 "library": "pairedend", 
+                 "platform": "Illumina", 
+                 "read_group": "ERR262997",
+                 "sample": "NA12878"
+            }
+        ],
+        "comment": "Long insert sizes of the order of 2000bp"
+    },
+
+    "ill_wes_NA12878": {
+        "alignment_groups": [
+            {
+                "fastq": [
+                    "lake:/samples/exomes/NA12878/Agilent_V2/SRR098401_1.fastq.gz", 
+                    "lake:/samples/exomes/NA12878/Agilent_V2/SRR098401_2.fastq.gz"
+                 ], 
+                 "library": "pairedend", 
+                 "platform": "Illumina", 
+                 "read_group": "SRR098401", 
+                 "sample": "NA12878"
+            }
+        ],
+        "bedfile": "lake:/samples/exomes/targets/SureSelect_HumanExonV2/S0293689_Covered_readable.bed"
+    },
+
+    "ill_platinum_50x_NA12877": {
+        "alignment_groups": [
+            {
+                "fastq": [
+                    "lake:/samples/whole-genomes/platinum/ERP001960_pedigree_50X/NA12877/ERR194146_1.fastq.gz", 
+                    "lake:/samples/whole-genomes/platinum/ERP001960_pedigree_50X/NA12877/ERR194146_2.fastq.gz"
+                 ], 
+                 "library": "pairedend", 
+                 "platform": "Illumina", 
+                 "read_group": "ERR194146", 
+                 "sample": "NA12877"
+            }
+        ],
+        "comment": "50x coverage from Platinum genomes pedigree."
+    },
+
+    "ill_platinum_50x_NA12882": {
+        "alignment_groups": [
+            {
+                "fastq": [
+                    "lake:/samples/whole-genomes/platinum/ERP001960_pedigree_50X/NA12882/ERR194151_1.fastq.gz", 
+                    "lake:/samples/whole-genomes/platinum/ERP001960_pedigree_50X/NA12882/ERR194151_2.fastq.gz"
+                 ], 
+                 "library": "pairedend", 
+                 "platform": "Illumina", 
+                 "read_group": "ERR194151", 
+                 "sample": "NA12882"
+            }
+        ],
+        "comment": "50x coverage from Platinum genomes pedigree."
+    },
+
+    "ill_platinum_50x_NA12891": {
+        "alignment_groups": [
+            {
+                "fastq": [
+                    "lake:/samples/whole-genomes/platinum/ERP001960_pedigree_50X/NA12878/ERR194160_1.fastq.gz", 
+                    "lake:/samples/whole-genomes/platinum/ERP001960_pedigree_50X/NA12878/ERR194160_2.fastq.gz"
+                 ], 
+                 "library": "pairedend", 
+                 "platform": "Illumina", 
+                 "read_group": "ERR194160", 
+                 "sample": "NA12891"
+            }
+        ],
+        "comment": "50x coverage from Platinum genomes pedigree."
+    },
+
+    "ill_platinum_50x_NA12892": {
+        "alignment_groups": [
+            {
+                "fastq": [
+                    "lake:/samples/whole-genomes/platinum/ERP001960_pedigree_50X/NA12878/ERR194161_1.fastq.gz", 
+                    "lake:/samples/whole-genomes/platinum/ERP001960_pedigree_50X/NA12878/ERR194161_2.fastq.gz"
+                 ], 
+                 "library": "pairedend", 
+                 "platform": "Illumina", 
+                 "read_group": "ERR194161", 
+                 "sample": "NA12892"
+            }
+        ],
+        "comment": "50x coverage from Platinum genomes pedigree."
+    },
+
+    "sanger_venter_8x": {
+        "alignment_groups": [
+            {
+                "read_group": "venter-pe_10000_1000",
+                "sample": "venter",
+                "library": "pe_10000_1000",
+                "platform": "Sanger",
+                "fastq": [
+                    "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_10000_1000.1.fastq.gz",
+                    "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_10000_1000.2.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "venter-pe_10000_2000",
+                "sample": "venter",
+                "library": "pe_10000_2000",
+                "platform": "Sanger",
+                "fastq": [
+                    "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_10000_2000.1.fastq.gz",
+                    "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_10000_2000.2.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "venter-pe_10201_755",
+                "sample": "venter",
+                "library": "pe_10201_755",
+                "platform": "Sanger",
+                "fastq": [
+                    "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_10201_755.1.fastq.gz",
+                    "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_10201_755.2.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "venter-pe_11000_2200",
+                "sample": "venter",
+                "library": "pe_11000_2200",
+                "platform": "Sanger",
+                "fastq": [
+                    "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_11000_2200.1.fastq.gz",
+                    "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_11000_2200.2.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "venter-pe_120000_24000",
+                "sample": "venter",
+                "library": "pe_120000_24000",
+                "platform": "Sanger",
+                "fastq": [
+                    "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_120000_24000.1.fastq.gz",
+                    "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_120000_24000.2.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "venter-pe_12000_2400",
+                "sample": "venter",
+                "library": "pe_12000_2400",
+                "platform": "Sanger",
+                "fastq": [
+                    "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_12000_2400.1.fastq.gz",
+                    "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_12000_2400.2.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "venter-pe_12500_1500",
+                "sample": "venter",
+                "library": "pe_12500_1500",
+                "platform": "Sanger",
+                "fastq": [
+                    "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_12500_1500.1.fastq.gz",
+                    "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_12500_1500.2.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "venter-pe_1925_111",
+                "sample": "venter",
+                "library": "pe_1925_111",
+                "platform": "Sanger",
+                "fastq": [
+                    "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_1925_111.1.fastq.gz",
+                    "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_1925_111.2.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "venter-pe_40000_8000",
+                "sample": "venter",
+                "library": "pe_40000_8000",
+                "platform": "Sanger",
+                "fastq": [
+                    "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_40000_8000.1.fastq.gz",
+                    "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_40000_8000.2.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "venter-pe_42000_8400",
+                "sample": "venter",
+                "library": "pe_42000_8400",
+                "platform": "Sanger",
+                "fastq": [
+                    "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_42000_8400.1.fastq.gz",
+                    "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_42000_8400.2.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "venter-pe_43000_8600",
+                "sample": "venter",
+                "library": "pe_43000_8600",
+                "platform": "Sanger",
+                "fastq": [
+                    "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_43000_8600.1.fastq.gz",
+                    "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_43000_8600.2.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "venter-pe_44000_8800",
+                "sample": "venter",
+                "library": "pe_44000_8800",
+                "platform": "Sanger",
+                "fastq": [
+                    "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_44000_8800.1.fastq.gz",
+                    "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_44000_8800.2.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "venter-pe_45000_9000",
+                "sample": "venter",
+                "library": "pe_45000_9000",
+                "platform": "Sanger",
+                "fastq": [
+                    "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_45000_9000.1.fastq.gz",
+                    "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_45000_9000.2.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "venter-pe_9500_1000",
+                "sample": "venter",
+                "library": "pe_9500_1000",
+                "platform": "Sanger",
+                "fastq": [
+                    "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_9500_1000.1.fastq.gz",
+                    "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.pe_9500_1000.2.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "venter-se",
+                "sample": "venter",
+                "library": "se",
+                "platform": "Sanger",
+                "fastq": [
+                    "river:/users/hugolam/samples/venter/ftp.ncbi.nih.gov/pub/TraceDB/Personal_Genomics/Venter/fastq/venter.se.0.fastq.gz"
+                ]
+            }
+        ],
+        "comment": "Sanger reads for Venter sample. Used in Levy et al. 2010 paper. Read groups with less than 2000 reads excluded to avoid BQSRGatherer failure."
+    },
+
+    "ill_venter_50x_1": {
+        "alignment_groups": [
+            {
+                "read_group": "131112_SN7001329_0258_BH7NRCADXX_Venter-1_L001",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131112_SN7001329_0258_BH7NRCADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R1_001.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131112_SN7001329_0258_BH7NRCADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R2_001.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131112_SN7001329_0258_BH7NRCADXX_Venter-1_L001",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131112_SN7001329_0258_BH7NRCADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R1_002.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131112_SN7001329_0258_BH7NRCADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R2_002.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131112_SN7001329_0258_BH7NRCADXX_Venter-1_L001",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131112_SN7001329_0258_BH7NRCADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R1_003.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131112_SN7001329_0258_BH7NRCADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R2_003.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131112_SN7001329_0258_BH7NRCADXX_Venter-1_L001",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131112_SN7001329_0258_BH7NRCADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R1_004.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131112_SN7001329_0258_BH7NRCADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R2_004.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131112_SN7001329_0258_BH7NRCADXX_Venter-1_L001",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131112_SN7001329_0258_BH7NRCADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R1_005.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131112_SN7001329_0258_BH7NRCADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R2_005.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131112_SN7001329_0258_BH7NRCADXX_Venter-1_L001",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131112_SN7001329_0258_BH7NRCADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R1_006.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131112_SN7001329_0258_BH7NRCADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R2_006.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131112_SN7001329_0258_BH7NRCADXX_Venter-1_L001",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131112_SN7001329_0258_BH7NRCADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R1_007.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131112_SN7001329_0258_BH7NRCADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R2_007.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131112_SN7001329_0258_BH7NRCADXX_Venter-1_L001",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131112_SN7001329_0258_BH7NRCADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R1_008.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131112_SN7001329_0258_BH7NRCADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R2_008.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131112_SN7001329_0258_BH7NRCADXX_Venter-1_L001",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131112_SN7001329_0258_BH7NRCADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R1_009.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131112_SN7001329_0258_BH7NRCADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R2_009.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131112_SN7001329_0258_BH7NRCADXX_Venter-1_L001",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131112_SN7001329_0258_BH7NRCADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R1_010.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131112_SN7001329_0258_BH7NRCADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R2_010.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131112_SN7001329_0258_BH7NRCADXX_Venter-1_L001",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131112_SN7001329_0258_BH7NRCADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R1_011.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131112_SN7001329_0258_BH7NRCADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R2_011.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131202_SN7001329_0268_BH7RG3ADXX_Venter-1_L001",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131202_SN7001329_0268_BH7RG3ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R1_001.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131202_SN7001329_0268_BH7RG3ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R2_001.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131202_SN7001329_0268_BH7RG3ADXX_Venter-1_L001",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131202_SN7001329_0268_BH7RG3ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R1_002.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131202_SN7001329_0268_BH7RG3ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R2_002.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131202_SN7001329_0268_BH7RG3ADXX_Venter-1_L001",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131202_SN7001329_0268_BH7RG3ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R1_003.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131202_SN7001329_0268_BH7RG3ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R2_003.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131202_SN7001329_0268_BH7RG3ADXX_Venter-1_L001",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131202_SN7001329_0268_BH7RG3ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R1_004.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131202_SN7001329_0268_BH7RG3ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R2_004.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131202_SN7001329_0268_BH7RG3ADXX_Venter-1_L001",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131202_SN7001329_0268_BH7RG3ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R1_005.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131202_SN7001329_0268_BH7RG3ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R2_005.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131202_SN7001329_0268_BH7RG3ADXX_Venter-1_L001",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131202_SN7001329_0268_BH7RG3ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R1_006.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131202_SN7001329_0268_BH7RG3ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R2_006.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131202_SN7001329_0268_BH7RG3ADXX_Venter-1_L001",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131202_SN7001329_0268_BH7RG3ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R1_007.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131202_SN7001329_0268_BH7RG3ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R2_007.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131202_SN7001329_0268_BH7RG3ADXX_Venter-1_L001",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131202_SN7001329_0268_BH7RG3ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R1_008.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131202_SN7001329_0268_BH7RG3ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R2_008.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131202_SN7001329_0268_BH7RG3ADXX_Venter-1_L001",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131202_SN7001329_0268_BH7RG3ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R1_009.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131202_SN7001329_0268_BH7RG3ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R2_009.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131202_SN7001329_0268_BH7RG3ADXX_Venter-1_L001",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131202_SN7001329_0268_BH7RG3ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R1_010.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131202_SN7001329_0268_BH7RG3ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R2_010.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131211_SN7001329_0271_AH7NU8ADXX_Venter-1_L001",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R1_001.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R2_001.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131211_SN7001329_0271_AH7NU8ADXX_Venter-1_L001",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R1_002.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R2_002.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131211_SN7001329_0271_AH7NU8ADXX_Venter-1_L001",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R1_003.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R2_003.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131211_SN7001329_0271_AH7NU8ADXX_Venter-1_L001",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R1_004.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R2_004.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131211_SN7001329_0271_AH7NU8ADXX_Venter-1_L001",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R1_005.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R2_005.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131211_SN7001329_0271_AH7NU8ADXX_Venter-1_L001",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R1_006.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R2_006.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131211_SN7001329_0271_AH7NU8ADXX_Venter-1_L001",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R1_007.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R2_007.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131211_SN7001329_0271_AH7NU8ADXX_Venter-1_L001",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R1_008.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R2_008.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131211_SN7001329_0271_AH7NU8ADXX_Venter-1_L001",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R1_009.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R2_009.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131211_SN7001329_0271_AH7NU8ADXX_Venter-1_L001",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R1_010.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R2_010.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131211_SN7001329_0271_AH7NU8ADXX_Venter-1_L001",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R1_011.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R2_011.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131211_SN7001329_0271_AH7NU8ADXX_Venter-1_L001",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R1_012.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R2_012.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131211_SN7001329_0271_AH7NU8ADXX_Venter-1_L002",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L002_R1_001.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L002_R2_001.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131211_SN7001329_0271_AH7NU8ADXX_Venter-1_L002",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L002_R1_002.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L002_R2_002.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131211_SN7001329_0271_AH7NU8ADXX_Venter-1_L002",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L002_R1_003.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L002_R2_003.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131211_SN7001329_0271_AH7NU8ADXX_Venter-1_L002",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L002_R1_004.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L002_R2_004.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131211_SN7001329_0271_AH7NU8ADXX_Venter-1_L002",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L002_R1_005.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L002_R2_005.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131211_SN7001329_0271_AH7NU8ADXX_Venter-1_L002",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L002_R1_006.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L002_R2_006.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131211_SN7001329_0271_AH7NU8ADXX_Venter-1_L002",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L002_R1_007.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L002_R2_007.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131211_SN7001329_0271_AH7NU8ADXX_Venter-1_L002",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L002_R1_008.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L002_R2_008.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131211_SN7001329_0271_AH7NU8ADXX_Venter-1_L002",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L002_R1_009.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L002_R2_009.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131211_SN7001329_0271_AH7NU8ADXX_Venter-1_L002",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L002_R1_010.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L002_R2_010.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131211_SN7001329_0271_AH7NU8ADXX_Venter-1_L002",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L002_R1_011.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L002_R2_011.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131211_SN7001329_0271_AH7NU8ADXX_Venter-1_L002",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L002_R1_012.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131211_SN7001329_0271_AH7NU8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L002_R2_012.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131220_SN7001329_0282_BH81Y8ADXX_Venter-1_L001",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131220_SN7001329_0282_BH81Y8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R1_001.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131220_SN7001329_0282_BH81Y8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R2_001.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131220_SN7001329_0282_BH81Y8ADXX_Venter-1_L001",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131220_SN7001329_0282_BH81Y8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R1_002.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131220_SN7001329_0282_BH81Y8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R2_002.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131220_SN7001329_0282_BH81Y8ADXX_Venter-1_L001",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131220_SN7001329_0282_BH81Y8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R1_003.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131220_SN7001329_0282_BH81Y8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R2_003.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131220_SN7001329_0282_BH81Y8ADXX_Venter-1_L001",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131220_SN7001329_0282_BH81Y8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R1_004.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131220_SN7001329_0282_BH81Y8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R2_004.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131220_SN7001329_0282_BH81Y8ADXX_Venter-1_L001",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131220_SN7001329_0282_BH81Y8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R1_005.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131220_SN7001329_0282_BH81Y8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R2_005.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131220_SN7001329_0282_BH81Y8ADXX_Venter-1_L001",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131220_SN7001329_0282_BH81Y8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R1_006.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131220_SN7001329_0282_BH81Y8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R2_006.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131220_SN7001329_0282_BH81Y8ADXX_Venter-1_L001",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131220_SN7001329_0282_BH81Y8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R1_007.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131220_SN7001329_0282_BH81Y8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R2_007.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131220_SN7001329_0282_BH81Y8ADXX_Venter-1_L001",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131220_SN7001329_0282_BH81Y8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R1_008.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131220_SN7001329_0282_BH81Y8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R2_008.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131220_SN7001329_0282_BH81Y8ADXX_Venter-1_L001",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131220_SN7001329_0282_BH81Y8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R1_009.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131220_SN7001329_0282_BH81Y8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R2_009.fastq.gz"
+                ]
+            },
+            {
+                "read_group": "131220_SN7001329_0282_BH81Y8ADXX_Venter-1_L001",
+                "sample": "Venter",
+                "library": "Venter",
+                "platform": "Illumina",
+                "fastq": [
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131220_SN7001329_0282_BH81Y8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R1_010.fastq.gz",
+                    "lake:/users/hugolam/venter/WHWong_StanFord_NGS/131220_SN7001329_0282_BH81Y8ADXX/FastQ/Sample_Wong-1/Wong-1_NoIndex_L001_R2_010.fastq.gz"
+                ]
+            }
+        ],
+        "comment": "High coverage Illumina-sequenced Venter sample for Bina-Stanford collaboration. Replicate 1."
+    }
+}

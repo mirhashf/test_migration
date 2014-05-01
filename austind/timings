@@ -1,0 +1,65 @@
+#!/usr/bin/env python
+
+import sys
+import json
+import datetime
+
+def get_min_failed_task(job):
+    min_failed_task = None
+    for worker in job['workers']:
+        for task in worker['tasks']:
+            if task['exitValue'] != 0:
+                if not min_failed_task or task['endTime'] < min_failed_task['endTime']:
+                    min_failed_task = task
+    return min_failed_task
+
+def get_total_elapsed(job):
+    min_start_time = sys.maxint
+    max_end_time = 0
+    for worker in job['workers']:
+        for task in worker['tasks']:
+            min_start_time = min(min_start_time, task['startTime'])
+            max_end_time = max(max_end_time, task['endTime'])
+    st = datetime.datetime.fromtimestamp(min_start_time / 1e3)
+    et = datetime.datetime.fromtimestamp(max_end_time / 1e3)
+    return et - st
+
+def main():
+    jobs = []
+    for fn in sys.argv[1:]:
+        with open(fn, 'r') as f:
+            jobs.append(json.loads(f.read()))
+    if len(sys.argv) > 2:
+        print_jobs(jobs)
+    else:
+        print_job(jobs[0])
+
+def print_job(job):
+    for worker in job['workers']:
+        print worker['name']
+        for task in worker['tasks']:
+            e = task['endTime'] - task['startTime']
+            st = datetime.datetime.fromtimestamp(task['startTime'] / 1e3)
+            et = datetime.datetime.fromtimestamp(task['endTime'] / 1e3)
+            print '  ', task['exitValue'], task['name'], et - st, e, task['startTime'], task['endTime']
+
+def print_jobs(jobs):
+    failed = []
+    successful = []
+
+    for job in jobs:
+        if get_min_failed_task(job):
+            failed.append(job)
+        else:
+            successful.append(job)
+
+    print 'successful'
+    for job in successful:
+        print '  ', job['id'], job['status'], get_total_elapsed(job)
+
+    print 'failed'
+    for job in failed:
+        min_failed_task = get_min_failed_task(job)
+        print '  ', job['id'], job['status'], min_failed_task['name'], min_failed_task['exitValue']
+
+main()

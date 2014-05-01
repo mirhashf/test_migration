@@ -1,0 +1,28 @@
+﻿<div ng-controller="SignupCtrl">
+    <div class="header">
+        <a ng-click="redirectToIndex()" href="">
+            <img src="../../img/logo.png" class="logo" />
+        </a>
+    </div>
+    <div class="login-wrapper">
+        <div class="box">
+            <div class="content-wrap">
+                <h6>Sign Up</h6>
+                <input class="form-control" type="text" placeholder="E-mail address" ng-model="email">
+                <input class="form-control" type="password" placeholder="Password" ng-model="password">
+                <input class="form-control" type="password" placeholder="Confirm Password" ng-model="confirmPassword">
+
+                <div class="alert alert-danger" ng-show="isShow">{{message}}</div>
+
+                <div class="action">
+                    <a class="btn-glow primary signup" ng-click="createUser()" href="">Sign up</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="already">
+            <p>Already have an account?</p>
+            <a ng-click="redirectToSignin()" href="">Sign in</a>
+        </div>
+    </div>
+</div>
