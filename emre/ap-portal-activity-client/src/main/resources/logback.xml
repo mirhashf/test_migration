@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<configuration>
+	<appender name="ServerAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_HOME}/server.log</file>
+
+		<!-- This will create server.1.log, server.2.log etc. -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+           <fileNamePattern>${LOG_HOME}/server.%i.log</fileNamePattern>
+           <minIndex>1</minIndex>
+           <maxIndex>1000</maxIndex>
+        </rollingPolicy>
+        
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+           <maxFileSize>5MB</maxFileSize>
+        </triggeringPolicy>
+
+		<encoder>
+			<pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n
+			</pattern>
+		</encoder>
+		
+		<!-- Log level for server.log. e.g. INFO, DEBUG, WARN. Default is DEBUG -->
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter"> 
+            <level>${LOG_LEVEL}</level>
+        </filter>
+	</appender>
+	
+	<appender name="ErrorAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOG_HOME}/error.log</file>
+
+		<!-- This will create server.1.log, server.2.log etc. -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+           <fileNamePattern>${LOG_HOME}/error.%i.log</fileNamePattern>
+           <minIndex>1</minIndex>
+           <maxIndex>1000</maxIndex>
+        </rollingPolicy>
+        
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+           <maxFileSize>5MB</maxFileSize>
+        </triggeringPolicy>
+
+		<encoder>
+			<pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n
+			</pattern>
+		</encoder>
+		
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter"> 
+            <level>ERROR</level>
+        </filter>
+	</appender>
+
+  	<logger name="org.eclipse.jetty" level="INFO" />
+
+	<root>
+		<appender-ref ref="ServerAppender" />
+		<appender-ref ref="ErrorAppender" />
+	</root>
+</configuration>
