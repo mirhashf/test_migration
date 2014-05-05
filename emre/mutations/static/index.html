@@ -5,14 +5,27 @@
 		<script>
 			var apiBaseUrl = "http://localhost:9000/api";
 			$.getJSON(apiBaseUrl + "/mutations", function (data) {
-				var html = "<ul>";
+				var html = "<ol>";
 				$.each(data.objects, function (index, mut) {
 					html += "<li><strong>Chromosome:</strong> " + mut.chromosome 
 							+ ", <strong>Position: </strong> " + mut.position
 							+ ", <strong>Ref:</strong> " + mut.reference + ", <strong>Alt:</strong> " 
-							+ mut.alternate + ", <strong>Depth:</strong> " + mut.readDepth + "</li>";
+							+ mut.alternate + ", <strong>Depth:</strong> " + mut.readDepth + "</li>"
+							+ "<div id=ann_" + mut.id + "></div>";
+					
+					$.getJSON(apiBaseUrl + "/mutations/" + mut.id + "/annotations", function (data) {
+						var annHtml = "<strong>Annotations: </strong><ol>";
+						$.each(data, function (index, ann) {
+							annHtml += "<li><strong>Transcript id: </strong> " + ann.transcriptId
+										+ ", <strong>Gene: </strong> " + ann.gene
+										+ ", <strong>Impact: </strong> " + ann.impact + "</li>";
+						});
+						annHtml += "</ol>";
+						$("#ann_" + mut.id).html(annHtml);
+					});
+					
 				});
-				html += "</ul>";
+				html += "</ol>";
 				$("#content").html(html);
 			});
 		</script>
