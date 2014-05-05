@@ -53,7 +53,7 @@ public class MutationsResource {
       mut.setReadDepth(10 + random.nextInt(60));
 
       int numAnnotations = 1 + random.nextInt(5);
-      List<Annotation> annotations = generateRandomAnnotations(mut.getId(), numAnnotations);
+      List<Annotation> annotations = generateRandomAnnotations(numAnnotations);
       annMap.put(mut.getId(), annotations);
 
       result[i - 1] = mut;
@@ -61,11 +61,10 @@ public class MutationsResource {
     return result;
   }
 
-  private static List<Annotation> generateRandomAnnotations(Integer mutationId, int numAnnotations) {
+  private static List<Annotation> generateRandomAnnotations(int numAnnotations) {
     List<Annotation> annotations = new ArrayList<>(numAnnotations);
     for (int x = 0; x < numAnnotations; x++) {
       Annotation ann = new Annotation();
-      ann.setMutationId(mutationId);
       ann.setImpact(Impact.values()[random.nextInt(Impact.values().length)]);
       ann.setGene(Gene.values()[random.nextInt(Gene.values().length)]);
       ann.setTranscriptId("ENST" + String.valueOf(1000 + random.nextInt(1000)));
