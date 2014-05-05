@@ -3,6 +3,10 @@ package com.bina.mutations.app;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.webapp.WebAppContext;
 
+/**
+ * Helps with starting from within an IDE 
+ * 
+ * */
 public class Runner {
 
   public static void main(String[] args) throws Exception {

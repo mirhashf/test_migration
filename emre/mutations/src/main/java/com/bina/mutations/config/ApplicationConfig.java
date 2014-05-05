@@ -5,7 +5,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 
 public class ApplicationConfig extends ResourceConfig {
 
-	public ApplicationConfig() {
-		packages("com.bina.mutations").register(JacksonFeature.class);
-	}
+  public ApplicationConfig() {
+    packages("com.bina.mutations").register(JacksonFeature.class);
+  }
 }

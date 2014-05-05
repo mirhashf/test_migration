@@ -2,7 +2,7 @@ package com.bina.mutations.model;
 
 
 public class Annotation {
-  
+
   public static enum Impact {
     DAMAGING, TOLERATED
   }
@@ -10,7 +10,7 @@ public class Annotation {
   public static enum Gene {
     BRCA1, BRCA2, KRAS, TPL1, PTEN
   }
-  
+
   private Integer mutationId;
   private String transcriptId;
   private Gene gene;
@@ -24,7 +24,7 @@ public class Annotation {
     this.gene = gene;
     this.impact = impact;
   }
-  
+
   public Integer getMutationId() {
     return mutationId;
   }

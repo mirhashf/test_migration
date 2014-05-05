@@ -20,20 +20,20 @@ public class CORSFilter implements Filter {
 
   @Override
   public void init(FilterConfig config) throws ServletException {}
-  
+
   @Override
   public void destroy() {}
 
   @Override
-  public void doFilter(ServletRequest request, ServletResponse response,
-                       FilterChain filterChain) throws IOException, ServletException {
-      HttpServletResponse resp = (HttpServletResponse) response;
+  public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException,
+                                                                                                 ServletException {
+    HttpServletResponse resp = (HttpServletResponse) response;
 
-      resp.addHeader(ACCESS_CONTROL_ALLOW_ORIGIN, "*");
-      resp.addHeader(ACCESS_CONTROL_ALLOW_METHODS, ALLOWED_METHODS);
-      resp.addHeader(ACCESS_CONTROL_ALLOW_HEADERS, ALLOWED_HEADERS);
+    resp.addHeader(ACCESS_CONTROL_ALLOW_ORIGIN, "*");
+    resp.addHeader(ACCESS_CONTROL_ALLOW_METHODS, ALLOWED_METHODS);
+    resp.addHeader(ACCESS_CONTROL_ALLOW_HEADERS, ALLOWED_HEADERS);
 
-      filterChain.doFilter(request, response);
+    filterChain.doFilter(request, response);
   }
 
 }
