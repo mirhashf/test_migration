@@ -19,8 +19,8 @@ parser.add_argument("--enable_vqsr", action="store_true", help="Enable VQSR")
 parser.add_argument("--enable_sv", action="store_true", help="Enable SV tools")
 parser.add_argument("--enable_hc", action="store_true", help="Use HaplotypeCaller for genotyping")
 parser.add_argument("--enable_reduce_reads", action="store_true", help="Run ReduceReads")
-parser.add_argument("--aligners", metavar="aligners", nargs='+', help="List of aligners (one of bina, bwa, bwamem)", required=False, default=["bwa"]) 
-parser.add_argument("--gatk_versions", metavar="gatk-versions", nargs='+', help="List of gatk versions (subset of {2.3-9, 2.7-2, 2.8-1})", required=False, default=["2.8-1"])
+parser.add_argument("--aligners", metavar="aligners", nargs='+', help="List of aligners (one of bina, bwa, bwamem)", required=False, default=["bwamem"]) 
+parser.add_argument("--gatk_versions", metavar="gatk-versions", nargs='+', help="List of gatk versions (subset of {2.3-9, 2.7-2, 2.8-1, 3.1})", required=False, default=["3.1"])
 parser.add_argument("--dataset_names", metavar="dataset_names", nargs='+', help="List of dataset names in the dataset json", required=False)
 parser.add_argument("--keep_sorted", action="store_true", help="Keep sorted BAMs")
 parser.add_argument("--keep_realigned", action="store_true", help="Keep realigned BAMs")
@@ -144,6 +144,7 @@ for gatk_version in args.gatk_versions:
       if run_type == "wes":
         workflow["vqsr_snp_train_args"] = {"--maxGaussians": 4}
       workflow["run_vqsr_snp"] = args.enable_vqsr
+      workflow["run_vqsr"] = args.enable_vqsr
       workflow["run_vqsr_indel"] = (run_type == "wgs") and args.enable_vqsr
       if args.enable_sv:
         for run_svtool in ["run_breakseq", "run_pindel", "run_breakdancer", "run_cnvnator"]:
