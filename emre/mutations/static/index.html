@@ -8,15 +8,12 @@
 						  "9": 9, "10": 10, "11": 11, "12": 12, "13": 13, "14": 14, "15": 15,
 						  "16": 16, "17": 17, "18": 18, "19": 19, "20": 20, "21": 21, "22": 22,
 						  "X": 23, "Y": 24, "M": 25};
-			var mutations;
 			$.getJSON(apiBaseUrl + "/mutations", function (data) {
-				mutations = data.objects;
+				var mutations = data.objects;
 				
 				mutations.sort(function (a,b) {
-					var chr_a = a.chromosome.substring(3);
-					var chr_b = b.chromosome.substring(3);
-					var chr_a_ord = parseInt(chrOrd[chr_a]);
-					var chr_b_ord = parseInt(chrOrd[chr_b]);
+					var chr_a_ord = chrOrd[a.chromosome.substring(3)];
+					var chr_b_ord = chrOrd[b.chromosome.substring(3)];
 					
 					if (chr_a_ord < chr_b_ord) return -1;
 					if (chr_a_ord > chr_b_ord) return 1;
@@ -43,8 +40,7 @@
 						});
 						annHtml += "</ul>";
 						$("#ann_" + mut.id).html(annHtml);
-					});
-					
+					});					
 				});
 				html += "</ol>";
 				$("#content").html(html);
