@@ -6,4 +6,4 @@ JAX-RS API mostly intended for interviews etc.
 
 3. /api/test - Health check
 
-**Note:** API is open to the whole world so AJAX calls from an HTML5 compliant browser can call this API.
+**Note:** This API is open to for cross-origin resource sharing (CORS) so AJAX calls from an HTML5 compliant browser can call this API.
