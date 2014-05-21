@@ -4,10 +4,31 @@
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
 		<script>
 			var apiBaseUrl = "http://localhost:9000/api";
+			var chrOrd = {"1": 1, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8,
+						  "9": 9, "10": 10, "11": 11, "12": 12, "13": 13, "14": 14, "15": 15,
+						  "16": 16, "17": 17, "18": 18, "19": 19, "20": 20, "21": 21, "22": 22,
+						  "X": 23, "Y": 24, "M": 25};
+			var mutations;
 			$.getJSON(apiBaseUrl + "/mutations", function (data) {
-				var html = "<ol>";
-				$.each(data.objects, function (index, mut) {
-					html += "<li><strong>Chromosome:</strong> " + mut.chromosome 
+				mutations = data.objects;
+				
+				mutations.sort(function (a,b) {
+					var chr_a = a.chromosome.substring(3);
+					var chr_b = b.chromosome.substring(3);
+					var chr_a_ord = parseInt(chrOrd[chr_a]);
+					var chr_b_ord = parseInt(chrOrd[chr_b]);
+					
+					if (chr_a_ord < chr_b_ord) return -1;
+					if (chr_a_ord > chr_b_ord) return 1;
+					if (a.position < b.position) return -1;
+					if (a.position > b.position) return 1;
+					return 0;
+				});
+				
+				var html = "<ul>";
+				$.each(mutations, function (index, mut) {
+					html += "<li><strong>ID: </strong>" + mut.id 
+							+ ", <strong>Chromosome:</strong> " + mut.chromosome 
 							+ ", <strong>Position: </strong> " + mut.position
 							+ ", <strong>Ref:</strong> " + mut.reference + ", <strong>Alt:</strong> " 
 							+ mut.alternate + ", <strong>Depth:</strong> " + mut.readDepth + "</li>"
@@ -20,14 +41,14 @@
 										+ ", <strong>Gene: </strong> " + ann.gene
 										+ ", <strong>Impact: </strong> " + ann.impact + "</li>";
 						});
-						annHtml += "</ol>";
+						annHtml += "</ul>";
 						$("#ann_" + mut.id).html(annHtml);
 					});
 					
 				});
 				html += "</ol>";
 				$("#content").html(html);
-			});
+			});		
 		</script>
 	</head>
 	<body>
