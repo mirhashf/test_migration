@@ -13,7 +13,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response.Status;
 
 import com.bina.mutations.model.Annotation;
 import com.bina.mutations.model.Annotation.Gene;
@@ -80,6 +82,15 @@ public class MutationsResource {
                            page,
                            pageSize,
                            snps.length);
+  }
+  
+  @GET
+  @Path("{id}")
+  public Mutation getMutationById(@PathParam("id") int id) {
+    if (snps.length >= id) {
+      return snps[id];
+    }
+    throw new WebApplicationException(Status.NOT_FOUND);
   }
 
   @GET
