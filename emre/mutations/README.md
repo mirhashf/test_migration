@@ -2,9 +2,11 @@ JAX-RS API mostly intended for interviews etc.
 ---------------------------------------------
 1. /api/mutations - Returns mutations. Can be paged by appending ?page=1&pagesize=20
 
-2. /api/mutations/{id}/annotations - Returns annotations for a specific mutation
+2. /api/mutations/{id} - Returns a single mutation by id
 
-3. /api/test - Health check
+3. /api/mutations/{id}/annotations - Returns annotations for a specific mutation
+
+4. /api/test - Health check
 
 To run the API, build with Maven and run the produced WAR file in the target directory, or run **com.bina.mutations.app.Runner.java** from an IDE like Eclipse.
 

@@ -87,8 +87,9 @@ public class MutationsResource {
   @GET
   @Path("{id}")
   public Mutation getMutationById(@PathParam("id") int id) {
+    int snpId = id - 1;
     if (snps.length >= id) {
-      return snps[id];
+      return snps[snpId];
     }
     throw new WebApplicationException(Status.NOT_FOUND);
   }
