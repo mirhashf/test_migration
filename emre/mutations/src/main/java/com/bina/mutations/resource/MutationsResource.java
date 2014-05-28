@@ -30,12 +30,12 @@ public class MutationsResource {
   private static final Random random = new Random();
   private static final Map<Integer, List<Annotation>> annMap = new HashMap<>();
   private static final Mutation[] snps = generateRandomSnps();
+  private static final int NUM_MUTATIONS = 100;
 
   private static Mutation[] generateRandomSnps() {
-    int numMutations = 100;
     int pos = 10;
-    Mutation[] result = new Mutation[numMutations];
-    for (int i = 1; i <= numMutations; i++) {
+    Mutation[] result = new Mutation[NUM_MUTATIONS];
+    for (int i = 1; i <= NUM_MUTATIONS; i++) {
       Mutation mut = new Mutation();
       mut.setId(i);
       pos += 10;
@@ -78,9 +78,13 @@ public class MutationsResource {
   @GET
   public QueryResult getMutations(@DefaultValue("1") @QueryParam("page") int page,
                                   @DefaultValue("10") @QueryParam("pagesize") int pageSize) {
-    return new QueryResult(Arrays.asList(Arrays.copyOfRange(snps, (page - 1) * pageSize, page * pageSize)),
-                           page,
-                           pageSize,
+    int actualPage = page < 1 ? 1 : page;
+    int actualPageSize = Math.min(pageSize, NUM_MUTATIONS);
+    return new QueryResult(Arrays.asList(Arrays.copyOfRange(snps, 
+                                                            (actualPage - 1) * actualPageSize, 
+                                                            actualPage * actualPageSize)),
+                           actualPage,
+                           actualPageSize,
                            snps.length);
   }
   
