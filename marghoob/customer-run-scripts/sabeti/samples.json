@@ -1,0 +1,132 @@
+{
+    "RC-102_1": {
+        "alignment_groups": [
+            {
+                "sample": "RC-102_1", 
+                "platform": "illumina", 
+                "read_group": "D2E76.5", 
+                "bam": "delta:/prj/sabeti/raw/RC-102_1/RC-102_1.D2E76.5.rg.bam", 
+                "library": "Solexa-180813"
+            }, 
+            {
+                "sample": "RC-102_1", 
+                "platform": "illumina", 
+                "read_group": "D2F80.2", 
+                "bam": "delta:/prj/sabeti/raw/RC-102_1/RC-102_1.D2F80.2.rg.bam", 
+                "library": "Solexa-180808"
+            }, 
+            {
+                "sample": "RC-102_1", 
+                "platform": "illumina", 
+                "read_group": "D2F80.8", 
+                "bam": "delta:/prj/sabeti/raw/RC-102_1/RC-102_1.D2F80.8.rg.bam", 
+                "library": "Solexa-180813"
+            }
+        ], 
+        "output_prefix": "delta:/prj/sabeti/runs/RC-102_1"
+    }, 
+    "RC-074_1": {
+        "alignment_groups": [
+            {
+                "sample": "RC-074_1", 
+                "platform": "illumina", 
+                "read_group": "D2DTW.8", 
+                "bam": "delta:/prj/sabeti/raw/RC-074_1/RC-074_1.D2DTW.8.rg.bam", 
+                "library": "Solexa-181485"
+            }, 
+            {
+                "sample": "RC-074_1", 
+                "platform": "illumina", 
+                "read_group": "D2DTW.7", 
+                "bam": "delta:/prj/sabeti/raw/RC-074_1/RC-074_1.D2DTW.7.rg.bam", 
+                "library": "Solexa-181485"
+            }, 
+            {
+                "sample": "RC-074_1", 
+                "platform": "illumina", 
+                "read_group": "D2E1J.6", 
+                "bam": "delta:/prj/sabeti/raw/RC-074_1/RC-074_1.D2E1J.6.rg.bam", 
+                "library": "Solexa-181477"
+            }
+        ], 
+        "output_prefix": "delta:/prj/sabeti/runs/RC-074_1"
+    }, 
+    "RC-006_1": {
+        "alignment_groups": [
+            {
+                "sample": "RC-006_1", 
+                "platform": "illumina", 
+                "read_group": "D2E0V.8", 
+                "bam": "delta:/prj/sabeti/raw/RC-006_1/RC-006_1.D2E0V.8.rg.bam", 
+                "library": "Solexa-181491"
+            }, 
+            {
+                "sample": "RC-006_1", 
+                "platform": "illumina", 
+                "read_group": "D2DKV.3", 
+                "bam": "delta:/prj/sabeti/raw/RC-006_1/RC-006_1.D2DKV.3.rg.bam", 
+                "library": "Solexa-181491"
+            }, 
+            {
+                "sample": "RC-006_1", 
+                "platform": "illumina", 
+                "read_group": "D2DTW.4", 
+                "bam": "delta:/prj/sabeti/raw/RC-006_1/RC-006_1.D2DTW.4.rg.bam", 
+                "library": "Solexa-181483"
+            }
+        ], 
+        "output_prefix": "delta:/prj/sabeti/runs/RC-006_1"
+    }, 
+    "RC-123_1": {
+        "alignment_groups": [
+            {
+                "sample": "RC-123_1", 
+                "platform": "illumina", 
+                "read_group": "D2E1J.8", 
+                "bam": "delta:/prj/sabeti/raw/RC-123_1/RC-123_1.D2E1J.8.rg.bam", 
+                "library": "Solexa-181479"
+            }, 
+            {
+                "sample": "RC-123_1", 
+                "platform": "illumina", 
+                "read_group": "D2DDR.3", 
+                "bam": "delta:/prj/sabeti/raw/RC-123_1/RC-123_1.D2DDR.3.rg.bam", 
+                "library": "Solexa-181487"
+            }, 
+            {
+                "sample": "RC-123_1", 
+                "platform": "illumina", 
+                "read_group": "D2DDR.4", 
+                "bam": "delta:/prj/sabeti/raw/RC-123_1/RC-123_1.D2DDR.4.rg.bam", 
+                "library": "Solexa-181487"
+            }
+        ], 
+        "output_prefix": "delta:/prj/sabeti/runs/RC-123_1"
+    }, 
+    "SM-GRN85_1": {
+        "alignment_groups": [
+            {
+                "sample": "SM-GRN85_1", 
+                "platform": "illumina", 
+                "read_group": "C3A48.1", 
+                "bam": "delta:/prj/sabeti/raw/SM-GRN85_1/SM-GRN85_1.C3A48.1.rg.bam", 
+                "library": "Sage-200392"
+            }, 
+            {
+                "sample": "SM-GRN85_1", 
+                "platform": "illumina", 
+                "read_group": "C3A48.3", 
+                "bam": "delta:/prj/sabeti/raw/SM-GRN85_1/SM-GRN85_1.C3A48.3.rg.bam", 
+                "library": "Solexa-201742"
+            }, 
+            {
+                "sample": "SM-GRN85_1", 
+                "platform": "illumina", 
+                "read_group": "C2Y7H.7", 
+                "bam": "delta:/prj/sabeti/raw/SM-GRN85_1/SM-GRN85_1.C2Y7H.7.rg.bam", 
+                "library": "Solexa-201742"
+            }
+        ], 
+        "output_prefix": "delta:/prj/sabeti/runs/SM-GRN85_1"
+    }
+}

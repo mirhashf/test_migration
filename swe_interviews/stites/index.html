@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html ng-app='main'>
+<head></head>
+<body>
+<div ng-controller='resCtrl'>
+	<div ng-repeat='data in response'>
+		<ul>
+			<li>ID: {{data.id}}, Chromosome: {{data.chromosome}}, Position: {{data.position}}, Ref: {{data.reference}}, Alt: {{data.alternate}}, Depth: {{data.readDepth}} </li>
+			Annotations:
+			<div ng-repeat='annotation in data.annotations'>
+				<ul>
+				<li>gene: {{annotation.gene}}, impact: {{annotation.impact}}, transcriptId: {{annotation.transcriptId}}</li>
+				</ul>
+			</div>
+
+		</ul>
+	</div>
+</div>
+</body>
+<script src='https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js'></script>
+<script src='main.js'></script>
+</html>

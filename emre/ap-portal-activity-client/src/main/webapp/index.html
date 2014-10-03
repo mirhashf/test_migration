@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html ng-app="main">
+<head>
+<title>Annotation Platform Activity Monitor</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="shortcut icon" href="favicon.ico" type="image/icon">
+<link rel="icon" href="favicon.ico" type="image/icon">
+
+<link href="libs/bootstrap/css/bootstrap.css" rel="stylesheet" />
+<link href="libs/bootstrap/css/bootstrap.loading.css" type="text/css" rel="stylesheet" />
+<link href="css/main.css" rel="stylesheet" />
+
+<script src="libs/jquery/jquery-2.1.0.min.js"></script>
+
+<script src="libs/bootstrap/js/bootstrap.min.js"></script>
+
+<script src="libs/angular/angular.min.js"></script>
+<script src="libs/angular/angular-resource.min.js"></script>
+<script src="libs/angular/angular-route.min.js"></script>
+
+<script src="libs/moment/moment.min.js"></script>
+
+<script src="js/main.js"></script>
+
+</head>
+<body>
+	<div ng-controller="MainCtrl">
+		<div class="page-header" style="text-align: center">
+  			<img src="img/logo.png"> <h4><font color="#ffffff">ACTIVITY MONITOR</font></h4>
+		</div>
+	
+		<div class="container">
+			<div class="content">
+				<form class="form-inline" role="form" ng-submit="getNotificationsPeriodically()">
+				  <div class="form-group">
+				    <input type="text" class="form-control input-xxlarge" size="80" 
+				    		placeholder="Enter email addresses (comma separated)"
+				    		ng-model="targetEmails">
+				  </div>
+				  <button type="submit" class="btn btn-primary">Submit</button>
+				</form>
+				<br/>
+			
+				<div class="alert alert-danger alert-dismissable" ng-show="errorMessage">
+				  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+				  {{errorMessage}}
+				</div>
+				<div class="alert alert-info" ng-show="query" style="word-wrap: break-word;">
+					<button type="button" class="close" ng-click="query = null">&times;</button>
+				  	<strong>Data set name:</strong> {{query.dataSetName}} <br/>
+					<strong>Sample name:</strong> {{query.sampleName}} <br/>
+					<strong>Clauses: </strong>
+					<ul>
+						<li ng-repeat="c in query.andClauses">
+							{{c.dataSourceName + ' ' + (c.columnName ? c.columnName : '') + ' ' + c.operator + ' ' + (c.operand ? c.operand : '')}}
+						</li>
+					</ul>
+				</div>
+				
+				<br/>
+				<div ng-show="loading" class="text-center"><img src="img/ajax-loader.gif"></div>
+				<div ng-if="notifications && notifications.length > 0 && !loading">
+					<table class="table table-hover">
+						<tr><th>User</th><th>Message</th><th>Timestamp</th></tr>
+						<tr ng-repeat="n in notifications">
+							<td>{{n.emailAddress}}</td>
+							<td>{{n.message}} 
+								<span ng-show="n.isQuery"> 
+									-> <a href="#" ng-click="getQuery(n.message)">View Query</a>	
+								</span>
+							</td>
+							<td>{{n.dateCreated | formatDate}}</td>
+						</tr>
+					</table>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+</body>
+</html>

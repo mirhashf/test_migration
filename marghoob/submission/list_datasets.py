@@ -11,12 +11,14 @@ args = parser.parse_args()
 
 datasets = json.load(args.dataset_file)
 
-max_key_len = max([len(key) for key in datasets.keys()])
+dataset_keys = datasets.keys()
+dataset_keys.sort()
+max_key_len = max([len(key) for key in dataset_keys])
 
 fmt = "%%-%ds| %%s" % (max_key_len + 1)
 print fmt % ("Dataset name", "Comment")
 print "-"*120
-for dataset_name in datasets:
+for dataset_name in dataset_keys:
   dataset = datasets[dataset_name]
   comment = dataset["comment"] if "comment" in dataset else ""
   print fmt % (dataset_name, comment)

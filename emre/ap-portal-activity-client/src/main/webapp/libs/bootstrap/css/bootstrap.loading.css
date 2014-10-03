@@ -1,0 +1,49 @@
+.icon-load,
+.btn.load [class^="icon-"],
+.btn.load [class*=" icon-"] {
+    background-image: url('../../../img/bootstrap/loading/loading.gif');
+    background-position: 0px 0px;
+    background-repeat: no-repeat;
+}
+
+.btn-primary .icon-load,
+.btn-primary.load [class^="icon-"],
+.btn-primary.load [class*=" icon-"] {
+    background-image: url('../../../img/bootstrap/loading/loading-primary.gif');
+    background-repeat: no-repeat;
+}
+
+.btn-info .icon-load,
+.btn-info.load [class^="icon-"],
+.btn-info.load [class*=" icon-"] {
+    background-image: url('../../../img/bootstrap/loading/loading-info.gif');
+    background-repeat: no-repeat;
+}
+
+.btn-success .icon-load,
+.btn-success.load [class^="icon-"],
+.btn-success.load [class*=" icon-"] {
+    background-image: url('../../../img/bootstrap/loading/loading-success.gif');
+    background-repeat: no-repeat;
+}
+
+.btn-warning .icon-load,
+.btn-warning.load [class^="icon-"],
+.btn-warning.load [class*=" icon-"] {
+    background-image: url('../../../img/bootstrap/loading/loading-warning.gif');
+    background-repeat: no-repeat;
+}
+
+.btn-danger .icon-load,
+.btn-danger.load [class^="icon-"],
+.btn-danger.load [class*=" icon-"] {
+    background-image: url('../../../img/bootstrap/loading/loading-danger.gif');
+    background-repeat: no-repeat;
+}
+
+.btn-inverse .icon-load,
+.btn-inverse.load [class^="icon-"],
+.btn-inverse.load [class*=" icon-"] {
+    background-image: url('../../../img/bootstrap/loading/loading-inverse.gif');
+    background-repeat: no-repeat;
+}

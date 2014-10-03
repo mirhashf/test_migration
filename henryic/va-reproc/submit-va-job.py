@@ -36,7 +36,7 @@ elif hw_rev == 'A01':
     worker_num = 4
     max_mem = 85
     thread_num = 24
-    bwa_threads = 22
+    bwa_threads = 18
 else:
     print 'The hardware rev parameter mapper is confused'
     exit(1)
@@ -59,13 +59,13 @@ job_obj = {
                 "sample": sample_name,
                 "library": "L0",
                 "platform": "Illumina",
-                "bam": "gs1:/VA/bam/" + sample_name + ".bam"
+                "bam": "gsfs0:/VA/bam/" + sample_name + ".bam"
             }
         ],
         "fasta": "gsfs0:/referencefiles/ucsc.hg19.fa",
         "dbsnp": "gsfs0:/referencefiles/dbsnp_135.hg19.vcf",
         "output_prefix": "gsfs0:/output/VA/reproc-out/" + sample_name,
-        "gatk_path": "gsfs0:/gatk/gatk-2.7-4",
+        "gatk_path": "gsfs0:/VA/gatk/gatk-2.7-4",
         "run_breakdancer": True,
         "run_cnvnator": True,
         "run_pindel": True,
@@ -75,7 +75,7 @@ job_obj = {
         "keep_realigned_bams": False,
         "keep_recalibrated_bams": True,
         "worker_num": worker_num,
-        "run_bwa": False,
+        "run_bwa": True,
         "run_reduce_reads": True,
         "run_vqsr_snp": True,
         "run_vqsr_indel": True,
@@ -204,7 +204,7 @@ job_obj = {
     },
     "metadata": {
         "tags": sample_name + ",bwa,gatk2.7-4,rread,refcall,cnv,bd,pd,bs",
-        "project": "Workflow Test",
+        "project": "AAA Reprocess",
         "library": "L0",
         "pi": "Phil Tsao",
         "sample": sample_name
