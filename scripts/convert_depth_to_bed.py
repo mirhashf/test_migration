@@ -54,6 +54,7 @@ for line in fileinput.input(sys.argv[1:]):
     else:
         if pos > curr_end + 1:
             print_bed(curr_chr, curr_start, curr_end, curr_depth)
+            curr_start = None
         else:
             curr_end += 1
 
