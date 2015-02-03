@@ -10,7 +10,7 @@ JAX-RS API mostly intended for interviews etc.
 
 To run the API, build with Maven and run the produced WAR file in the target directory, or run **com.bina.mutations.app.Runner.java** from an IDE like Eclipse.
 
-**Note:** This API is open to for cross-origin resource sharing (CORS) so AJAX calls from an HTML5 compliant browser can call this API.
+**Note:** This API is open to cross-origin resource sharing (CORS) so AJAX calls from an HTML5 compliant browser can call this API.
 
 Possible interview questions
 ----------------------------

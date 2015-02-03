@@ -65,10 +65,12 @@ public class MutationsResource {
 
   private static List<Annotation> generateRandomAnnotations(int numAnnotations) {
     List<Annotation> annotations = new ArrayList<>(numAnnotations);
+    // Make all the annotations on the same gene, per transcript
+    Gene randomGene = Gene.values()[random.nextInt(Gene.values().length)];
     for (int x = 0; x < numAnnotations; x++) {
       Annotation ann = new Annotation();
       ann.setImpact(Impact.values()[random.nextInt(Impact.values().length)]);
-      ann.setGene(Gene.values()[random.nextInt(Gene.values().length)]);
+      ann.setGene(randomGene);
       ann.setTranscriptId("ENST" + String.valueOf(1000 + random.nextInt(1000)));
       annotations.add(ann);
     }
