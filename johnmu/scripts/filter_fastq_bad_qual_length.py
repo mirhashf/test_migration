@@ -29,4 +29,4 @@ with open(sys.argv[1]) as fq1, open(sys.argv[2]) as fq2, open("fixed_"+sys.argv[
 					fixed_fq1.write(rec[0] + '\n')
 					fixed_fq2.write(rec[1] + '\n')
 			line_counter = 0
-			line_buffer.clear()
+			del line_buffer[:]
