@@ -36,7 +36,7 @@ def main():
     print "using customer email: {0}".format(cusemail)
 
     if (raw_input('Proceed using these parameters? [Y/n]: ') != 'Y'):
-        sys.exit()
+        sys.exit("Notification aborted")
 
     ses_region = 'us-east-1'
     ses_sender = 'mail-noreply@bina.com'
@@ -48,7 +48,8 @@ def main():
 
     ses_connection = boto.ses.connect_to_region(ses_region)
 
-    ses_connection.send_email(source=ses_sender, subject=message_subject, body=None, to_addresses=[cusemail], bcc_addresses=['henryic@bina.com'], format=message_format, text_body=message_text_body, html_body=message_html_body)
+    print "Sending notification"
+    ses_connection.send_email(source=ses_sender, subject=message_subject, body=None, to_addresses=[cusemail], bcc_addresses=['henry.chen.hc5@bina.roche.com'], format=message_format, text_body=message_text_body, html_body=message_html_body)
 
 
 if __name__ == '__main__':
