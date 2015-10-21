@@ -1,0 +1,8 @@
+Please write a simple command line program that adds 2 Roman numerals WITHOUT converting them to decimal or any other base. In case you are not familiar with Roman numerals, here's a short description: https://en.wikipedia.org/wiki/Roman_numerals
+
+Examples:
+1. Adding III and IX should return XII
+2. Adding CLI and LIX should return CCX
+
+Instructions:
+Please send us your code written in a language of your choosing, and some instructions to compile (if necessary) and run it. Please do NOT send us any binaries (jar, class, exe files etc.).
