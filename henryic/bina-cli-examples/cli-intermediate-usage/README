@@ -1,0 +1,101 @@
+Intermediate usage:
+
+The CLI can be used to query some relevant information from the Bina system.
+
+#############################
+## Job submission feedback ##
+#############################
+
+Upon submission of a job, the CLI will write some basic information to STDOUT with the format:
+
+Submitted job to BinaBox(https://<portalURL>, #<boxID>): <jobID>, <jobStatus>, <monitorLink> -> <persistedLink>, \
+pi: <piMetadata>, project: <projectMetadata>, tags: <tagsMetadata>
+
+Submitted job to BinaBox(https://binabox, #1): aaaaaaaa-bbbb-cccc-eeee-ffffffffffff, Queued, \
+https://binabox/?#binabox/monitor/1/aaaaaaaa-bbbb-cccc-eeee-ffffffffffff -> \
+https://binabox/?#binabox/view/1/aaaaaaaa-bbbb-cccc-eeee-ffffffffffff, pi: Bina-User, project: CLI Example, \
+tags: Cli Example, Test Sample, Some Parameters
+
+The CLI can be made to log this to a parsable JSON file by including the "--list" flag with an output filename, e.g.:
+
+    java -jar binaclient.jar <portal_url> <username> submit [--list wes_jobs.json] ds9_wes.st samples_list=ds9_wes_samples.csv
+
+The output file will contain a JSON array, with each element having the following elements:
+
+    id
+    linkMonitor
+    linkView
+    outputURI
+    metadata
+        pi
+        project
+        tags
+
+So running the above example would give a three-element JSON array:
+
+    [ {
+      "id" : "11111111-1111-1111-1111-111111111111",
+      "linkMonitor" : "https://<portalURL>/?#binabox/monitor/1/11111111-1111-1111-1111-111111111111",
+      "linkView" : "https://portalURL>/?#binabox/view/1/11111111-1111-1111-1111-111111111111",
+      "outputURI" : "mount:henryic/userdata/output"
+      "metadata" : {
+        "pi" : "HENRY",
+        "project" : "BATCH SUBMIT",
+        "tags" : "ds9"
+    }, {
+      "id" : "22222222-2222-2222-2222-222222222222",
+      "linkMonitor" : "https://<portalURL>/?#binabox/monitor/1/22222222-2222-2222-2222-222222222222",
+      "linkView" : "https://portalURL>/?#binabox/view/1/22222222-2222-2222-2222-222222222222",
+      "outputURI" : "mount:henryic/userdata/output"
+      "metadata" : {
+        "pi" : "HENRY",
+        "project" : "BATCH SUBMIT",
+        "tags" : "ds9"
+    },{
+      "id" : "33333333-3333-3333-3333-333333333333",
+      "linkMonitor" : "https://<portalURL>/?#binabox/monitor/1/33333333-3333-3333-3333-333333333333",
+      "linkView" : "https://portalURL>/?#binabox/view/1/33333333-3333-3333-3333-333333333333",
+      "outputURI" : "mount:henryic/userdata/output"
+      "metadata" : {
+        "pi" : "HENRY",
+        "project" : "BATCH SUBMIT",
+        "tags" : "ds9"
+    } ]
+
+
+###########################
+## Querying job statuses ##
+###########################
+
+The CLI can be used to query a job or list of jobs for their statuses. The most basic form is to directly query using
+a Job ID:
+
+    java -jar binaclient.jar https://<portalURL> <username> get 11111111-1111-1111-1111-111111111111
+
+which would return output on STDOUT similar to:
+
+Got job from BinaBox(https://<portalURL>, #1): 11111111-1111-1111-1111-111111111111, Successful,\
+https://<portalURL>/?#binabox/view/1/11111111-1111-1111-1111-111111111111, pi: HENRY, project: BATCH SUBMIT, tags: ds9
+
+If multiple jobs were submitted, all statues can be queried by using the JSON array from the --list output:
+
+    java -jar binaclient.jar https://<portalURL> <username> get wes_jobs.json
+
+which would query all jobs.
+
+A blocking query can be made by specifying the --synchronous flag with the get command:
+
+    java -jar binaclient.jar https://<portalURL> <username> get --synchronous 11111111-1111-1111-1111-111111111111
+
+or
+
+    java -jar binaclient.jar https://<portalURL> <username> get --synchronous wes_jobs.json
+
+This will poll the requested jobs and will not return until either all jobs are completed successfully, or an errored
+job is encountered.
+
+
+FILES ATTACHED
+(refer to cli-basic-usage)
+ds9_wes.st
+ds9_wes_samples.csv

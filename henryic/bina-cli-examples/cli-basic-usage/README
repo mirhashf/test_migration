@@ -1,0 +1,45 @@
+Basic usage:
+
+Create a string template file based on an existing job object or job template. In the places you want to parameterize,
+replace the fields with "<variable.parameter>"
+
+You will use "variable" to define which CSV file will supply the parameter during job submission time.
+
+For example, if you want to run many jobs and change only the files used as input, you would create a CSV file having:
+
+    samplename,first-end,second-end
+    sample1,mount:yourmount/path/to/sample1_1.fq,mount:yourmount/path/to/sample1_2.fq
+    sample2,mount:yourmount/path/to/sample2_1.fq,mount:yourmount/path/to/sample2_2.fq
+    sample3,mount:yourmount/path/to/sample3_3.fq,mount:yourmount/path/to/sample3_2.fq
+    sample4,mount:yourmount/path/to/sample4_1.fq,mount:yourmount/path/to/sample4_2.fq
+
+
+And in the read inputs section you would have something like:
+
+                    "pairs": [
+                        {
+                            "identifier": "ReadGroup",
+                            "sample": "<samples_list.samplename>",
+                            "library": "Library",
+                            "platform": "Illumina",
+                            "reads": [
+                                "<samples_list.first-end>",
+                                "<samples_list.second-end>"
+                            ]
+                        }
+                    ]
+
+
+Download the Bina CLI client directly from the portal, from https://<your.portal.url>/cli/binaclient.jar
+
+Submit by running:
+
+java -jar binaclient.jar <portal_url> <username> submit <job template file>.st samples_list=<samples_file.csv>
+
+For the specific attached example (running WES on "ds9"), the command to submit would be:
+
+java -jar binaclient.jar <portal_url> <username> submit ds9_wes.st samples_list=ds9_wes_samples.csv
+
+FILES ATTACHED
+ds9_wes.st
+ds9_wes_samples.csv
