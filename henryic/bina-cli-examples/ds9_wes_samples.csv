@@ -1,0 +1,2 @@
+samplename,readname,library,end0_path,end1_path
+ds9,rn_ds9-1,lb_ds9-1,mount:preload/ds9/1.fq,mount:preload/ds9/2.fq
