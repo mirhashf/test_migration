@@ -57,10 +57,6 @@ def performSubtraction(value):
 addValues("CLI", "LIX")
 addValues("CCCLXIX","DCCCXLV")
 addValues("III","IX")
-# Start Emre
-addValues("I","II")
-addValues("IV","VI")
-
 
 
 
