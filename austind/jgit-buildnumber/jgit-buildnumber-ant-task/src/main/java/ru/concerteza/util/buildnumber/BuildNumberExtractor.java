@@ -1,5 +1,6 @@
 package ru.concerteza.util.buildnumber;
 
+import org.eclipse.jgit.errors.RevWalkException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.PersonIdent;
@@ -134,13 +135,19 @@ public class BuildNumberExtractor {
 
     // takes about 1 sec to count 69939 in intellijidea repo
     private static int countCommits(FileRepository repo, ObjectId revision) throws IOException {
-        RevWalk walk = new RevWalk(repo);
-        walk.setRetainBody(false);
-        RevCommit head = walk.parseCommit(revision);
-        walk.markStart(head);
-        int res = 0;
-        for (RevCommit commit : walk) res += 1;
-        walk.dispose();
-        return res;
+        try {
+            RevWalk walk = new RevWalk(repo);
+            walk.setRetainBody(false);
+            RevCommit head = walk.parseCommit(revision);
+            walk.markStart(head);
+            int res = 0;
+            for (RevCommit commit : walk) res += 1;
+            walk.dispose();
+            return res;
+        } catch (final RevWalkException ex) {
+          // Ignore exception caused by shallow clone
+          ex.printStackTrace();
+          return -1;
+        }
     }
 }
