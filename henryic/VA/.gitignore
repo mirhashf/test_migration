@@ -1,0 +1,4 @@
+aws_credentials.py
+*.pyc
+venv
+
