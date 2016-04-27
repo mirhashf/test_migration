@@ -1,0 +1,40 @@
+** Description **
+Write a program that takes input as a CSV file that represents a spreadsheet, computes
+the formulas in the spreadsheet and outputs the results
+
+The first row of the input specifies the size of the sheet (rows,columns)
+
+Formulas may have references to other cells. Rows are indexed as numbers (1,2,3,...)
+and columns are indexed as capital letters (A,B,C,...)
+
+Formulas may only have the operations '+' and '*'. 
+
+Formulas are specified in reverse polish notation, space is used as the separator.
+
+All values are integers
+
+Assume maximum number of rows or columns is 10
+
+Bonus: Able to check if there is a loop in the formula specifications and jump out
+
+** Example **
+Input:
+2,2
+1 1 +,2
+0, 2 2 * 2 +
+
+Output:
+2,2
+0,6
+
+** Example2 **
+Input:
+2,2
+B2 A2 +, 2 2 +
+A1 2 *, 3
+
+Output
+7,4
+14,3
+
+These examples are given as files for your convenience 
