@@ -1,0 +1,35 @@
+#!/bin/bash
+
+echo "Running FastQC wrapper"
+
+FASTQC_BIN=/usr/lib/bina/fastqc/current/current/FastQC/fastqc
+
+FASTQC_ARGS=${@:1:$#-1}
+FASTQ_STREAMIN=${@: -1}
+FASTQ_NAME=$(basename $(dirname $2))
+FASTQ_NAME=$(basename $(basename $(cat /proc/$PPID/cmdline | tr "\0" " " | grep -o  "multipart-chunk-size-mb=200 s3://\S*" | awk '{ print $2 }')) .gz)
+WGE_JOBDIR=$(dirname $(dirname $(dirname $(dirname $(dirname $(dirname $2))))))
+
+TMPDIR=${WGE_JOBDIR}/FastQCStage
+
+mkdir -pv ${TMPDIR}
+
+echo "FASTQ_NAME: ${FASTQ_NAME}"
+# echo "FASTQC_ARGS: ${FASTQC_ARGS}"
+# echo "FASTQ_STREAMIN: ${FASTQ_STREAMIN}"
+
+[ ! -z "${FASTQ_NAME}" ] || FASTQ_NAME=$(basename $(mktemp --tmpdir=${TMPDIR}))
+
+# echo "FASTQ_NAME: ${FASTQ_NAME}"
+FASTQ_TMPFILE=${TMPDIR}/${FASTQ_NAME}
+
+# echo "FASTQ_TMPFILE: ${FASTQ_TMPFILE}"
+
+echo "Staging FASTQ stream to file ${FASTQ_TMPFILE}: \"cat ${FASTQ_STREAMIN} | gunzip -c > ${FASTQ_TMPFILE}\""
+cat ${FASTQ_STREAMIN} | gunzip -c > ${FASTQ_TMPFILE}
+
+echo "Calling FastQC: ${FASTQC_BIN} ${FASTQC_ARGS} ${FASTQ_TMPFILE}"
+${FASTQC_BIN} ${FASTQC_ARGS} ${FASTQ_TMPFILE}
+
+rm -v ${FASTQ_TMPFILE}
+
