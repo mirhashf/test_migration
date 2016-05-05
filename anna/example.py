@@ -48,7 +48,7 @@ def main():
 	options = {'server': host}
 	jira = JIRA(options, basic_auth=(user, password))
 
-	user_stories_to_ids = get_user_stories_to_ids('../../../mappings.csv')
+	user_stories_to_ids = get_user_stories_to_ids('mappings.csv')
 
 	print "user stories to ids"
 	print user_stories_to_ids
