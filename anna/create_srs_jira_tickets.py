@@ -37,24 +37,20 @@ def save_srs_data_to_ticket(srs_data, jira):
 		req_id = srs[0]
 		if (not isNumber(req_id)): continue
 		req_id = int(req_id)
-		req_description = srs[1]
-		req_component = srs[2]
+		req_summary = srs[1]
+		req_description = srs[2]
+		req_component = srs[3]
 		# the name that we give the issue
-		req_summary = str(req_id) + '-' + req_component
+		# req_summary = str(req_id) + '-' + req_component
 
 		# check if issue exists in jira
 		issue = jira.search_issues('project= SBX and cf[12301]= ' +  str(req_id))
 
 		if len(issue) > 0 :
 
-			# need to compare descriptions and highlight the differences
-			current_description = issue[0].fields.description
-
-			if not (current_description == req_description):
-				print "updating description "
-		 		issue[0].update(fields={'description': req_description})
-		 	else:
-		 		print "keeping the same description"
+			# need to compare current values to new values
+			# version is hard coded
+			update_issue(issue[0], req_summary, req_description, 12)
 
 		else:
 
@@ -63,7 +59,39 @@ def save_srs_data_to_ticket(srs_data, jira):
 
 			# 12300 = HPALM Project name, 12301 = HP ALM Req ID, 12303 = HP ALM Version
 			new_issue.update(fields={'customfield_12300': 'RSU_Development', 'customfield_12301': req_id, 'customfield_12303': 12})
-		
+	
+def update_summary(issue, new_summary):
+	current_summary = issue.fields.summary
+	if not (current_summary == new_summary):
+		print "updating summary"
+		issue.update(fields={'summary': new_summary})
+	else:
+		print "keeping the same summary"
+
+def update_description(issue, new_descript):
+	current_description = issue.fields.description
+
+	if not (current_description == new_descript):
+		print "updating description "
+		issue.update(fields={'description': new_descript})
+	else:
+		print "keeping the same description"
+
+def update_version(issue, new_version):
+	current_version = issue.fields.customfield_12303
+	if not (current_version == new_version):
+		print "updating version"
+		issue.update(fields={'customfield_12303': new_version})
+
+	else:
+		print "keeping the same version"
+
+
+def update_issue(issue, new_summary, new_descript, new_version):
+	update_summary(issue, new_summary)
+	update_description(issue, new_descript)
+	update_version(issue, new_version)
+	
 
 
 def delete_all_issues(jira):

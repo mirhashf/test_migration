@@ -281,7 +281,7 @@
 2638,The analysis software shall perform external backups of working databases and audit trail.,The analysis software shall perform external backups of working databases and audit trail.,System Infrastructure
 2635,The analysis software shall read input data and write output data over NFSv3.,The analysis software shall read input data and write output data over NFSv3.,System Infrastructure
 2634,"When viewing the configuration UI, the analysis software global navigation bar shall provide a way for an admin user to navigate to the Analysis Tool UI.","When viewing the configuration UI, the analysis software global navigation bar shall provide a way for an admin user to navigate to the Analysis Tool UI.",Global Header Bar
-2637,The analysis software shall allow external backups to be set with a configuratble retention period.,The analysis software shall allow external backups to be set with a configuratble retention period.,System Infrastructure
+2637,The analysis software shall allow external backups to be set with a configurable retention period.,The analysis software shall allow external backups to be set with a configurable retention period.,System Infrastructure
 2636,The analysis software shall be accessible over HTTPS.,The analysis software shall be accessible over HTTPS.,System Infrastructure
 2631,The analysis software shall provide a way to view the following software versioning information:,"The analysis software shall provide a way to view the following software versioning information:
 - Version of GMS
