@@ -11,6 +11,10 @@ OUTFILEPATH="/var/log/disk-usage"
 OUTFILENAME="disk-usage-report_$(date +%Y%m%d)"
 OUTFILE=${OUTFILEPATH}/${OUTFILENAME}
 
+if [ ! -d ${OUTFILEPATH} ]; then
+    mkdir -pv ${OUTFILEPATH}
+fi
+
 touch ${OUTFILE}
 
 SEARCH_DIRS='
