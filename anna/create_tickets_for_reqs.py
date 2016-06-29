@@ -127,7 +127,7 @@ def login_to_jira():
 
 def req_or_prd():
 	if (len(sys.argv) != 3):
-		sys.exit("Please type PRD or req as the last argument based on the requirement you want to import.")
+		sys.exit("Please type PRD or SRS as the last argument based on the requirement you want to import.")
 
 	req_or_prd = sys.argv[2]
 	if req_or_prd == "PRD": return True 
