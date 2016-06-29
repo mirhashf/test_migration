@@ -1,0 +1,400 @@
+HPALM Req ID,Req Name,Req Description,Req Parent folder/section
+2349,"[TRQ2349] When an error occurs during CSV sample information import, the analysis software shall prevent importing samples and display an error message to the user.","When an error occurs during CSV sample information import, the analysis software shall prevent importing samples and display an error message to the user.",Error Handling
+1961,[TRQ1961] The analysis software shall provide access for two privilege levels. Admin users and Lab Users.,The analysis software shall provide access for two privilege levels. Admin users and Lab Users.,User Management
+3323,[TRQ3323] The analysis software shall take less than 20 minutes to perform tertiary analysis and annotation.,The analysis software shall take less than 20 minutes to perform tertiary analysis and annotation.,Analysis
+2381,"[TRQ2381] When displaying the SNV and Indel table, the analysis software shall display a legend for the colored database icons in the Annotation Column.","When displaying the SNV and Indel table, the analysis software shall display a legend for the colored database icons in the Annotation Column.",Results View
+2380,"[TRQ2380] When displaying the SNV and Indel table, the analysis software shall display corroborating Annotation from databases as colored icons.","When displaying the SNV and Indel table, the analysis software shall display corroborating Annotation from databases as colored icons.",Results View
+2019,[TRQ2019] The analysis software shall produce a Quality Control Report with a graph of the Allele Fraction Distribution.,The analysis software shall produce a Quality Control Report with a graph of the Allele Fraction Distribution.,Report
+2018,[TRQ2018] The analysis software shall allow filtering results by common SNPs from dbSNP.,The analysis software shall allow filtering results by common SNPs from dbSNP.,Filtering
+2015,[TRQ2015] The analysis software shall allow filtering results by allele frequency of variants found in ExAC.,The analysis software shall allow filtering results by allele frequency of variants found in ExAC.,Filtering
+2014,[TRQ2014] The analysis software shall allow filtering results by allele frequency of variants found in 1000 Genomes.,The analysis software shall allow filtering results by allele frequency of variants found in 1000 Genomes.,Filtering
+2016,[TRQ2016] The analysis software shall allow users to filter variants such that displayed variants match at least one of the selected SNPEff criteria.,The analysis software shall allow users to filter variants such that displayed variants match at least one of the selected SNPEff criteria.,Filtering
+2010,[TRQ2010] The detailed data for SNVs and Indels in the reports shall contain the following information:,"The detailed data for SNVs and Indels in the reports shall contain the following information:
+- Gene
+- Variant Description
+- Genomic Position
+- Allele Fraction
+- Mutant Molecules per ml
+- Alternate Depth: Total Read Depth
+- Transcript
+- Amino Acid Change
+- Coding Change
+- Exon for Amino Acid Change
+- ExAC Global Frequency
+- dbSNP ID
+- COSMIC ID
+- Link to COSMIC variant page if applicable
+- Primary Tissue(s) from COSMIC
+- Sample Count according to COSMIC
+- ID in TCGA
+- Primary Cancer Types from TCGA
+- Number of Cases from TCGA
+- Custom Annotations if applicable",Report
+2013,[TRQ2013] The analysis software shall allow users to filter results by somatic mutations found in COSMIC,The analysis software shall allow users to filter results by somatic mutations found in COSMIC,Filtering
+3769,"[TRQ3769] When a filter set is applied, the analysis software shall remove any previous filter set and apply the most recent filter set selected by the user.","When a filter set is applied, the analysis software shall remove any previous filter set and apply the most recent filter set selected by the user.",Filtering
+1954,"[TRQ1954] When a data set is re-analyzed by an identical workflow, the analysis software shall produce results in which >=99% of aberrations are identical to previously generated results.","When a data set is re-analyzed by an identical workflow, the analysis software shall produce results in which >=99% of aberrations are identical to previously generated results.",Analysis
+1957,[TRQ1957] The software shall to detect SNVs in the following assay panels:,"The software shall to detect SNVs in the following assay panels:
+- AVENIO ctDNA Targeted Kit
+- AVENIO ctDNA Expanded Kit
+- AVENIO ctDNA Surveillance Kit",Analysis
+1959,[TRQ1959] The software shall to detect CNV Amplifications in the following assay panels:,"The software shall to detect CNV Amplifications in the following assay panels:
+- AVENIO ctDNA Targeted Kit
+- AVENIO ctDNA Expanded Kit",Analysis
+1958,[TRQ1958] The software shall to detect Indels in the following assay panels:,"The software shall to detect Indels in the following assay panels:
+- AVENIO ctDNA Targeted Kit
+- AVENIO ctDNA Expanded Kit
+- AVENIO ctDNA Surveillance Kit",Analysis
+3379,[TRQ3379] The analysis software shall store user passwords as cryptographic hashes.,The analysis software shall store user passwords as cryptographic hashes.,Security
+2068,[TRQ2068] The analysis software shall allow a user to search for existing runs in all run states.,The analysis software shall allow a user to search for existing runs in all run states.,Run Information
+2069,[TRQ2069] The analysis software shall allow a user to create a new run.,The analysis software shall allow a user to create a new run.,Run Setup
+2390,[TRQ2390] The analysis software shall produce reports containing the following tracking information:,"The analysis software shall produce reports containing the following tracking information:
+- Run Name
+- Run ID generated from GMS
+- Analysis Completion Datetime
+- Operator
+- Software versions
+- Flow Cell ID
+- Sequencer Data Path
+- Sequencer Started Datetime
+- Sequencing instrument name
+- Number of samples sequenced in Flow Cell Lane
+- Sample ID
+- Assay Panel
+- Assay Adapter
+- Analysis Analysis Workflow
+- Filter set
+- Total DNA Mass in nanograms (ng)
+- Plasma Volumes in milliliters (ml)",Report
+2065,[TRQ2065] The analysis software shall allow a user to define a directory path where files output from analysis will be saved.,The analysis software shall allow a user to define a directory path where files output from analysis will be saved.,Run Settings
+2066,[TRQ2066] The analysis software shall display the following status information for the most recent 10 Runs on the home screen:,"The analysis software shall display the following status information for the most recent 10 Runs on the home screen:
+- Runs in Setup to be finalized
+- Queued Runs
+- Analysis
+- Completed Runs
+- Total count of completed samples
+- Total count of failed samples",Run Information
+2067,[TRQ2067] The analysis software shall allow a user to access details about runs which are owned by that user.,The analysis software shall allow a user to access details about runs which are owned by that user.,Run Information
+3771,[TRQ3771] The analysis software shall allow a user to filter by a custom annotation  which the admin applied to the analysis workflow selected for the sample.,The analysis software shall allow a user to filter by a custom annotation  which the admin applied to the analysis workflow selected for the sample.,Filtering
+3770,"[TRQ3770] When saving a filter set, the analysis software shall allow an admin user to define a name and description for the filter set.","When saving a filter set, the analysis software shall allow an admin user to define a name and description for the filter set.",Filtering
+3383,[TRQ3383] The analysis software shall allow a user to generate reports manually with the desired filters applied.,The analysis software shall allow a user to generate reports manually with the desired filters applied.,Report
+3380,[TRQ3380] The analysis software shall produce Quality Control Reports as a JSON file.,The analysis software shall produce Quality Control Reports as a JSON file.,Report
+2026,[TRQ2026] The analysis software shall produce a Quality Control Report with the following sample analysis information:,"The analysis software shall produce a Quality Control Report with the following sample analysis information:
+- Number of Read Pairs
+- Properly paired aligned read percentage
+- Error Rate as percentage
+- Median fragment length after deduplication",Report
+3389,[TRQ3389] The analysis software shall generate unique Run IDs for all submistted runs.,The analysis software shall generate unique Run IDs for all submistted runs.,Analysis
+2666,[TRQ2666] The analysis software shall detect cross-contamination between samples.,The analysis software shall detect cross-contamination between samples.,Analysis
+2667,"[TRQ2667] When viewing sample results, and if cross-contamination has occurred during the assay, the analysis software shall display an indicator for cross-contamination for that sample.","When viewing sample results, and if cross-contamination has occurred during the assay, the analysis software shall display an indicator for cross-contamination for that sample.",Results View
+2359,[TRQ2359] The analysis software shall display a global navigation bar in the header of every screen in the ctDNA Analysis Tool UI.,The analysis software shall display a global navigation bar in the header of every screen in the ctDNA Analysis Tool UI.,Global Header Bar
+2388,[TRQ2388] The analysis software run header shall allow users to navigate through the following steps:,"The analysis software run header shall allow users to navigate through the following steps:
+- Sample Entry
+- Run Settings
+- Analysis
+- Results",Run Setup
+2071,[TRQ2071] The analysis software shall display the following information for Runs in the queued state:,"The analysis software shall display the following information for Runs in the queued state:
+- Run Name
+- User ID of owner (user who started run)
+- Numbered position in the queue
+- Time elapsed since run entered queue",Run Information
+2070,[TRQ2070] The analysis software shall display the following information for Runs in the analysis state:,"The analysis software shall display the following information for Runs in the analysis state:
+- Run Name
+- User ID of owner (user who started run)
+- Lock icon if run was not started by current user
+- Time elapsed since run was started",Run Information
+2668,[TRQ2668] The analysis software shall analyze samples sequenced with the following Panels:,"The analysis software shall analyze samples sequenced with the following Panels:
+- AVENIO ctDNA Targeted Kit
+- AVENIO ctDNA Expanded Kit
+- AVENIO ctDNA Surveillance Kit",Analysis
+2669,[TRQ2669] The analysis software shall prevent more than 24 samples being entered into the Run Setup.,The analysis software shall prevent more than 24 samples being entered into the Run Setup.,Run Setup
+2674,"[TRQ2674] When a QC checkpoint fails for a individual sample, the analysis software shall produce results for all other samples in the dataset which passed all QC checkpoints.","When a QC checkpoint fails for a individual sample, the analysis software shall produce results for all other samples in the dataset which passed all QC checkpoints.",Error Handling
+2046,"[TRQ2046] When a user has rights to the directory, the analysis software shall allow a user to select data from the lab NFS.","When a user has rights to the directory, the analysis software shall allow a user to select data from the lab NFS.",System Infrastructure
+2047,[TRQ2047] The analysis software shall use locally stored versions of the annotation databases.,The analysis software shall use locally stored versions of the annotation databases.,System Infrastructure
+2044,"[TRQ2044] When the user views run details, the analysis software shall display analysis status per sample, including the following information for each sample:","When the user views run details, the analysis software shall display analysis status per sample, including the following information for each sample:
+- Sample ID
+- Panel
+- Analysis Workflow
+- Error description if error has occurred",Results View
+2042,"[TRQ2042] When the user views run details, the analysis software shall display the run status as the following color codes:","When the user views run details, the analysis software shall display the run status as the following color codes:
+- Black as running
+- Green as complete
+- Red as error state
+- Yellow as cancelled",Results View
+2041,"[TRQ2041] When a user cancels a run, the analysis software shall display the run as completed with a message about the cancellation.","When a user cancels a run, the analysis software shall display the run as completed with a message about the cancellation.",Analysis
+2028,"[TRQ2028] The analysis software shall generate reports with summary sections for SNVs, Indels, CNV Amplifications, and fusions.","The analysis software shall generate reports with summary sections for SNVs, Indels, CNV Amplifications, and fusions.",Report
+2670,[TRQ2670] The Loci of interest table shall display an indication for variant detection state. (dectected or not detected),The Loci of interest table shall display an indication for variant detection state. (dectected or not detected),Results View
+2673,"[TRQ2673] When a QC checkpoint fails for an individual sample, the analysis software shall alert the user that the individual sample has failed and produce no results for the failed sample.","When a QC checkpoint fails for an individual sample, the analysis software shall alert the user that the individual sample has failed and produce no results for the failed sample.",Error Handling
+2672,"[TRQ2672] When a QC checkpoint fails when demultiplexing a dataset, the analysis software shall alert the user with an error message and halt analysis, producing no results.","When a QC checkpoint fails when demultiplexing a dataset, the analysis software shall alert the user with an error message and halt analysis, producing no results.",Error Handling
+2675,[TRQ2675] The analaysis software shall allow a user to modify entered sample information.,The analaysis software shall allow a user to modify entered sample information.,Run Setup
+2379,"[TRQ2379] When displaying the SNV and Indel table, the analysis software shall use abbreviated HGVS p. for protein variants and HGVS c. notation for nucleotide variant identification.","When displaying the SNV and Indel table, the analysis software shall use abbreviated HGVS p. for protein variants and HGVS c. notation for nucleotide variant identification.",Results View
+2677,[TRQ2677] The analysis software shall allow the user to select FASTQ files for analysis.,The analysis software shall allow the user to select FASTQ files for analysis.,Run Settings
+2676,[TRQ2676] The analaysis software shall allow a user to delete entered sample information.,The analaysis software shall allow a user to delete entered sample information.,Run Setup
+2374,"[TRQ2374] When the user views the fusion results for an individual sample, the analysis software shall display fusion information in a table with the column headers listed as:","When the user views the fusion results for an individual sample, the analysis software shall display fusion information in a table with the column headers listed as:
+- Partner Gene 1
+- Breakpoint 1
+- Partner Gene 2
+- Breakpoint 2
+- Paired Reads Spanning BP (BreakPoint)",Results View
+2678,[TRQ2678] The analysis software shall prevent the user from applying the same sample adapter to more than 1 sample.,The analysis software shall prevent the user from applying the same sample adapter to more than 1 sample.,Run Setup
+2376,[TRQ2376] The analysis software shall allow a user to define comma delimited email addresses for users to be notified when analysis is complete in the Run Settings.,The analysis software shall allow a user to define comma delimited email addresses for users to be notified when analysis is complete in the Run Settings.,Run Settings
+2370,"[TRQ2370] When invalid characters are entered into the Sample ID field, the analysis software shall display a red box highlighting the field as an error for the user.","When invalid characters are entered into the Sample ID field, the analysis software shall display a red box highlighting the field as an error for the user.",Error Handling
+2613,"[TRQ2613] When a user selects BCL files for analysis, The analysis software shall automatically convert the BCL files to FASTQ files.","When a user selects BCL files for analysis, The analysis software shall automatically convert the BCL files to FASTQ files.",Run Settings
+2612,"[TRQ2612] When a user selects FASTQ files for analysis, the analysis software shall require a user to select both paired end FASTQ files in Run Settings.","When a user selects FASTQ files for analysis, the analysis software shall require a user to select both paired end FASTQ files in Run Settings.",Run Settings
+2619,[TRQ2619] The analysis software shall allow a user to cancel runs owned by that user which are running or queued.,The analysis software shall allow a user to cancel runs owned by that user which are running or queued.,Analysis
+2618,[TRQ2618] Analysis runs shall be owned by the user who created them.,Analysis runs shall be owned by the user who created them.,Analysis
+3362,[TRQ3362] The analysis software shall deploy versions of OTSS with no major known security vulnerabilities that has been tested and verified for the application.,The analysis software shall deploy versions of OTSS with no major known security vulnerabilities that has been tested and verified for the application.,Security
+3363,[TRQ3363] The analysis software shall have applied patches to fix major known vulnerabilities for Off-The-Shelf and Roche controlled software.,The analysis software shall have applied patches to fix major known vulnerabilities for Off-The-Shelf and Roche controlled software.,Security
+1986,[TRQ1986] The analysis software shall calculate mutant molecules per milliliter for Indels in the following assay panels:,"The analysis software shall calculate mutant molecules per milliliter for Indels in the following assay panels:
+- AVENIO ctDNA Targeted Kit
+- AVENIO ctDNA Expanded Kit",Analysis
+1987,[TRQ1987] The analysis software shall display individual sample CNV Amplification information in a table with the column headers listed as:,"The analysis software shall display individual sample CNV Amplification information in a table with the column headers listed as:
+- Gene
+- Segment Range",Results View
+1984,[TRQ1984] The analysis software shall display the status of a sample as  Successful  or  Failed  in the color code:,"The analysis software shall display the status of a sample as ""Successful"" or ""Failed"" in the color code:
+- Green for Successful
+- Red for Failed",Results View
+1985,[TRQ1985] The analysis software shall calculate allele frequency of Indels in all assay panels.,The analysis software shall calculate allele frequency of Indels in all assay panels.,Analysis
+1982,[TRQ1982] The analysis software shall display SNV and Indel information in a table with the column headers listed as:,"The analysis software shall display SNV and Indel information in a table with the column headers listed as:
+- Gene
+- Variant
+- Variant Description
+- Allele fraction (AF) as a percentage
+- Mutant Molecules per ml
+- Annotation from specific Databases",Results View
+1983,[TRQ1983] The SNV and Indel results table shall be sortable alphanumerically in ascending or descending order by the following columns:,"The SNV and Indel results table shall be sortable alphanumerically in ascending or descending order by the following columns:
+- Gene
+- Variant Description
+- Variant
+- Location
+- Allele fraction as a percentage",Results View
+1980,[TRQ1980] The analysis software shall allow a user to import a CSV file of sample information into the Run Setup with the following information:,"The analysis software shall allow a user to import a CSV file of sample information into the Run Setup with the following information:
+- Sample ID
+- Adaptor
+- Panel
+- Analysis Workflow
+- Total DNA Mass in nanograms (ng)
+- Plasma Volume in milliliters (ml)",Run Setup
+1981,[TRQ1981] The analysis software shall provide a CSV template for inputting sample information with the following columns:,"The analysis software shall provide a CSV template for inputting sample information with the following columns:
+- Sample ID
+- Adaptor
+- Panel
+- Analysis Workflow
+- Total DNA Mass in nanograms (ng)
+- Plasma Volume in milliliters (ml)",Run Setup
+3364,[TRQ3364] The analysis software shall remove unused components from OTSS on the system and disable unused functionality that can t be removed.,The analysis software shall remove unused components from OTSS on the system and disable unused functionality that can t be removed.,Security
+3365,[TRQ3365] The analysis software shall use an encrypted communication channel provided by TLS whenever an authentication cookie is transmitted.,The analysis software shall use an encrypted communication channel provided by TLS whenever an authentication cookie is transmitted.,Security
+3366,[TRQ3366] The analysis software shall use a firewall to limit inbound and outbound network traffic on a specific port or ports.,The analysis software shall use a firewall to limit inbound and outbound network traffic on a specific port or ports.,Security
+3360,[TRQ3360] The analysis software shall sanitize all application database requests.,The analysis software shall sanitize all application database requests.,Security
+3361,[TRQ3361] The analysis software shall be accessible through the following web browsers:,"The analysis software client shall be accessible through the following web browsers:
+- Google Chrome versions greater than 50
+- Mozilla Firefox versions greater than 46",System Infrastructure
+1988,[TRQ1988] The analysis software shall display Fusion results in a table with the following column headers and information:,"The analysis software shall display Fusion results in a table with the following column headers and information:
+- Partner Gene 1
+- Breakpoint 1
+- Partner Gene 2
+- Breakpoint 2
+- Paired Reads Spanning BP (BreakPoint)",Results View
+1989,[TRQ1989] The analysis software shall automatically generate reports based on the specified analysis workflow given at start of analysis.,The analysis software shall automatically generate reports based on the specified analysis workflow given at start of analysis.,Report
+2369,"[TRQ2369] When a user chooses a panel in Run Setup, the Analysis Workflow list shall display Analysis Workflows specific for that panel as defined in the workflow.","When a user chooses a panel in Run Setup, the Analysis Workflow list shall display Analysis Workflows specific for that panel as defined in the workflow.",Run Setup
+2367,[TRQ2367] The analysis software shall display 10 runs per page in the view runs table.,The analysis software shall display 10 runs per page in the view runs table.,Run Information
+2366,[TRQ2366] The analysis software shall allow Run Name to be edited before analysis begins on run.,The analysis software shall allow Run Name to be edited before analysis begins on run.,Run Setup
+2365,"[TRQ2365] When all sample fields have been filled by a user, the analysis software shall allow a user to add the sample to the sample information table.","When all sample fields have been filled by a user, the analysis software shall allow a user to add the sample to the sample information table.",Run Setup
+2364,[TRQ2364] The analysis software shall allow users to input sample information manually with the following information. The default value for Plasma Volume shall be 4. The default value of all other fields shall be blank.,"The analysis software shall allow users to input sample information manually with the following information. The default value for Plasma Volume shall be 4. The default value of all other fields shall be blank.
+- Sample ID
+- Adaptor
+- Panel
+- Analysis Workflow
+- Total DNA Mass in nanograms (ng)
+- Plasma Volume in milliliters (ml)",Run Setup
+2363,"[TRQ2363] When the Run Name is longer than the text box displaying it, the analysis software shall truncate the characters past the text box and append an ellipsis ( ... ) to the Run Name.","When the Run Name is longer than the text box displaying it, the analysis software shall truncate the characters past the text box and append an ellipsis (""..."") to the Run Name.",Run Information
+2362,[TRQ2362] The analysis software global navigation bar shall provide a way for an admin user to navigate to the Configuration UI.,The analysis software global navigation bar shall provide a way for an admin user to navigate to the Configuration UI.,Global Header Bar
+2361,[TRQ2361] The analysis software global navigation bar shall allow a user to logout of the software.,The analysis software global navigation bar shall allow a user to logout of the software.,Global Header Bar
+2360,[TRQ2360] The analysis software global navigation bar shall display the username of the currently logged in user.,The analysis software global navigation bar shall display the username of the currently logged in user.,Global Header Bar
+2622,[TRQ2622] The analysis software shall provide a Loci of Interest table of genes with fusions a user can view with the following information:,"The analysis software shall provide a Loci of Interest table of genes with fusions a user can view with the following information:
+- Partner Gene 1
+- Partner Gene 2
+- Variant Call (variant detected or not detected)
+- Read Depth",Results View
+2623,[TRQ2623] The Loci of Interest table shall be sortable by any column.,The Loci of Interest table shall be sortable by any column.,Results View
+2620,[TRQ2620] The analysis software shall provide a Loci of Interest table of genes with SNVs a user can view with the following information:,"The analysis software shall provide a Loci of Interest table of genes with SNVs a user can view with the following information:
+- Gene where variant was found
+- Nucleotide change
+- Amino Acid Change
+- Variant Call (variant detected or not)
+- Confidence of detection
+- Read Depth",Results View
+2621,[TRQ2621] The analysis software shall provide a Loci of Interest table of genes with CNV Amplifications a user can view with the following information:,"The analysis software shall provide a Loci of Interest table of genes with CNV Amplifications a user can view with the following information:
+- Gene where variant was found
+- Segment Range
+- Variant Call (variant detected or not detected)
+- p-value
+- Read Depth",Results View
+2626,[TRQ2626] The analysis software shall allow a user to toggle filters on or off in the results view.,The analysis software shall allow a user to toggle filters on or off in the results view.,Filtering
+2624,[TRQ2624] The analysis software shall only display results which match filter criteria.,The analysis software shall only display results which match filter criteria.,Filtering
+2628,"[TRQ2628] When logging in, the analysis software shall present input boxes for a username and password.","When logging in, the analysis software shall present input boxes for a username and password.",User Management
+2629,[TRQ2629] The analysis software shall allow a user to view detailed SNV and Indel data with the following information for an individual variant in the results screen:,"The analysis software shall allow a user to view detailed SNV and Indel data with the following information for an individual variant in the results screen:
+- Gene
+- Variant Description
+- Genomic Position
+- Allele Fraction
+- Mutant Molecules per ml
+- Alternate Depth: Total Read Depth
+- Transcript
+- Amino Acid Change
+- Coding Change
+- Exon for Amino Acid Change
+- ExAC Global Frequency
+- dbSNP ID
+- COSMIC ID
+- Link to COSMIC variant page if applicable
+- Primary Tissue(s) from COSMIC
+- Sample Count according to COSMIC
+- ID in TCGA
+- Primary Cancer Types from TCGA
+- Number of Cases from TCGA
+- Custom Annotations if applicable",Results View
+3393,[TRQ3393] The analysis software shall allow a user to export VCF data in TXT format.,The analysis software shall allow a user to export VCF data in TXT format.,Report
+1990,[TRQ1990] The analysis software shall be installed with one pre-defined report template.,The analysis software shall be installed with one pre-defined report template.,Report
+1992,[TRQ1992] The analysis software platform shall have the following dependencies installed on the system:,"The analysis software platform shall have the following dependencies installed on the system:
+- OpenJDK 1.8.0_66
+- Apache Maven 3.3.3
+- node v0.10.42
+- Python 2.7.9
+- g++ 4.9.2",System Infrastructure
+1995,[TRQ1995] The analysis software shall allow a user to change their real name.,The analysis software shall allow a user to change their real name.,User Management
+1994,[TRQ1994] The analysis software shall allow a user to reset their password.,The analysis software shall allow a user to reset their password.,User Management
+1997,[TRQ1997] The analysis software shall name manually generated reports uniquely from all other reports by default.,The analysis software shall name manually generated reports uniquely from all other reports by default.,Report
+1996,"[TRQ1996] When the user navigates to the user settings screen, the analysis software shall display the following information","When the user navigates to the user settings screen, the analysis software shall display the following information:
+- Username
+- Real Name
+- Email address",User Management
+1999,"[TRQ1999] When a user cancels a run, the analysis software shall prompt the user with a confirmation message before cancelling the analysis run.","When a user cancels a run, the analysis software shall prompt the user with a confirmation message before cancelling the analysis run.",Analysis
+2680,[TRQ2680] The analysis software shall allow the variants in the Loci of Interest to be included in generated reports.,The analysis software shall allow the variants in the Loci of Interest to be included in generated reports.,Report
+3375,[TRQ3375] The analysis software shall provide emergency procedures to deploy software patches in case of critical vulnerabilities.,The analysis software shall provide emergency procedures to deploy software patches in case of critical vulnerabilities.,Security
+3374,[TRQ3374] The analysis software shall provide instructions to customers to transmit and store backups and archive files securely.,The analysis software shall provide instructions to customers to transmit and store backups and archive files securely.,Security
+3373,[TRQ3373] The analysis software shall provide instructions to customers to restrict physical access to the system and attached infrastructure,The analysis software shall provide instructions to customers to restrict physical access to the system and attached infrastructure,Security
+3372,[TRQ3372] The analysis software shall provide instructions for customers to protect attached systems from malicious software,The analysis software shall provide instructions for customers to protect attached systems from malicious software,Security
+3371,[TRQ3371] The analysis software shall automatically log out the user and end the session after 5 minutes.,The analysis software shall automatically log out the user and end the sessiona after 5 minutes.,Security
+3370,[TRQ3370] The analysis software shall enforce the following IP Table rules.,The analysis software shall enforce the following IP Table rules.,Security
+2024,[TRQ2024] The analysis software shall allow a user to view saved filter sets.,The analysis software shall allow a user to view saved filter sets.,Filtering
+2025,[TRQ2025] The analysis software shall allow an admin user to save a filter set.,The analysis software shall allow an admin user to save a filter set.,Filtering
+2358,[TRQ2358] The analysis software shall sort the view all runs table for all runs regardless of run visibility in the page.,The analysis software shall sort the view all runs table for all runs regardless of run visibility in the page.,Run Information
+2027,"[TRQ2027] The analysis software shall display results with separate tables for SNVs and Indels, CNV Amplifications, and fusions.","The analysis software shall display results with separate tables for SNVs and Indels, CNV Amplifications, and fusions.",Results View
+2023,[TRQ2023] The analysis software shall allow a user to load saved filter sets.,The analysis software shall allow a user to load saved filter sets.,Filtering
+2352,"[TRQ2352] When an invalid username or password is entered on login, the analysis software shall prevent login and display an error message.","When an invalid username or password is entered on login, the analysis software shall prevent login and display an error message.",Error Handling
+2353,[TRQ2353] The analysis software shall display the following information for Runs in the setup state:,"The analysis software shall display the following information for Runs in the setup state:
+- Run Name
+- Date and Time Last Modified",Run Information
+2350,[TRQ2350] The analysis software shall allow a user to switch between CSV sample information import and manual sample information entry in the Run Setup and retain all previously entered samples.,The analysis software shall allow a user to switch between CSV sample information import and manual sample information entry in the Run Setup and retain all previously entered samples.,Run Setup
+2351,[TRQ2351] The analysis software shall authenticate users for a session.,The analysis software shall authenticate users for a session.,Security
+2356,[TRQ2356] The analysis software shall display color coding of run status in the view all runs table containing the following mappings:,"The analysis software shall display color coding of run status in the view all runs table containing the following mappings:
+- Blue if analyzing
+- Red if failure occurred
+- Yellow if cancelled
+- Green if completed
+- Black if queued for analysis",Run Information
+2357,[TRQ2357] The analysis software shall allow the view runs table to be sorted alphanumerically in ascending or descending order by any column.,The analysis software shall allow the view runs table to be sorted alphanumerically in ascending or descending order by any column.,Run Information
+2354,[TRQ2354] The analysis software shall allow a user to view all runs in a table.,The analysis software shall allow a user to view all runs in a table.,Run Information
+2355,"[TRQ2355] When viewing all runs, the analysis software shall display a table populated with runs, with the column headers:","When viewing all runs, the analysis software shall display a table populated with runs, with the column headers:
+- Run Name
+- Status
+- Last Modified
+- User ID
+- Flow Cell ID",Run Information
+2638,[TRQ2638] The analysis software shall perform external backups of working databases and audit trail.,The analysis software shall perform external backups of working databases and audit trail.,System Infrastructure
+2635,[TRQ2635] The analysis software shall read input data and write output data over NFSv3.,The analysis software shall read input data and write output data over NFSv3.,System Infrastructure
+2636,[TRQ2636] The analysis software shall be accessible over HTTPS.,The analysis software shall be accessible over HTTPS.,Security
+2631,[TRQ2631] The analysis software shall allow a user to view the following software versioning information:,"The analysis software shall allow a user to view the following software versioning information:
+- Version of GMS
+- Version of ctDNA Analysis Pipeline
+- Versions of annotation databases
+- Version of GMS Admin UI",System Infrastructure
+2630,"[TRQ2630] After login, the analysis software shall display the home screen.","After login, the analysis software shall display the home screen.",Run Information
+2633,[TRQ2633] The analysis software shall allow sending a notification email with the following information:,"The analysis software shall allow sending a notification email with the following information:
+- Analysis status
+- Name",Analysis
+1960,[TRQ1960] The software shall to detect fusions in the following assay panels:,"The software shall to detect fusions in the following assay panels:
+- AVENIO ctDNA Targeted Kit
+- AVENIO ctDNA Expanded Kit
+- AVENIO ctDNA Surveillance Kit",Analysis
+2348,[TRQ2348] The analysis software shall display the following information for Runs in the completed state:,"The analysis software shall display the following information for Runs in the completed state:
+- Run Name
+- Number of samples successfully analyzed
+- Number of samples which failed analysis
+- Message if the run was cancelled",Run Information
+1962,[TRQ1962] The analysis software shall complete analysis of up to 800 million paired end reads within 24 hours.,The analysis software shall complete analysis of up to 800 million paired end reads within 24 hours.,Analysis
+1963,[TRQ1963] The analysis software shall execute using GMS as the software platform.,The analysis software shall execute using GMS as the software platform.,Analysis
+2037,[TRQ2037] The analysis software shall to analyze data sets in which multiple panel assays were performed.,The analysis software shall to analyze data sets in which multiple panel assays were performed.,Analysis
+2036,[TRQ2036] The analysis software annotation databases shall be able to be updated manually.,The analysis software annotation databases shall be able to be updated manually.,System Infrastructure
+2035,[TRQ2035] The analysis software annotation databases shall be able to be updated without affecting analysis software performance or installation,The analysis software annotation databases shall be able to be updated without affecting analysis software performance or installation,System Infrastructure
+2034,[TRQ2034] The analysis software shall allow 2 or more filters to be applied simultaneously,The analysis software shall allow 2 or more filters to be applied simultaneously,Filtering
+2033,[TRQ2033] The fusion results table shall be sortable alphanumerically in ascending or descending order for the following columns:,"The fusion results table shall be sortable alphanumerically in ascending or descending order for the following columns:
+- Partner Gene 1
+- Breakpoint 1
+- Partner Gene 2
+- Breakpoint 2
+- Paired Reads Spanning BP (BreakPoint)",Results View
+2032,[TRQ2032] The analysis software shall produce a Quality Control Report with the following Run Metrics:,"The analysis software shall produce a Quality Control Report with the following Run Metrics:
+- Clusters Passing Filter
+- Reads passing filter
+- Aligned to PhiX
+- Reads
+- Percent Bases with Q >= 30",Report
+2031,[TRQ2031] The analysis software shall produce reports which contain the disclaimer For Research Use Only. Not for use in diagnostic procedures.,"The analysis software shall produce reports which contain the disclaimer ""For Research Use Only. Not for use in diagnostic procedures.""",Report
+2030,[TRQ2030] The CNV Amplifications results table shall be sortable alphanumerically in ascending or descending order for the following columns:,"The CNV Amplifications results table shall be sortable alphanumerically in ascending or descending order for the following columns:
+- Gene
+- Segment Range",Results View
+2378,"[TRQ2378] When a sample fails to analyze, the analysis software shall provide a reason for failure of that sample.","When a samples fails to analyze, the analysis software shall provide a reason for failure of that sample.",Report
+2039,"[TRQ2039] When a QC checkpoint fails, the analysis software shall notify the user of the error with an error message associated with the error trigger.","When an error occurs during analysis, the analysis software shall notify the user of the error with an error message associated with the error trigger.
+  ",Error Handling
+2038,[TRQ2038] The analysis software global navigation bar shall allow a user to navigate to the home screen.,The analysis software global navigation bar shall allow a user to navigate to the home screen.,Global Header Bar
+2642,[TRQ2642] The analysis software shall allow a user to view license information about annotation sources.,The analysis software shall allow a user to view license information about annotation sources.,System Infrastructure
+2646,[TRQ2646] The analysis software shall allow a user to Duplicate and Rerun an existing analysis run.,The analysis software shall allow a user to Duplicate and Rerun an existing analysis run.,Analysis
+2679,[TRQ2679] The analysis software shall allow a user to filter by variants which are rare in Germline genomes.,The analysis software shall allow a user to filter by variants which are rare in Germline genomes.,Filtering
+2375,[TRQ2375] The analysis software shall allow the user to select the directory of BCL files to analyze.,The analysis software shall allow the user to select the directory of BCL files to analyze.,Run Settings
+3358,"[TRQ3358] When the user views run details, the analysis software shall display the following run information:","When the user views run details, the analysis software shall display the following run information:
+- Run Name
+- Run ID
+- Elapsed time since analysis has begun
+- Operator
+- Software Version used for analysis
+- Number of samples in run
+- Sequence data path where BCL or FASTQ files are stored
+- Flowcell ID (blank if not provided)
+- Sequencer Name (blank if not provided)
+- Date when sequencer was started (blank if not provided)",Results View
+1979,[TRQ1979] The analysis software shall calculate mutant molecules per milliliter for SNVs in the following assay panels:,"The analysis software shall calculate mutant molecules per milliliter for SNVs in the following assay panels:
+- AVENIO ctDNA Targeted Kit
+- AVENIO ctDNA Expanded Kit
+- AVENIO ctDNA Surveillance Kit",Analysis
+1978,[TRQ1978] The analysis software shall calculate allele frequency of SNVs in the following assay panels:,"The analysis software shall calculate allele frequency of SNVs in the following assay panels:
+- AVENIO ctDNA Targeted Kit
+- AVENIO ctDNA Expanded Kit
+- AVENIO ctDNA Surveillance Kit",Analysis
+1977,[TRQ1977] The analysis software shall produce a Quality Control Report with the following run information:,"The analysis software shall produce a Quality Control Report with the following run information:
+- Sample Name
+- Run Name
+- Run ID
+- Date Run was Started
+- Panel of Sample",Report
+1976,[TRQ1976] The analysis software shall allow a user to apply published workflows to a sample.,The analysis software shall allow a user to apply published workflows to a sample.,Workflows
+1973,[TRQ1973] The analysis software shall place output files in the following standard directory structure:  Run name / samples / sample name /,"The analysis software shall place output files in the following standard directory structure: ""Run name / samples / sample name /""",Report
+2003,[TRQ2003] The analysis software shall generate Quality Control Reports as a PDF file.,The analysis software shall generate Quality Control Reports as a PDF file.,Report
+2000,[TRQ2000] The analysis software shall allow the user to export VCF data as a JSON file.,The analysis software shall allow the user to export VCF data as a JSON file.,Report
+2001,[TRQ2001] The analysis software shall produce a Quality Control Report with a graph of the Coverage Uniformity for a sample.,The analysis software shall produce a Quality Control Report with a graph of the Coverage Uniformity for a sample.,Report
+2006,[TRQ2006] The summary data for SNVs in reports shall contain the following information:,"The summary data for SNVs in reports shall contain the following information:
+- Gene
+- Alteration
+- Allele Fraction
+- Mutant Molecules per ml.",Report
+2007,[TRQ2007] The summary data for Indels in reports shall contain the following information:,"The summary data for Indels in reports shall contain the following information:
+- Gene
+- Alteration
+- Allele Fraction
+- Mutant Molecules per ml.",Report
+2004,[TRQ2004] The analysis software shall allow the user to export an aberration report as a PDF file.,The analysis software shall allow the user to export an aberration report as a PDF file.,Report
+2008,[TRQ2008] The summary data for CNV Amplifications in reports shall contain the following information:,"The summary data for CNV Amplifications in reports shall contain the following information:
+- Gene",Report
+2009,[TRQ2009] The summary data for Fusions in reports shall contain the following information:,"The summary data for Fusions in reports shall contain the following information:
+- Gene 1
+- Gene 2",Report

@@ -10,8 +10,8 @@ import getpass
 # can also have TRQ or PRQ as a parameter in the command line
 
 def get_file_from_cmd_line():
-	if (len(sys.argv) != 2):
-		sys.exit("Please inclue the csv file name of srs requirements as an argument.")
+	if (len(sys.argv) != 3):
+		sys.exit("Please inclue the csv file name of req requirements as the first argument.")
 
 	file_name = sys.argv[1]
 	return file_name
@@ -19,9 +19,19 @@ def get_file_from_cmd_line():
 
 
 def read_file(csv_file):
+
+	# f = open(csv_file,'r')
+	# lines = f.readlines()[1:]
+	# f.close()
+
     with open(csv_file, 'r') as f:
+    	header = f.readline()
+    	print header
         data = [row for row in csv.reader(f.read().splitlines())]
+        print data
     return data
+
+
 
 def isNumber(req_id):
 	try: 
@@ -30,16 +40,24 @@ def isNumber(req_id):
 	except ValueError:
 		return False
 
-def save_srs_data_to_ticket(srs_data, jira):
+def save_req_data_to_ticket(req_data, jira, is_prd):
 
-	for srs in srs_data:
+	for req in req_data:
 
-		req_id = srs[0]
+		req_id = req[0]
 		if (not isNumber(req_id)): continue
 		req_id = int(req_id)
-		req_summary = srs[1]
-		req_description = srs[2]
-		req_component = srs[3]
+		req_summary = req[1]
+		if len(req_summary) > 255: 
+			req_summary = req_summary[:255]
+		
+		req_description = req[2]
+
+		if (is_prd) :
+			req_component = req[5] 
+		else:
+			req_component = req[3]
+
 		# the name that we give the issue
 		# req_summary = str(req_id) + '-' + req_component
 
@@ -50,10 +68,11 @@ def save_srs_data_to_ticket(srs_data, jira):
 
 			# need to compare current values to new values
 			# version is hard coded
+
 			update_issue(issue[0], req_summary, req_description, 12)
 
 		else:
-
+			print "creating new issue"
 			new_issue = jira.create_issue(project='SBX', summary= req_summary,
                               description=req_description, issuetype={'name': 'Requirement'})
 
@@ -106,9 +125,19 @@ def login_to_jira():
 	return user, passwd
 
 
+def req_or_prd():
+	if (len(sys.argv) != 3):
+		sys.exit("Please type PRD or req as the last argument based on the requirement you want to import.")
+
+	req_or_prd = sys.argv[2]
+	if req_or_prd == "PRD": return True 
+	else: return False
+
+
 def main():
 
-	srs_data = read_file(get_file_from_cmd_line())
+	is_prd = req_or_prd()
+	req_data = read_file(get_file_from_cmd_line())
 
 	# set up JIRA instance
 
@@ -121,7 +150,7 @@ def main():
 	jira = JIRA(options, basic_auth=(user, password))
 
 
-	save_srs_data_to_ticket(srs_data, jira)
+	save_req_data_to_ticket(req_data, jira, is_prd)
 
 
 
