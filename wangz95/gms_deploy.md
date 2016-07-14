@@ -22,7 +22,7 @@ git clone https://github.com/BinaTechnologies/seqalto.git
 
 cd seqalto
 
-git checkout test-ctDNA-20160622
+git checkout test-ctDNA-20160707
 ```
 
 Download 3rd-party packages using the Python script:
@@ -117,7 +117,7 @@ ssh kent -A
 
 Update the installed packages
 ```bash
-sudo apt-get update && sudo apt-get install bina-salt-configs && sudo salt-call state.highstate
+sudo apt-get update && sudo salt-call state.highstate
 ```
 
 #### tehran-20
@@ -129,7 +129,7 @@ ssh tehran-20 -A
 
 Update the installed packages
 ```bash
-sudo apt-get update && sudo apt-get install bina-salt-configs && sudo salt-call state.highstate
+sudo apt-get update && sudo salt-call state.highstate
 ```
 
 #### tehran-22
@@ -141,7 +141,7 @@ ssh tehran-22 -A
 
 Update the installed packages
 ```bash
-sudo apt-get update && sudo apt-get install bina-salt-configs && sudo salt-call state.highstate
+sudo apt-get update && sudo salt-call state.highstate
 ```
 
 Restart processes
