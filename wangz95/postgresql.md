@@ -2,11 +2,12 @@
 
 ## How to connect
 
-`/etc/default/portal-frontend`
+PostgreSQL database credentials can be found in `/etc/default/portal-frontend`.
 
 ```bash
 psql postgres://binatech:binarocks2013@localhost/portal
 ```
+
 ## List all databases
 
 ```bash
@@ -14,6 +15,7 @@ psql postgres://binatech:binarocks2013@localhost/portal
 ```
 
 ## Quit psql
+
 ```bash
 => \q
 ```
@@ -31,7 +33,7 @@ dropdb portal
 Recreate the database
 
 ```bash
-sudo salt-call apply postgres
+sudo salt-call state.apply postgres
 
 sudo systemctl restart portal-frontend && sudo systemctl restart portal-backend && sudo systemctl restart executor
 ```
