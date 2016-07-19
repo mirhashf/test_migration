@@ -2,13 +2,25 @@
 
 ## Prerequisites
 
+Create a local clone of your fork of the `BinaTechnologies/seqalto` repo, then add `BinaTechnologies/seqalto` as remote called `upstream`
+```bash
+cd seqalto
+
+git add remote upstream git@github.com:BinaTechnologies/seqalto.git
+```
+
+Fetch latest changes from `upstream` and merge `upstream/develop`
+```bash
+cd seqalto && git checkout develop && git fetch upstream && git merge upstream/develop && git push origin
+```
+
 Create a test tag
 ```bash
-git tag -am"test-ctDNA-20160707" test-ctDNA-20160707
+git tag -am"test-ctDNA-20160719" test-ctDNA-20160719
 
-git push origin test-ctDNA-20160707
+git push origin test-ctDNA-20160719
 
-git push upstream test-ctDNA-20160707
+git push upstream test-ctDNA-20160719
 ```
 
 SSH to `build-00` from `t-rex`
@@ -22,7 +34,7 @@ git clone https://github.com/BinaTechnologies/seqalto.git
 
 cd seqalto
 
-git checkout test-ctDNA-20160707
+git checkout test-ctDNA-20160719
 ```
 
 Download 3rd-party packages using the Python script:
