@@ -163,6 +163,14 @@ sudo systemctl restart portal-backend
 sudo systemctl restart executor
 ```
 
+## Dropping PostgreSQL Database
+
+```bash
+sudo -u binatech bash
+
+sudo systemctl stop portal-frontend && sudo -upostgres bash -c "echo 'drop database portal;' | psql" && sudo salt-call state.apply postgres && sudo systemctl restart portal-frontend
+```
+
 ## References
 
 [BinaOps Utilites](https://github.com/BinaTechnologies/seqalto/blob/develop/doc/gms/tools/BinaOps/BinaOps_utils.md)
