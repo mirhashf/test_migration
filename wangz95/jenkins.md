@@ -1,6 +1,20 @@
 # Jenkins
 
-## JDK
+## AWS
+
+### Master
+
+ec2-user@build.binacloud.com
+
+### Slave
+
+admin@54.201.61.90
+
+/mnt/data/jenkins/workspace/
+
+## Settings
+
+### JDK
 
 Create an account on oracle.com in order to automatically install JDK.
 
@@ -8,7 +22,7 @@ Create an account on oracle.com in order to automatically install JDK.
 bina.jenkinsci@bina.roche.com / bin@t3chOracle
 ```
 
-## E-mail Notification
+### E-mail Notification
 
 | Configuration | Value |
 | --- | --- |
@@ -21,7 +35,7 @@ bina.jenkinsci@bina.roche.com / bin@t3chOracle
 
 **NOTE:** Need to enable the [allowing less secure apps to access your account](https://support.google.com/accounts/answer/6010255).
 
-## GitHub
+### GitHub
 
 ```
 bina.jenkinsci@bina.roche.com / binat3mp
