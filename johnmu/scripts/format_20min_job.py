@@ -2,7 +2,7 @@
 
 # Goes into the 20min job from the post request and digs out the workflow and turns off checkpointing
 # Example:
-# 	- Open network tab and copy the job saving request
+# 	- Open network tab and copy body of the job saving request
 #	- run `pbpaste | ./format_20min_job.py | pbcopy
 #	- The properly formatted job should be in your clipboard now
 
