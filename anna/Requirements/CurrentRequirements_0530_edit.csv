@@ -1,0 +1,204 @@
+HPALM Req ID,Req Descripion,Section2349,"When an error occurs during CSV sample information import, the analysis software shall prevent importing samples and display an error message to the user.",Error Handling1961,The analysis software shall provide access for two privilege levels. Admin users and Lab Users.,User Management2019,The analysis software shall produce a Quality Control Report with a graph of the Allele Fraction Distribution.,Report2018,The analysis software shall allow filtering of results by common SNPs from dbSNP.,Filtering2015,The analysis software shall allow filtering results by allele frequency of variants found in ExAC.,Filtering2014,The analysis software shall allow filtering results by allele frequency of variants found in 1000 Genomes.,Filtering2017,"The analysis software shall allow the user to filter by the following SNPEff criteria:
+- Codon Indel
+- Frameshift
+- Nonsynonymous coding
+- Splice site change
+- Start gain
+- Start lost
+- Stop gain or Stop Lost
+- UTR deleted",Filtering2016,The analysis software shall allow users to filter variants such that displayed variants match at least one of the selected SNPEff criteria.,Filtering2010,"The detailed data for SNVs in the reports shall contain the following information:
+- Gene
+- Nucleotide Change
+- Genomic Position
+- Allele Fraction
+- Mutant Molecules per ml
+- Alternate Depth: Total Read Depth
+- Transcript
+- Amino Acid Change
+- Exon for Amino Acid Change
+- Variant Type
+- ExAC Global Frequency
+- dbSNP ID
+- COSMIC ID
+- Link to COSMIC is applicable
+- Primary Tissue(s) from COSMIC
+- Sample Count according to COSMIC
+- ID in TCGA
+- Primary Cancer Types from TCGA
+- Number of Cases from TCGA
+- Custom Annotations if applicable",Report2013,The analysis software shall allow users to filter results somatic mutations found in COSMIC,Filtering1955,The analysis software shall detect mutant DNA with a sensitivity lower limit of 0.25% mutant allele frequency.,Analysis1954,"When a data set is re-analyzed by an identical workflow, the analysis software shall produce results in which >=99% of aberrations are identical to previously generated results.",Analysis1957,The software shall to detect SNVs in all assay panels.,Analysis1956,The analysis software shall determine mutant allele frequency with a positive predictive value of >= 95%.,Analysis1959,The software shall to detect CNVs in all assay panels.,Analysis1958,The software shall to detect indels in all assay panels.,Analysis2068,The analysis software shall provide a way to search for existing runs in all run states.,Run Information2069,The analysis software shall provide a way to create a new run.,Run Setup2390,"The analysis software shall produce reports containing the following tracking information:
+- Run Name
+- Run ID generated from GMS
+- Analysis Completion Datetime
+- Operator
+- Flow Cell ID
+- Sequencer Data Path
+- Sequencer Started Datetime
+- Sequencing instrument name
+- Number of samples sequenced in Flow Cell Lane
+- Sample ID
+- Assay Panel
+- Assay Adapter
+- Analysis Analysis Workflow
+- Filter set
+- Total DNA Mass in nanograms (ng)
+- Plasma Volumes in milliliters (ml)",Report2065,The analysis software shall allow a user to define a directory path where files output from analysis will be saved.,Run Settings2066,"The analysis software shall display the following status information for the most recent 10 Runs on the home screen:
+- Runs in Setup to be finalized
+- Queued Runs
+- Analysis
+- Completed Runs",Run Information2067,The analysis software shall allow a user to access details about runs which are owned by that user.,Run Information2026,"The analysis software shall produce a Quality Control Report with the following sample analysis information:
+- Number of Read Pairs
+- Properly paired aligned read percentage
+- Error Rate as percentage
+- Median fragment length after deduplication",Report2381,"When displaying the SNV and Indel table, the analysis software shall display a legend for the colored database icons in the Annotation Column.",Results View2380,"When displaying the SNV and Indel table, the analysis software shall display corroborating Annotation from databases as colored icons.",Results View2027,"The analysis software shall generate reports with separate tables for SNVs and Indels, CNVs, and fusions.",Report2385,"When an admin user saves a workflow, the analysis software shall generate a unique name for the workflow by default.",Workflows2387,"The analysis software shall allow an admin user to edit the following information in workflows:
+- Publish state of workflow
+- Panel
+- Description
+- Filter set
+- Custom annotation
+- Variants to report
+- Output directory of analysis files
+- Option to receive email upon job completion",Workflows2386,The analysis software shall allow an admin user to edit workflows before the workflow is published.,Workflows2388,"The analysis software run header shall allow users to navigate through the following steps:
+- Sample Entry
+- Run Settings
+- File Selection
+- Analysis
+- Results",Run Setup2071,"The analysis software shall display the following information for Runs in the queued state:
+- Run Name
+- User ID of owner (user who started run)
+- Numbered position in the queue
+- Time elapsed since run entered queue",Run Information2070,"The analysis software shall display the following information for Runs in the analysis state:
+- Run Name
+- User ID of owner (user who started run)
+- Lock icon if run was not started by current user
+- Time elapsed since run was started",Run Information2046,"When a user has rights to the directory, the analysis software shall allow a user to select data from the lab NFS.",System Infrastructure2047,The analysis software shall use locally stored versions of the annotation databases.,System Infrastructure2044,"When the user selects view run details, the analysis software shall display analysis status per sample, including the following information for each sample:
+- Run Name
+- Elapsed Time of analysis
+- Sample ID
+- Panel
+- Analysis Workflow
+- Error description if error has occurred
+- Analysis description if analysis is running",Results View2045,The analysis software shall allow an admin user to select the default directory on the lab NFS for files produced by the analysis software.,System Infrastructure2042,"When the user views run details, the analysis software shall display the run status as the following color codes:
+- Black as running
+- Green as complete
+- Red as error state",Results View2043,The analysis software shall display the estimated time remaining for an analysis run.,Analysis2040,"When an error occurs during analysis, the analysis software shall terminate analysis and provide an error report.",Error Handling2041,"When a user cancels a run, the analysis software shall display the run as completed with a message about the cancellation.",Analysis2028,The analysis software shall generate reports with summary sections for each aberration type.,Report2029,The analysis software shall generate reports with summary sections for somatic mutations,Report2378,"When a samples fails to analyze, the analysis software shall provide a reason for failure of that sample.",Report2379,"When displaying the SNV and Indel table, the analysis software shall use abbreviated HGVS p. for protein variants and HGVS c. notation for nucleotide variant identification.",Results View2374,"When the user views the fusion results for an individual sample, the analysis software shall display fusion information in a table with the column headers listed as:
+- Gene 1
+- Breakpoint
+- Gene 2
+- Breakpoint",Results View2375,The analysis software shall allow the user to select the directory for BCL or FASTQ files to analyze.,Run Settings2376,The analysis software shall allow a user to define comma delimited email addresses for users to be notified when analysis is complete in the Run Settings.,Run Settings2377,The analysis software shall notify by email the logged in user when the analysis is completed by default.,Run Settings2370,"When invalid characters are entered into the Sample ID field, the analysis software shall display a red box highlighting the field as an error for the user.",Error Handling2373,The analysis software shall allow admin users to copy published and un-published workflows.,Workflows2613,"When a user selects BCL files for analysis, The analysis software shall automatically convert the BCL files to FASTQ files.",Run Settings2612,"When a user chooses to manually select FASTQ files for analysis, the analysis software shall require a user to select both paired end FASTQ files in Run Settings.",Run Settings2619,The analysis software shall allow a user to cancel runs owned by that user which are running or queued.,Analysis2618,Analysis runs shall be owned by the user who created them.,Analysis1986,The analysis software shall calculate mutant copies per milliliter for Indels in all assay panels.,Analysis1987,"The analysis software shall display individual sample CNV information in a table with the column headers listed as:
+- Gene
+- Segment Range",Results View1984,"The analysis software shall display the status of a sample as ""Successful"" or ""Failed"" in the color code:
+- Green for Successful
+- Red for Failed",Results View1985,The analysis software shall calculate allele frequency of Indels in all assay panels.,Analysis1982,"The analysis software shall display SNV and Indel information in a table with the column headers listed as:
+- Gene
+- Variant Description
+- Variant
+- Location
+- Allele fraction as a percentage
+- Annotation from specific Databases",Results View1983,"The SNV and Indel results table shall be sortable alphanumerically in ascending or descending order by the following columns:
+- Gene
+- Variant Description
+- Variant
+- Location
+- Allele fraction as a percentage",Results View1980,"The analysis software shall allow a user to import a CSV file of sample information into the Run Setup with the following information:
+- Sample ID
+- Adaptor
+- Panel
+- Analysis Workflow
+- Total DNA Mass in nanograms (ng)
+- Plasma Volume in milliliters (ml)",Run Setup1981,"The analysis software shall provide a CSV template for inputting sample information with the following columns:
+- Sample ID
+- Adaptor
+- Panel
+- Analysis Workflow
+- Total DNA Mass in nanograms (ng)
+- Plasma Volume in milliliters (ml)",Run Setup1988,"The analysis software shall display Fusion results in a table with the following column headers and information:
+- Gene 1
+- Breakpoint 1
+- Clipping order bp1
+- Gene 2
+- Breakpoint 2
+- Clipping order bp2
+- Paired Reads Spanning bp",Results View1989,The analysis software shall automatically generate reports based on the specified workflow given at start of analysis.,Report2369,"When a user chooses a panel in Run Setup, the Analysis Workflow list shall display Analysis Workflows specific for that panel as defined in the workflow.",Run Setup2367,The analysis software shall display 10 runs per page in the view runs table.,Run Information2366,The analysis software shall allow Run Name to be edited until analysis begins on run.,Run Setup2365,"When all sample fields have been filled by a user, the analysis software shall allow a user to add the sample to the sample information table.",Run Setup2364,"The analysis software shall allow users to input sample information manually with the following information. The default value of all fields shall be Blank.
+- Sample ID
+- Adaptor
+- Panel
+- Analysis Workflow
+- Total DNA Mass in nanograms (ng)
+- Plasma Volume in milliliters (ml)",Run Setup2363,"When the Run Name is longer than the text box displaying it, the analysis software shall truncate the characters past the text box and append an ellipsis (""..."") to the Run Name.",Run Information2362,The analysis software global navigation bar shall provide a way for an admin user to navigate to the Configuration UI.,Global Header Bar2361,The analysis software global navigation bar shall provide a way to logout of the software.,Global Header Bar2360,The analysis software global navigation bar shall display the username of the currently logged in user.,Global Header Bar2622,"The analysis software shall provide a Loci of Interest table of genes with fusions a user can view with the following information:
+- Gene 1
+- Gene 2
+- Variant Call (variant detected or not)
+- Confidence of detection",Report2623,The Loci of Interest table shall be sortable by any column.,Results View2620,"The analysis software shall provide a Loci of Interest table of genes with SNVs a user can view with the following information:
+- Gene where variant was found
+- Nucleotide change
+- Amino Acid Change
+- Variant Call (variant detected or not) -Confidence of detection",Report2621,"The analysis software shall provide a Loci of Interest table of genes with CNVs a user can view with the following information:
+- Gene where variant was found
+- Segment Range
+- Variant Call (variant detected or not)
+- Confidence of detection",Report2626,The analysis software shall allow a user to toggle filters on or off in the results view.,Filtering2627,The analysis software shall allow an user to register for a account to access the system.,User Management2624,The analysis software shall only display results which match filter criteria.,Filtering2625,The analysis software shall allow an admin user to create a custom annotation filter with user defined variants.,Filtering2628,"When logging in, the analysis software shall present input boxes for a username and password.",User Management2629,"The analysis software shall allow a user to view detailed variant data with the following information:
+- Gene
+- Variant Description
+- Location
+- Nucleotide change
+- Allele Fraction
+- Mutant Molecules per ml
+- Total read depth
+- Transcripts
+- Amino acid change
+- COSMIC ID
+- Somatic Status
+- Most frequent cancer types
+- Primary tissue
+- Sample count
+- Population frequency from ExAC
+- dbSNP common SNPs
+- Population frequency from 1000 Genomes
+- Custom annotations if applicable",Results View1990,The analysis software shall be installed with one pre-defined report template.,Report1993,The analysis software shall be uninstallable.,System Infrastructure1992,The analysis software shall provide an installer.,System Infrastructure1995,The analysis software shall allow a user to change their real name.,User Management1994,The analysis software shall allow a user to reset their password.,User Management1997,The analysis software shall name manually generated reports uniquely from all other reports by default.,Report1996,"When the user navigates to the user settings screen, the analysis software shall display the following information:
+- Username
+- Real Name
+- Email address",User Management1999,"When a user cancels a run, the analysis software shall prompt the user with a confirmation message before cancelling the analysis run.",Analysis1998,The analysis software shall produce identical reports given identical post-analysis data.,Report2024,The analysis software shall allow a user to view saved filter settings.,Filtering2025,The analysis software shall allow an admin user to save filter settings.,Filtering2358,The analysis software shall sort the view all runs table for all runs regardless of run visibility in the page.,Run Information2359,The analysis software shall display a global navigation bar in the header of every screen in the ctDNA Analysis Tool UI.,Global Header Bar2020,The analysis software shall allow a user to filter results by approximate read depth,Filtering2021,The analysis software shall allow a user to filter results by Gene Allele Fraction,Filtering2022,The analysis software shall prevent more than 24 samples being entered into the Run Setup.,Filtering2023,The analysis software shall allow a user to load saved filter settings.,Filtering2352,"When an invalid username or password is entered on login, the analysis software shall prevent login and display an error message.",Error Handling2353,"The analysis software shall display the following information for Runs in the setup state:
+- Run Name
+- Date and Time Last Modified",Run Information2350,The analysis software shall allow a user to switch between CSV sample information import and manual sample information entry in the Run Setup and retain all previously entered samples.,Run Setup2351,The analysis software shall authenticate users for a session.,User Management2356,"The analysis software shall display color coding of run status in the view all runs table containing the following mappings:
+- Blue if analyzing
+- Red if failure occurred
+- Yellow if cancelled
+- Green if completed
+- Black if queued for analysis",Run Information2357,The analysis software shall allow the view runs table to be sorted alphanumerically in ascending or descending order by any column.,Run Information2354,The analysis software shall provide a way to view all runs in a table.,Run Information2355,"When viewing all runs, the analysis software shall display a table populated with runs, with the column headers:
+- Run Name
+- Status
+- Last Modified
+- User ID
+- Flow Cell ID",Run Information2638,The analysis software shall perform external backups of working databases and audit trail.,System Infrastructure2635,The analysis software shall read input data and write output data over NFSv3.,System Infrastructure2634,"When viewing the configuration UI, the analysis software global navigation bar shall provide a way for an admin user to navigate to the Analysis Tool UI.",Global Header Bar2637,The analysis software shall allow external backups to be set with a configuratble retention period.,System Infrastructure2636,The analysis software shall be accessible over HTTPS.,System Infrastructure2631,"The analysis software shall provide a way to view the following software versioning information:
+- Version of GMS
+- Version of ctDNA Analysis Pipeline",System Infrastructure2630,"After login, the analysis software shall display the home screen.",Run Information2633,"The analysis software shall allow sending a notification email with the following information:
+- analysis status
+- Name
+- Link on successful/failed analysis",Analysis2632,The analysis software shall allow an admin user to cancel runs owned by any user that are running or queued.,Analysis1968,"When an admin user attempt to modify an existing workflow, the analysis software shall enforce the admin user must first copy the workflow.",Workflows1966,The analysis software shall allow an admin user to create new workflows by first copying previously existing workflows.,Workflows1967,"When Modifying workflows, the analysis software shall allow an admin user to define a name for the workflow.",Workflows1960,The software shall to detect fusions in all assay panels.,Analysis2348,"The analysis software shall display the following information for Runs in the completed state:
+- Run Name
+- Number of samples successfully analyzed
+- Number of samples which failed analysis
+- Message if the run was cancelled",Run Information1962,The analysis software shall complete analysis of up to 800 million paired end reads within 24 hours.,Analysis1963,The analysis software shall execute using GMS as the software platform.,Analysis2037,The analysis software shall to analyze data sets in which multiple panel assays were performed.,Analysis2036,The analysis software databases shall be able to be updated manually.,System Infrastructure2035,The analysis software databases shall be able to be updated without affecting analysis software performance or installation,System Infrastructure2034,The analysis software shall allow 2 or more filters to be applied simultaneously,Filtering2033,The fusion results table shall be sortable alphanumerically in ascending or descending order by any column.,Results View2032,"The analysis software shall produce a Quality Control Report with the following Run Metrics:
+- Clusters Passing Filter
+- Reads passing filter
+- Aligned to PhiX
+- Reads
+- Percent Bases with Q >= 30",Report2031,"The analysis software shall produce reports which contain the disclaimer ""For Research Only. Not for use in diagnostic procedures.""",Report2030,"The CNV results table shall be sortable alphanumerically in ascending or descending order for the following columns:
+- Gene
+- Segment Range",Results View2039,"When an error occurs during analysis, the analysis software shall notify the user of the error with a message.",Error Handling2038,The analysis software global navigation bar shall provide a way to navigate to the home screen.,Global Header Bar2642,The analysis software shall provide a way to view license information about annotation sources.,System Infrastructure1979,The analysis software shall calculate mutant molecules per milliliter for SNVs in all assay panels.,Analysis1978,The analysis software shall calculate allele frequency of SNVs in all assay panels.,Analysis1977,"The analysis software shall produce a Quality Control Report with the following run information:
+- Sample Name
+- Run Name
+- Date Run was Started
+- Panel of Sample",Report1976,The analysis software shall allow a user to access published workflows.,Workflows1973,"The analysis software shall follow a naming convention for produced output files. (e.g. ""NameOfAssay_DateTime"")",Report1972,The analysis software shall allow an admin user to delete workflow before the workflow is published.,Workflows1971,"When the workflow is published, the analysis software shall prevent the admin user from deleting or modifying the workflow.",Workflows1970,The analysis software shall allow an admin user to publish workflows so that lab users may view and use the workflow for analysis.,Workflows2003,The analysis software shall generate Quality Control Reports as a PDF file.,Report2000,The analysis software shall allow the user to export VCF data as a JSON file.,Report2001,The analysis software shall produce a Quality Control Report with a graph of the Coverage Uniformity.,Report2006,"The summary data for SNVs in reports shall contain the following information:
+- Gene
+- Alteration
+- Allele Fraction
+- Mutant Molecules per ml.",Report2007,"The summary data for Indels in reports shall contain the following information:
+- Gene
+- Alteration
+- Allele Fraction
+- Mutant Molecules per ml.",Report2004,The analysis software shall allow the user to export summary data as a PDF file.,Report2008,"The summary data for CNVs in reports shall contain the following information:
+- Gene",Report2009,"The summary data for Fusions in reports shall contain the following information:
+- Gene 1
+- Gene 2",Report

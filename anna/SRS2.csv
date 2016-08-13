@@ -1,0 +1,40 @@
+HPALM Req ID,Req Name,Req Description,Req Parent folder/section
+3773,[TRQ3773] The software shall allow an admin user to edit the name and description of filter sets.,The software shall allow an admin user to edit the name and description of filter sets.,Filter Sets
+3777,[TRQ3777] The software shall allow filtering by allele frequency of variants found in 1000 Genomes.,The software shall allow filtering by allele frequency of variants found in 1000 Genomes.,Filter Sets
+3776,[TRQ3776] The software shall allow filtering by allele frequency of variants found in ExAC.,The software shall allow filtering by allele frequency of variants found in ExAC.,Filter Sets
+3775,[TRQ3775] The software shall allow filtering by common SNPs from dbSNP.,The software shall allow filtering by common SNPs from dbSNP.,Filter Sets
+3774,[TRQ3774] The software shall allow an admin user to filter by variants which are rare in Germline genomes.,The software shall allow an admin user to filter by variants which are rare in Germline genomes.,Filter Sets
+2634,"[TRQ2634] When viewing the configuration UI, the software global navigation bar shall allow an admin user to navigate to the Analysis Tool UI.","When viewing the configuration UI, the software global navigation bar shall allow an admin user to navigate to the Analysis Tool UI.",GMS Navigation
+3779,"[TRQ3779] Before a workflow is published, the software shall allow an admin user to set the following as a workflow published status:","Before a workflow is published, the software shall allow an admin user to set the following as a workflow published status:
+- Visible to all Lab users and Admin users
+- Visible to only the admin",Workflow
+3778,[TRQ3778] The software shall allow users to filter by somatic mutations found in COSMIC,The software shall allow users to filter by somatic mutations found in COSMIC,Filter Sets
+2632,[TRQ2632] The software shall allow an admin user to cancel runs owned by any user that are running or queued.,The software shall allow an admin user to cancel runs owned by any user that are running or queued.,Analysis Management
+1968,"[TRQ1968] When an admin user attempt to modify a published workflow, the software shall enforce the admin user must first copy the workflow.","When an admin user attempt to modify an published workflow, the software shall enforce the admin user must first copy the workflow.",Workflow
+1966,[TRQ1966] The software shall allow an admin user to create new workflows by first copying previously existing workflows.,The software shall allow an admin user to create new workflows by first copying previously existing workflows. The values for all fields except the workflow name shall be identical to the original workflow.,Workflow
+1967,"[TRQ1967] When Modifying workflows, the software shall allow an admin user to define a name for the workflow.","When Modifying workflows, the software shall allow an admin user to define a name for the workflow.",Workflow
+2385,"[TRQ2385] When an admin user saves a workflow, the software shall generate a unique name for the workflow by default.","When an admin user saves a workflow, the software shall generate a unique name for the workflow by default.",Workflow
+2387,[TRQ2387] The software shall allow an admin user to edit the following information in workflows:,"The software shall allow an admin user to edit the following information in workflows:
+- Publish state of the workflow
+- Panel
+- Description
+- Filter set
+- Custom annotation
+- Variants to report
+- Directory where BCL to FASTQ converter is installed
+- Output direcory of analysis files",Workflow
+2386,[TRQ2386] The software shall allow an admin user to edit workflows before the workflow is published.,The software shall allow an admin user to edit workflows before the workflow is published.,Workflow
+2627,[TRQ2627] The software shall allow an admin user to add users to the system.,The software shall allow an admin user to add users to the system.,System Management
+2625,[TRQ2625] The software shall allow an admin user to create a custom annotation with user defined variants.,The software shall allow an admin user to create a custom annotation with user defined variants.,Custom Annotation
+3781,[TRQ3781] The software shall allow an admin user to apply a custom annotation to a workflow.,The software shall allow an admin user to apply a custom annotation to a workflow.,Custom Annotation
+3782,[TRQ3782] The software shall prevent more than 1 custom annotation from being applied to a single workflow.,The software shall prevent more than 1 custom annotation from being applied to a single workflow.,Custom Annotation
+3783,[TRQ3783] The software shall allow an admin user to edit the custom annotation title and description.,The software shall allow an admin user to edit the custom annotation title and description.,Custom Annotation
+3780,[TRQ3780] The analysis software shall allow an admin user to apply a filter set to a workflow.,The analysis software shall allow an admin user to apply a filter set to a workflow.,Workflow
+2045,[TRQ2045] The software shall allow an admin user to select the default directory on the lab NFS for files produced by the software.,The software shall allow an admin user to select the default directory on the lab NFS for files produced by the software.,System Management
+3784,"[TRQ3784] When editing a custom annotation, the software shall allow an admin user to import a VCF file containing the variants desired in the custom annotation results.","When editing a custom annotation, the software shall allow an admin user to import a VCF file containing the variants desired in the custom annotation results.",Custom Annotation
+3785,"[TRQ3785] When importing a custom annotation VCF and the VCF is in an incorrect format or currupt, the software shall prevent importation of the VCF and present an error message to the user.","When importing a custom annotation VCF and the VCF is in an incorrect format or currupt, the software shall prevent importation of the VCF and present an error message to the user. ",Error Handling
+3376,[TRQ3376] The software shall allow an admin user to import custom annotation databases.,The software shall allow an admin user to import custom annotation databases.,System Management
+1972,[TRQ1972] The software shall allow an admin user to delete workflow before the workflow is published.,The software shall allow an admin user to delete workflow before the workflow is published.,Workflow
+1971,"[TRQ1971] When the workflow is published, the software shall prevent the admin user from deleting or modifying the workflow.","When the workflow is published, the software shall prevent the admin user from deleting or modifying the workflow.",Workflow
+1970,[TRQ1970] The software shall allow an admin user to publish workflows so that lab users may view and use the workflow for analysis.,The software shall allow an admin user to publish workflows so that lab users may view and use the workflow for analysis.,Workflow
+2373,[TRQ2373] The software shall allow an admin user to copy published and un-published workflows.,The software shall allow an admin user to copy published and un-published workflows.,Workflow
