@@ -12,7 +12,8 @@ public class Hello {
 
         int myTotal = myFirstNumber + mySecondNumber + myThirdNumber;
         int myLastOne = 1000 - myTotal;
-
+        
+        // System.out.println(myLastOee);
         System.out.println("Your total value is: " + myTotal + ", and the difference of a 1000 is: " + myLastOne);
 
     }
